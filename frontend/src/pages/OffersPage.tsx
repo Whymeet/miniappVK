@@ -10,7 +10,7 @@ import {
   Banner,
   Text,
 } from '@vkontakte/vkui';
-import { Icon56MoneyCircleOutline } from '@vkontakte/icons';
+import { Icon28MoneyCircleOutline } from '@vkontakte/icons';
 
 import { BrandConfig, LaunchParams, OffersFilters } from '@/types';
 import { useOffers } from '@/hooks/useOffers';
@@ -95,7 +95,7 @@ export default function OffersPage({ config, launchParams }: OffersPageProps) {
 
         {error && (
           <Placeholder
-            icon={<Icon56MoneyCircleOutline />}
+            icon={<Icon28MoneyCircleOutline />}
             header="Ошибка загрузки"
           >
             Не удалось загрузить предложения
@@ -104,7 +104,7 @@ export default function OffersPage({ config, launchParams }: OffersPageProps) {
 
         {data && data.data.results.length === 0 && (
           <Placeholder
-            icon={<Icon56MoneyCircleOutline />}
+            icon={<Icon28MoneyCircleOutline />}
             header="Нет предложений"
           >
             Попробуйте изменить параметры фильтров

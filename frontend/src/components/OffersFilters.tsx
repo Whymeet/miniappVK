@@ -50,11 +50,12 @@ export default function OffersFiltersComponent({
         <Select
           value={filters.sort || defaultSort}
           onChange={handleSortChange}
-        >
-          <option value="rate">По ставке</option>
-          <option value="sum">По сумме</option>
-          <option value="term">По сроку</option>
-        </Select>
+          options={[
+            { label: 'По ставке', value: 'rate' },
+            { label: 'По сумме', value: 'sum' },
+            { label: 'По сроку', value: 'term' },
+          ]}
+        />
       </FormItem>
     </Group>
   );

@@ -22,7 +22,7 @@ import LoadingScreen from './components/LoadingScreen';
 import ErrorScreen from './components/ErrorScreen';
 
 function App() {
-  const [scheme, setScheme] = useState<'bright_light' | 'space_gray'>('bright_light');
+  const [scheme, setScheme] = useState<'light' | 'dark'>('light');
   const launchParams = useLaunchParams();
   const { data: config, isLoading, error } = useConfig(launchParams.groupId, launchParams.brand);
 
@@ -34,7 +34,7 @@ function App() {
     bridge.subscribe((e) => {
       if (e.detail.type === 'VKWebAppUpdateConfig') {
         const vkScheme = e.detail.data.scheme;
-        setScheme(vkScheme === 'space_gray' ? 'space_gray' : 'bright_light');
+        setScheme(vkScheme === 'space_gray' ? 'dark' : 'light');
       }
     });
   }, []);

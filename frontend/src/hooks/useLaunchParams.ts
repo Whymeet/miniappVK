@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import bridge from '@vkontakte/vk-bridge';
 import { LaunchParams } from '@/types';
 
 /**
@@ -8,27 +7,28 @@ import { LaunchParams } from '@/types';
 export function useLaunchParams(): LaunchParams {
   return useMemo(() => {
     try {
-      // Пробуем получить параметры через VK Bridge
-      const launchParams = bridge.parseURLSearchParamsForGetLaunchParams(window.location.search);
-      
-      // Проверяем query параметры для оверрайда
+      // Получаем параметры из URL
       const urlParams = new URLSearchParams(window.location.search);
-      const brandOverride = urlParams.get('brand');
+      const hash = window.location.hash;
+      const hashParams = new URLSearchParams(hash.split('?')[1] || '');
+      
+      // Проверяем оба источника параметров
+      const groupId = urlParams.get('vk_group_id') || hashParams.get('vk_group_id');
+      const userId = urlParams.get('vk_user_id') || hashParams.get('vk_user_id');
+      const brand = urlParams.get('brand') || hashParams.get('brand');
       
       return {
-        groupId: launchParams?.vk_group_id?.toString() || null,
-        userId: launchParams?.vk_user_id?.toString() || null,
-        brand: brandOverride || null,
+        groupId: groupId,
+        userId: userId,
+        brand: brand,
       };
     } catch (error) {
       console.error('Failed to parse launch params:', error);
       
-      // Fallback: пробуем получить из query параметров напрямую
-      const urlParams = new URLSearchParams(window.location.search);
       return {
-        groupId: urlParams.get('vk_group_id'),
-        userId: urlParams.get('vk_user_id'),
-        brand: urlParams.get('brand'),
+        groupId: null,
+        userId: null,
+        brand: null,
       };
     }
   }, []);

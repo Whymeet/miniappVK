@@ -39,7 +39,7 @@ export default function OfferCard({ offer, onApply, ctaText = 'Перейти' }
 
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 12 }}>
           {offer.features.map((feature, index) => (
-            <Chip key={index} mode="outline">
+            <Chip key={index}>
               {feature}
             </Chip>
           ))}
