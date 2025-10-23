@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  # Backend (Django + DRF)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: vk_miniapp_backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY:-django-insecure-dev-key}
+      - DJANGO_DEBUG=${DJANGO_DEBUG:-True}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS:-localhost,127.0.0.1,backend}
+      - DEFAULT_BRAND=${DEFAULT_BRAND:-kokos}
+      - VK_APP_SECRET=${VK_APP_SECRET:-}
+    volumes:
+      - ./backend:/app
+      - backend_static:/app/staticfiles
+    restart: unless-stopped
+    networks:
+      - vk_miniapp_network
+
+  # Frontend (React + Vite + Nginx)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_BASE=${VITE_API_BASE:-http://localhost:8000}
+    container_name: vk_miniapp_frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - vk_miniapp_network
+
+volumes:
+  backend_static:
+
+networks:
+  vk_miniapp_network:
+    driver: bridge
+

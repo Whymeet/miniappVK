@@ -1,0 +1,40 @@
+/* Глобальные стили */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* CSS переменные для white-label темизации */
+:root {
+  --color-primary: #5181b8;
+  --color-secondary: #4bb34b;
+  --color-background: #ffffff;
+  --color-surface: #f5f5f5;
+  --color-text: #000000;
+  --color-text-secondary: #818c99;
+  --color-accent: #5181b8;
+  --color-error: #e64646;
+  --color-success: #4bb34b;
+}
+
+/* Темизация VKUI */
+.vkui__root {
+  --vkui--color_background_accent: var(--color-primary);
+  --vkui--color_text_accent: var(--color-primary);
+}
+
