@@ -31,6 +31,19 @@
 - ✅ Production ready
 - ✅ Полная документация
 
+## 🔒 Безопасность (ВАЖНО!)
+
+> ⚠️ **ПЕРЕД НАЧАЛОМ РАБОТЫ:** Прочитайте [GIT_SAFETY.md](GIT_SAFETY.md) чтобы не закоммитить секреты!
+
+**Никогда не коммитьте:**
+- ❌ `.env` файлы
+- ❌ `DJANGO_SECRET_KEY` и `VK_APP_SECRET`
+- ❌ Базу данных `db.sqlite3`
+
+**Файл `.gitignore` уже настроен и защищает эти файлы!**
+
+📖 Подробнее: [SECURITY.md](SECURITY.md) | [GIT_SAFETY.md](GIT_SAFETY.md) | [SECURITY_CHECKLIST.md](SECURITY_CHECKLIST.md)
+
 ## ⚡ Быстрый старт
 
 ```bash
@@ -85,6 +98,7 @@ docker-compose up --build
 | [frontend/README.md](frontend/README.md) | Frontend документация |
 | [backend/README.md](backend/README.md) | Backend документация |
 | [FAQ.md](FAQ.md) | Частые вопросы и ответы |
+| [SECURITY.md](SECURITY.md) | ⚠️ **Безопасность и защита данных** |
 | [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md) | Полная структура файлов |
 | [CHANGELOG.md](CHANGELOG.md) | История изменений |
 
