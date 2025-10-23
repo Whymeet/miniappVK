@@ -1,41 +1,78 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button, Snackbar, Avatar } from '@vkontakte/vkui';
 import { Icon28CheckCircleOutline, Icon28CancelCircleOutline } from '@vkontakte/icons';
 import bridge from '@vkontakte/vk-bridge';
+import { useAllowMessages, useSubscriptionStatus } from '@/hooks/useSubscription';
 
 interface AllowMessagesButtonProps {
   groupId: string | null;
+  userId: string | null;
 }
 
-export default function AllowMessagesButton({ groupId }: AllowMessagesButtonProps) {
+export default function AllowMessagesButton({ groupId, userId }: AllowMessagesButtonProps) {
   const [snackbar, setSnackbar] = useState<React.ReactNode>(null);
+  const [isAllowed, setIsAllowed] = useState(false);
+  const allowMessagesMutation = useAllowMessages();
+  const { data: subscriptionStatus } = useSubscriptionStatus(userId);
+
+  // Проверяем статус из базы данных
+  useEffect(() => {
+    if (subscriptionStatus?.success && subscriptionStatus.data) {
+      setIsAllowed(subscriptionStatus.data.allowed_from_group);
+    }
+  }, [subscriptionStatus]);
 
   const handleAllowMessages = async () => {
-    if (!groupId) {
+    if (!groupId || !userId) {
       setSnackbar(
         <Snackbar
           onClose={() => setSnackbar(null)}
           before={<Avatar size={24}><Icon28CancelCircleOutline fill="var(--color-error)" /></Avatar>}
         >
-          Ошибка: Group ID не найден
+          Ошибка: данные пользователя не найдены
         </Snackbar>
       );
       return;
     }
 
     try {
+      // Запрашиваем разрешение у VK
       const result = await bridge.send('VKWebAppAllowMessagesFromGroup', {
         group_id: parseInt(groupId),
       });
 
       if (result.result) {
-        setSnackbar(
-          <Snackbar
-            onClose={() => setSnackbar(null)}
-            before={<Avatar size={24}><Icon28CheckCircleOutline fill="var(--color-success)" /></Avatar>}
-          >
-            Уведомления разрешены
-          </Snackbar>
+        // Сохраняем разрешение в базу данных
+        allowMessagesMutation.mutate(
+          { vkUserId: userId, groupId },
+          {
+            onSuccess: (response) => {
+              if (response.success) {
+                setIsAllowed(true);
+                // Сохраняем в localStorage для быстрого доступа
+                localStorage.setItem(`messages_allowed_${userId}`, 'true');
+                
+                setSnackbar(
+                  <Snackbar
+                    onClose={() => setSnackbar(null)}
+                    before={<Avatar size={24}><Icon28CheckCircleOutline fill="var(--color-success)" /></Avatar>}
+                  >
+                    Уведомления разрешены
+                  </Snackbar>
+                );
+              }
+            },
+            onError: () => {
+              setSnackbar(
+                <Snackbar
+                  onClose={() => setSnackbar(null)}
+                  before={<Avatar size={24}><Icon28CancelCircleOutline fill="var(--color-error)" /></Avatar>}
+                >
+                  Не удалось сохранить разрешение
+                </Snackbar>
+              );
+            },
+          }
         );
       }
     } catch (error) {
@@ -50,6 +87,23 @@ export default function AllowMessagesButton({ groupId }: AllowMessagesButtonProp
     }
   };
 
+  // Если уже разрешено, показываем статус
+  if (isAllowed) {
+    return (
+      <>
+        <Button
+          size="l"
+          stretched
+          mode="secondary"
+          disabled
+        >
+          ✓ Уведомления включены
+        </Button>
+        {snackbar}
+      </>
+    );
+  }
+
   return (
     <>
       <Button
@@ -57,6 +111,7 @@ export default function AllowMessagesButton({ groupId }: AllowMessagesButtonProp
         stretched
         mode="secondary"
         onClick={handleAllowMessages}
+        loading={allowMessagesMutation.isPending}
       >
         Разрешить уведомления
       </Button>

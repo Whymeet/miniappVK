@@ -15,6 +15,7 @@ import '@vkontakte/vkui/dist/vkui.css';
 import bridge from '@vkontakte/vk-bridge';
 import { useConfig } from './hooks/useConfig';
 import { useLaunchParams } from './hooks/useLaunchParams';
+import { useSubscribe } from './hooks/useSubscription';
 import OffersPage from './pages/OffersPage';
 import PolicyPage from './pages/PolicyPage';
 import { applyTheme } from './utils/theme';
@@ -25,6 +26,7 @@ function App() {
   const [scheme, setScheme] = useState<'light' | 'dark'>('light');
   const launchParams = useLaunchParams();
   const { data: config, isLoading, error } = useConfig(launchParams.groupId, launchParams.brand);
+  const subscribeMutation = useSubscribe();
 
   useEffect(() => {
     // Инициализация VK Bridge
@@ -45,6 +47,17 @@ function App() {
       applyTheme(config.data.palette);
     }
   }, [config]);
+
+  // Автоматическая подписка при входе
+  useEffect(() => {
+    if (launchParams.userId && config?.data?.brand) {
+      subscribeMutation.mutate({
+        vkUserId: launchParams.userId,
+        groupId: launchParams.groupId,
+        brand: config.data.brand,
+      });
+    }
+  }, [launchParams.userId, config?.data?.brand]);
 
   if (isLoading) {
     return <LoadingScreen />;
@@ -68,7 +81,7 @@ function App() {
                     </PanelHeader>
                     <Routes>
                       <Route path="/" element={<OffersPage config={config.data} launchParams={launchParams} />} />
-                      <Route path="/policy" element={<PolicyPage config={config.data} />} />
+                      <Route path="/policy" element={<PolicyPage config={config.data} launchParams={launchParams} />} />
                     </Routes>
                   </Panel>
                 </View>

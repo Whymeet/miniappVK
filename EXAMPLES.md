@@ -398,3 +398,228 @@ DATABASES = {
 psycopg2-binary==2.9.9
 ```
 
+---
+
+## Работа с подписками и рассылкой
+
+### Получение списка активных подписчиков
+
+```python
+from app.models import Subscriber
+
+# Все подписчики, которым можно отправлять сообщения
+active_subscribers = Subscriber.objects.filter(
+    subscribed=True,
+    allowed_from_group=True
+)
+
+# Фильтрация по бренду
+kubyshka_subscribers = active_subscribers.filter(brand='kubyshka')
+
+# Подписчики, которые кликали по офферам
+active_clickers = active_subscribers.filter(clicks__isnull=False).distinct()
+
+# Подписчики без кликов (для таргетинга)
+inactive_subscribers = active_subscribers.filter(clicks__isnull=True)
+```
+
+### Отправка массовой рассылки
+
+```python
+from app.vk_api import send_message
+from app.models import Subscriber
+import time
+
+def send_broadcast(brand, message_text):
+    """Отправка рассылки подписчикам бренда"""
+    subscribers = Subscriber.objects.filter(
+        brand=brand,
+        subscribed=True,
+        allowed_from_group=True
+    )
+    
+    success_count = 0
+    error_count = 0
+    
+    for subscriber in subscribers:
+        try:
+            send_message(
+                user_id=subscriber.vk_user_id,
+                message=message_text
+            )
+            success_count += 1
+            # Пауза для избежания лимитов VK API
+            time.sleep(0.5)
+        except Exception as e:
+            print(f"Ошибка для {subscriber.vk_user_id}: {e}")
+            error_count += 1
+    
+    print(f"✅ Отправлено: {success_count}")
+    print(f"❌ Ошибок: {error_count}")
+
+# Использование
+send_broadcast('kubyshka', '🎉 Новое предложение: займ под 0% для новых клиентов!')
+```
+
+### Сегментированная рассылка
+
+```python
+from django.utils import timezone
+from datetime import timedelta
+
+# Подписчики последней недели
+new_subscribers = Subscriber.objects.filter(
+    subscribed=True,
+    allowed_from_group=True,
+    created_at__gte=timezone.now() - timedelta(days=7)
+)
+
+# Отправляем приветственное сообщение
+for subscriber in new_subscribers:
+    send_message(
+        user_id=subscriber.vk_user_id,
+        message=f"Добро пожаловать! Спасибо, что выбрали {subscriber.brand}!"
+    )
+```
+
+### Экспорт подписчиков через Django Admin
+
+1. Откройте админ-панель: `http://localhost:8000/admin/`
+2. Перейдите в раздел "Subscribers"
+3. Используйте фильтры для выбора нужных подписчиков:
+   - По бренду
+   - По статусу подписки
+   - По дате создания
+4. Выберите подписчиков (checkbox)
+5. В меню "Действие" выберите "Экспорт выбранных в CSV"
+6. Нажмите "Выполнить"
+
+Полученный CSV содержит:
+- VK User ID
+- Group ID
+- Brand
+- Subscribed (Yes/No)
+- Allowed From Group (Yes/No)
+- Can Receive Messages (Yes/No)
+- Даты создания, подписки, отписки
+- Количество кликов
+
+### Программный экспорт в CSV
+
+```python
+import csv
+from app.models import Subscriber
+
+def export_subscribers_csv(filename='subscribers.csv', brand=None):
+    """Экспорт подписчиков в CSV файл"""
+    queryset = Subscriber.objects.all()
+    
+    if brand:
+        queryset = queryset.filter(brand=brand)
+    
+    with open(filename, 'w', encoding='utf-8-sig', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow([
+            'VK User ID', 'Brand', 'Subscribed', 'Allowed Messages',
+            'Created At', 'Total Clicks'
+        ])
+        
+        for sub in queryset:
+            writer.writerow([
+                sub.vk_user_id,
+                sub.brand,
+                'Yes' if sub.subscribed else 'No',
+                'Yes' if sub.allowed_from_group else 'No',
+                sub.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+                sub.clicks.count(),
+            ])
+    
+    print(f"✅ Экспортировано {queryset.count()} подписчиков в {filename}")
+
+# Использование
+export_subscribers_csv('kubyshka_subscribers.csv', brand='kubyshka')
+```
+
+### Анализ вовлеченности
+
+```python
+from django.db.models import Count
+from app.models import Subscriber
+
+# Статистика по брендам
+brand_stats = Subscriber.objects.values('brand').annotate(
+    total=Count('id'),
+    subscribed=Count('id', filter=models.Q(subscribed=True)),
+    allowed=Count('id', filter=models.Q(allowed_from_group=True)),
+    active=Count('id', filter=models.Q(subscribed=True, allowed_from_group=True))
+)
+
+for stat in brand_stats:
+    print(f"""
+    Бренд: {stat['brand']}
+    Всего: {stat['total']}
+    Подписаны: {stat['subscribed']}
+    Разрешили сообщения: {stat['allowed']}
+    Активные: {stat['active']}
+    Конверсия: {stat['active'] / stat['total'] * 100:.1f}%
+    """)
+```
+
+### Настройка VK Callback API
+
+#### 1. Получение Confirmation Code
+
+При первом запросе VK отправит событие типа `confirmation`. Наш сервер вернет код подтверждения.
+
+Проверьте логи Django:
+```bash
+docker-compose logs -f backend
+```
+
+#### 2. Тестирование Callback
+
+Используйте инструмент тестирования VK:
+- Настройки сообщества → Работа с API → Callback API
+- Кнопка "Тестирование"
+- Выберите событие `message_allow` или `message_deny`
+- Отправьте тестовый запрос
+
+Проверьте, что статус обновился в админке.
+
+#### 3. Ручная проверка через curl
+
+```bash
+# Имитация события message_allow
+curl -X POST http://localhost:8000/api/vk-callback/ \
+  -H "Content-Type: application/json" \
+  -d '{
+    "type": "message_allow",
+    "object": {
+      "user_id": 12345,
+      "key": "test"
+    },
+    "secret": "your-vk-callback-secret"
+  }'
+```
+
+### Очистка неактивных подписчиков
+
+```python
+from django.utils import timezone
+from datetime import timedelta
+from app.models import Subscriber
+
+# Подписчики без кликов более 30 дней
+inactive_cutoff = timezone.now() - timedelta(days=30)
+
+inactive = Subscriber.objects.filter(
+    created_at__lt=inactive_cutoff,
+    clicks__isnull=True
+)
+
+print(f"Найдено {inactive.count()} неактивных подписчиков")
+
+# Опционально: отписать их
+# inactive.update(subscribed=False, unsubscribed_at=timezone.now())
+```
+

@@ -1,13 +1,15 @@
 import { useNavigate } from 'react-router-dom';
 import { Group, Header, Div, Title, Text, Button } from '@vkontakte/vkui';
 import { Icon24ChevronLeft } from '@vkontakte/icons';
-import { BrandConfig } from '@/types';
+import { BrandConfig, LaunchParams } from '@/types';
+import UnsubscribeButton from '@/components/UnsubscribeButton';
 
 interface PolicyPageProps {
   config: BrandConfig;
+  launchParams: LaunchParams;
 }
 
-export default function PolicyPage({ config }: PolicyPageProps) {
+export default function PolicyPage({ config, launchParams }: PolicyPageProps) {
   const navigate = useNavigate();
 
   const handleBack = () => {
@@ -62,6 +64,15 @@ export default function PolicyPage({ config }: PolicyPageProps) {
               По вопросам обработки персональных данных обращайтесь по адресу: support@example.com
             </Text>
           </Div>
+        </Div>
+      </Group>
+
+      <Group header={<Header mode="secondary">Управление подпиской</Header>}>
+        <Div>
+          <Text style={{ fontSize: 14, color: 'var(--color-text-secondary)', marginBottom: 16 }}>
+            Если вы не хотите получать уведомления о новых предложениях, вы можете отписаться от рассылки.
+          </Text>
+          {launchParams.userId && <UnsubscribeButton userId={launchParams.userId} />}
         </Div>
       </Group>
 

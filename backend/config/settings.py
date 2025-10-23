@@ -110,6 +110,9 @@ REST_FRAMEWORK = {
 
 # VK App settings
 VK_APP_SECRET = os.getenv('VK_APP_SECRET', '')
+VK_GROUP_ACCESS_TOKEN = os.getenv('VK_GROUP_ACCESS_TOKEN', '')
+VK_CALLBACK_SECRET = os.getenv('VK_CALLBACK_SECRET', '')
+VK_CONFIRMATION_CODE = os.getenv('VK_CONFIRMATION_CODE', '')
 DEFAULT_BRAND = os.getenv('DEFAULT_BRAND', 'kokos')
 
 # X-Frame-Options для работы внутри VK
