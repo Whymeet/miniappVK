@@ -8,7 +8,7 @@ from rest_framework import status
 
 from .brands import get_brand_config
 from .offers import get_offers, get_offer_by_id
-from .models import ClickLog, Subscriber
+from .models import ClickLog, Subscriber, Offer
 from .vk_api import check_messages_allowed, VKAPIError
 
 
@@ -73,9 +73,10 @@ def offer_redirect_view(request, offer_id):
     group_id = request.GET.get('group_id')
     brand = request.GET.get('brand')
     
-    # Получаем оффер
-    offer = get_offer_by_id(offer_id)
-    if not offer:
+    # Получаем оффер из БД
+    try:
+        offer_obj = Offer.objects.get(id=offer_id, is_active=True)
+    except Offer.DoesNotExist:
         return Response(
             {'success': False, 'error': 'Offer not found'},
             status=status.HTTP_404_NOT_FOUND
@@ -92,7 +93,7 @@ def offer_redirect_view(request, offer_id):
                 pass
         
         ClickLog.objects.create(
-            offer_id=offer_id,
+            offer=offer_obj,
             vk_user_id=vk_user_id,
             subscriber=subscriber,
             group_id=group_id,
@@ -105,10 +106,10 @@ def offer_redirect_view(request, offer_id):
         print(f"Failed to log click: {e}")
     
     # Формируем sub_id для отслеживания
-    sub_id = f"vk_{vk_user_id}_{group_id}_{offer_id}" if vk_user_id else offer_id
+    sub_id = f"vk_{vk_user_id}_{group_id}_{offer_id}" if vk_user_id else str(offer_id)
     
     # Редирект на партнёрскую ссылку
-    redirect_url = offer['redirect_url'].format(sub_id=sub_id)
+    redirect_url = offer_obj.redirect_url.format(sub_id=sub_id)
     
     return redirect(redirect_url)
 

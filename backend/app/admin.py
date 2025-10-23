@@ -2,15 +2,15 @@ from django.contrib import admin
 from django.http import HttpResponse
 from django.utils.html import format_html
 import csv
-from .models import ClickLog, Subscriber
+from .models import ClickLog, Subscriber, Offer
 
 
 class ClickLogInline(admin.TabularInline):
     """Inline для отображения кликов подписчика"""
     model = ClickLog
     extra = 0
-    fields = ['offer_id', 'brand', 'created_at', 'ip_address']
-    readonly_fields = ['offer_id', 'brand', 'created_at', 'ip_address']
+    fields = ['offer', 'brand', 'created_at', 'ip_address']
+    readonly_fields = ['offer', 'brand', 'created_at', 'ip_address']
     can_delete = False
     
     def has_add_permission(self, request, obj=None):
@@ -55,6 +55,70 @@ def export_subscribers_to_csv(modeladmin, request, queryset):
 
 
 export_subscribers_to_csv.short_description = "Экспорт выбранных в CSV"
+
+
+@admin.register(Offer)
+class OfferAdmin(admin.ModelAdmin):
+    list_display = [
+        'partner_name',
+        'sum_range',
+        'term_range',
+        'rate_text',
+        'is_active',
+        'priority',
+        'clicks_count',
+        'created_at',
+    ]
+    list_filter = ['is_active', 'approval_probability', 'created_at']
+    search_fields = ['partner_name']
+    ordering = ['-priority', '-created_at']
+    
+    fieldsets = (
+        ('Основная информация', {
+            'fields': ('partner_name', 'logo_url')
+        }),
+        ('Параметры займа', {
+            'fields': (
+                ('sum_min', 'sum_max'),
+                ('term_min', 'term_max'),
+            )
+        }),
+        ('Ставка и условия', {
+            'fields': (
+                ('rate', 'rate_text'),
+                ('approval_time', 'approval_probability'),
+            )
+        }),
+        ('Особенности', {
+            'fields': ('features',),
+            'description': 'Введите список в формате JSON: ["Без отказа", "Первый займ 0%", "Онлайн"]'
+        }),
+        ('Настройки перехода', {
+            'fields': ('redirect_url',),
+            'description': 'Используйте {sub_id} для подстановки идентификатора пользователя'
+        }),
+        ('Отображение', {
+            'fields': (('is_active', 'priority'),)
+        }),
+    )
+    
+    readonly_fields = ['clicks_count']
+    
+    def sum_range(self, obj):
+        return f"{obj.sum_min:,} - {obj.sum_max:,} ₽"
+    sum_range.short_description = 'Сумма'
+    
+    def term_range(self, obj):
+        return f"{obj.term_min} - {obj.term_max} дней"
+    term_range.short_description = 'Срок'
+    
+    def clicks_count(self, obj):
+        return obj.clicks.count()
+    clicks_count.short_description = 'Кликов'
+    
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.prefetch_related('clicks')
 
 
 @admin.register(Subscriber)
@@ -114,10 +178,17 @@ class SubscriberAdmin(admin.ModelAdmin):
 
 @admin.register(ClickLog)
 class ClickLogAdmin(admin.ModelAdmin):
-    list_display = ['offer_id', 'vk_user_id', 'subscriber_link', 'group_id', 'brand', 'created_at']
-    list_filter = ['brand', 'created_at']
-    search_fields = ['offer_id', 'vk_user_id', 'group_id']
-    readonly_fields = ['created_at', 'subscriber']
+    list_display = ['offer_link', 'vk_user_id', 'subscriber_link', 'group_id', 'brand', 'created_at']
+    list_filter = ['brand', 'created_at', 'offer']
+    search_fields = ['vk_user_id', 'group_id', 'offer__partner_name']
+    readonly_fields = ['created_at', 'subscriber', 'offer']
+    
+    def offer_link(self, obj):
+        if obj.offer:
+            url = f'/admin/app/offer/{obj.offer.id}/change/'
+            return format_html('<a href="{}">{}</a>', url, obj.offer.partner_name)
+        return '-'
+    offer_link.short_description = 'Оффер'
     
     def subscriber_link(self, obj):
         if obj.subscriber:
