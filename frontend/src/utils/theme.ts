@@ -1,9 +1,13 @@
-import { BrandPalette } from '@/types';
+import { BrandPalette, CardGradient } from '@/types';
 
 /**
  * Применить тему бренда через CSS переменные
  */
-export function applyTheme(palette: BrandPalette, sortButtons?: { rate_color: string; sum_color: string; term_color: string }): void {
+export function applyTheme(
+  palette: BrandPalette, 
+  sortButtons?: { rate_color: string; sum_color: string; term_color: string },
+  cardGradient?: CardGradient
+): void {
   const root = document.documentElement;
   
   // Основные цветовые переменные (используемые в index.css)
@@ -30,6 +34,19 @@ export function applyTheme(palette: BrandPalette, sortButtons?: { rate_color: st
     root.style.setProperty('--sort-button-rate-color', sortButtons.rate_color);
     root.style.setProperty('--sort-button-sum-color', sortButtons.sum_color);
     root.style.setProperty('--sort-button-term-color', sortButtons.term_color);
+  }
+  
+  // Градиент для карточек (если передан)
+  if (cardGradient) {
+    root.style.setProperty('--card-gradient-start', cardGradient.start);
+    root.style.setProperty('--card-gradient-end', cardGradient.end);
+    
+    // Добавляем/удаляем класс для включения градиента
+    if (cardGradient.enabled) {
+      document.body.classList.add('card-gradient-enabled');
+    } else {
+      document.body.classList.remove('card-gradient-enabled');
+    }
   }
   
   // Переменные VKUI для кнопок и акцентов

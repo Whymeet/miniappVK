@@ -33,6 +33,12 @@ export interface SortButtonColors {
   term_color: string;
 }
 
+export interface CardGradient {
+  enabled: boolean;
+  start: string;
+  end: string;
+}
+
 export interface BrandConfig {
   brand: string;
   name: string;
@@ -41,6 +47,7 @@ export interface BrandConfig {
   copy: BrandCopy;
   features: BrandFeatures;
   sort_buttons: SortButtonColors;
+  card_gradient: CardGradient;
 }
 
 // Типы для офферов

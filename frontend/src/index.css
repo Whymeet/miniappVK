@@ -83,6 +83,10 @@ body {
   --text-xl: 20px;
   --text-2xl: 24px;
   --text-3xl: 28px;
+  
+  /* Градиент карточек */
+  --card-gradient-start: #FFFFFF;
+  --card-gradient-end: #F9FAFB;
 }
 
 /* Темизация VKUI */
@@ -128,6 +132,16 @@ body {
 .vkuiCard:hover {
   border-color: var(--accent) !important;
   transform: translateY(-2px) !important;
+}
+
+/* Градиент для карточек офферов */
+.offer-card-gradient.vkuiCard {
+  background: var(--surface) !important;
+}
+
+/* Применяем градиент только если включен */
+body.card-gradient-enabled .offer-card-gradient.vkuiCard {
+  background: linear-gradient(135deg, var(--card-gradient-start) 0%, var(--card-gradient-end) 100%) !important;
 }
 
 .vkuiGroup {

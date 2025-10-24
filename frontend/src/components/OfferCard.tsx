@@ -10,7 +10,7 @@ interface OfferCardProps {
 
 export default function OfferCard({ offer, onApply, ctaText = 'Оформить' }: OfferCardProps) {
   return (
-    <Card mode="shadow" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+    <Card mode="shadow" className="offer-card-gradient" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       <Div style={{ padding: 'var(--space-md)', display: 'grid', gap: 'var(--space-sm)', height: '100%' }}>
         {/* Шапка */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-sm)' }}>

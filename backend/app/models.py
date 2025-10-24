@@ -43,6 +43,11 @@ class AppConfig(models.Model):
     sort_button_sum_color = models.CharField(max_length=7, default='#d4a574', verbose_name='Цвет кнопки "По сумме"')
     sort_button_term_color = models.CharField(max_length=7, default='#8d5628', verbose_name='Цвет кнопки "По сроку"')
     
+    # Градиент для карточек офферов
+    card_gradient_start = models.CharField(max_length=7, default='#FFFFFF', verbose_name='Градиент карточек: начало')
+    card_gradient_end = models.CharField(max_length=7, default='#F9FAFB', verbose_name='Градиент карточек: конец')
+    card_gradient_enabled = models.BooleanField(default=False, verbose_name='Включить градиент карточек')
+    
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Обновлён')
     
     class Meta:
@@ -88,6 +93,11 @@ class AppConfig(models.Model):
                 'rate_color': self.sort_button_rate_color,
                 'sum_color': self.sort_button_sum_color,
                 'term_color': self.sort_button_term_color,
+            },
+            'card_gradient': {
+                'enabled': self.card_gradient_enabled,
+                'start': self.card_gradient_start,
+                'end': self.card_gradient_end,
             }
         }
     

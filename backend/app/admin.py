@@ -120,6 +120,13 @@ class AppConfigAdmin(admin.ModelAdmin):
             ),
             'description': 'Настройте цвет каждой кнопки сортировки'
         }),
+        ('🎨 Градиент карточек офферов', {
+            'fields': (
+                'card_gradient_enabled',
+                ('card_gradient_start', 'card_gradient_end'),
+            ),
+            'description': 'Включите градиентный фон для карточек и настройте цвета'
+        }),
     )
     
     readonly_fields = ['updated_at']
