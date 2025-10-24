@@ -122,11 +122,8 @@ def offer_redirect_view(request, offer_id):
         # Не падаем, если логирование не удалось
         print(f"Failed to log click: {e}")
     
-    # Формируем sub_id для отслеживания
-    sub_id = f"vk_{vk_user_id}_{group_id}_{offer_id}" if vk_user_id else str(offer_id)
-    
-    # Редирект на партнёрскую ссылку
-    redirect_url = offer_obj.redirect_url.format(sub_id=sub_id)
+    # Редирект на партнёрскую ссылку (используем URL как есть, без модификаций)
+    redirect_url = offer_obj.redirect_url
     
     return redirect(redirect_url)
 
