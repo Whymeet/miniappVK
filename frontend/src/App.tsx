@@ -44,7 +44,7 @@ function App() {
   useEffect(() => {
     // Применяем тему при загрузке конфига
     if (config?.data) {
-      applyTheme(config.data.palette);
+      applyTheme(config.data.palette, config.data.sort_buttons);
     }
   }, [config]);
 

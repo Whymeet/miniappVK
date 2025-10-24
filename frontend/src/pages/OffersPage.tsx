@@ -1,9 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  Group,
-  Header,
-  Div,
   Spinner,
   Placeholder,
   Pagination,
@@ -47,93 +44,75 @@ export default function OffersPage({ config, launchParams }: OffersPageProps) {
   };
 
   return (
-    <>
+    <div className="page-stack">
       {/* Лого и заголовок */}
-      <Group>
-        <Div style={{ textAlign: 'center', padding: 'var(--space-lg)' }}>
-          <img 
-            src={config.logo_url} 
-            alt={config.name}
-            style={{ maxWidth: '200px', height: 'auto', marginBottom: 'var(--space-md)' }}
-          />
-          <Text style={{ 
-            fontSize: 'var(--text-md)', 
-            color: 'var(--text-muted)',
-            lineHeight: '1.6'
-          }}>
-            Подберите выгодный займ за 1 минуту. Без скрытых комиссий
-          </Text>
-        </Div>
-      </Group>
+      <div className="section" style={{ textAlign: 'center', padding: 0 }}>
+        <img
+          src={config.logo_url}
+          alt={config.name}
+          style={{ maxWidth: 160, height: 'auto', marginBottom: 'var(--space-sm)' }}
+        />
+        <Text style={{ fontSize: 'var(--text-md)', color: 'var(--text-muted)' }}>
+          Подберите выгодный займ за 1 минуту. Без скрытых комиссий
+        </Text>
+      </div>
 
       {/* Фильтры */}
       {config.features.show_filters && (
-        <Group header={<Header mode="secondary">Параметры займа</Header>}>
+        <div className="section">
           <OffersFiltersComponent
             filters={filters}
             onChange={setFilters}
             defaultSort={config.features.default_sort}
           />
-        </Group>
+        </div>
       )}
 
       {/* Дисклеймер */}
       {config.features.show_disclaimer && (
-        <Group>
-          <Div style={{ 
-            backgroundColor: '#FFF8E1', 
-            padding: 'var(--space-md)',
-            borderRadius: 'var(--radius-sm)',
-            border: '1px solid #FDE68A',
-            display: 'flex',
-            gap: 'var(--space-sm)',
-            alignItems: 'flex-start'
+        <div className="alert">
+          <span className="alert__icon">ℹ️</span>
+          <Text style={{ 
+            fontSize: 'var(--text-sm)', 
+            lineHeight: '1.5'
           }}>
-            <span style={{ fontSize: 'var(--text-lg)' }}>ℹ️</span>
-            <Text style={{ 
-              fontSize: 'var(--text-sm)', 
-              color: '#92400E',
-              lineHeight: '1.5'
-            }}>
-              {config.copy.disclaimer}
-            </Text>
-          </Div>
-        </Group>
+            {config.copy.disclaimer}
+          </Text>
+        </div>
       )}
 
       {/* Список офферов */}
-      <Group header={<Header mode="secondary">Предложения</Header>}>
-        {isLoading && (
-          <Div style={{ display: 'flex', justifyContent: 'center', padding: '40px 0' }}>
-            <Spinner size="large" />
-          </Div>
-        )}
+      {isLoading && (
+        <div className="section" style={{ display: 'flex', justifyContent: 'center', padding: '40px 0' }}>
+          <Spinner size="large" />
+        </div>
+      )}
 
-        {error && (
+      {error && (
+        <div className="section">
           <Placeholder
             icon={<Icon28MoneyCircleOutline />}
             header="Ошибка загрузки"
           >
             Не удалось загрузить предложения
           </Placeholder>
-        )}
+        </div>
+      )}
 
-        {data && data.data.results.length === 0 && (
+      {data && data.data.results.length === 0 && (
+        <div className="section">
           <Placeholder
             icon={<Icon28MoneyCircleOutline />}
             header="Нет предложений"
           >
             Попробуйте изменить параметры фильтров
           </Placeholder>
-        )}
+        </div>
+      )}
 
-        {data && (
-          <Div style={{ 
-            display: 'grid', 
-            gridTemplateColumns: 'repeat(2, 1fr)', 
-            gap: '12px',
-            padding: '12px'
-          }}>
+      {data && (
+        <div className="section">
+          <div className="grid-offers">
             {data.data.results.map((offer) => (
               <OfferCard
                 key={offer.id}
@@ -142,51 +121,81 @@ export default function OffersPage({ config, launchParams }: OffersPageProps) {
                 ctaText={config.copy.cta}
               />
             ))}
-          </Div>
-        )}
-
-        {/* Пагинация */}
-        {data && data.data.total_pages > 1 && (
-          <Div>
-            <Pagination
-              currentPage={filters.page || 1}
-              siblingCount={1}
-              boundaryCount={1}
-              totalPages={data.data.total_pages}
-              onChange={handlePageChange}
-            />
-          </Div>
-        )}
-      </Group>
+          </div>
+          {data.data.total_pages > 1 && (
+            <div style={{ marginTop: 'var(--space-md)' }}>
+              <Pagination
+                currentPage={filters.page || 1}
+                siblingCount={1}
+                boundaryCount={1}
+                totalPages={data.data.total_pages}
+                onChange={handlePageChange}
+              />
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Кнопка разрешения уведомлений */}
       {config.features.enable_messages && launchParams.groupId && launchParams.userId && (
-        <Group>
-          <Div>
-            <AllowMessagesButton 
-              groupId={launchParams.groupId}
-              userId={launchParams.userId}
-            />
-          </Div>
-        </Group>
+        <div className="section">
+          <AllowMessagesButton 
+            groupId={launchParams.groupId}
+            userId={launchParams.userId}
+          />
+        </div>
       )}
 
       {/* Политика конфиденциальности */}
-      <Group>
-        <Div style={{ textAlign: 'center' }}>
-          <Link 
-            to="/policy" 
-            style={{ 
-              color: 'var(--color-text-secondary)', 
-              textDecoration: 'none',
-              fontSize: 13,
-            }}
-          >
-            Политика конфиденциальности
-          </Link>
-        </Div>
-      </Group>
-    </>
+      <div style={{ textAlign: 'center', padding: 'var(--space-md)' }}>
+        <Link 
+          to="/policy" 
+          style={{ 
+            color: 'var(--text-muted)', 
+            textDecoration: 'none',
+            fontSize: 'var(--text-sm)',
+          }}
+        >
+          Политика конфиденциальности
+        </Link>
+      </div>
+
+      {/* Юридическая информация */}
+      <div style={{ 
+        textAlign: 'center', 
+        padding: 'var(--space-lg) var(--space-md)',
+        borderTop: '1px solid #E5E7EB',
+        marginTop: 'var(--space-xl)'
+      }}>
+        <Text style={{ 
+          fontSize: 'var(--text-xs)', 
+          color: 'var(--text-muted)',
+          lineHeight: '1.6',
+          display: 'block',
+          marginBottom: 'var(--space-sm)'
+        }}>
+          Сервис "Кубышка займ" не является финансовым учреждением, банком или кредитором. 
+          Услуги посредника предоставляет ООО "ЛИДСТЕХ". ПСК 0% - 292%.
+        </Text>
+        <Text style={{ 
+          fontSize: 'var(--text-xs)', 
+          color: 'var(--text-muted)',
+          lineHeight: '1.6',
+          display: 'block',
+          marginBottom: 'var(--space-sm)'
+        }}>
+          Информация на сайте: бабкиманки.рф
+        </Text>
+        <Text style={{ 
+          fontSize: 'var(--text-xs)', 
+          color: 'var(--text-muted)',
+          lineHeight: '1.6',
+          display: 'block'
+        }}>
+          © 2025 Кубышка займ. Все права защищены.
+        </Text>
+      </div>
+    </div>
   );
 }
 

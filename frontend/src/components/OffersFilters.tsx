@@ -1,4 +1,4 @@
-import { FormItem, Input, Group, Button } from '@vkontakte/vkui';
+import { FormItem, Input, Button } from '@vkontakte/vkui';
 import { OffersFilters } from '@/types';
 
 interface OffersFiltersProps {
@@ -29,101 +29,36 @@ export default function OffersFiltersComponent({
   const currentSort = filters.sort || defaultSort;
 
   return (
-    <Group mode="plain">
-      <div style={{ 
-        display: 'grid', 
-        gridTemplateColumns: 'repeat(2, 1fr)', 
-        gap: '12px',
-        padding: '0 12px'
-      }}>
+    <div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 'var(--space-md)' }}>
         <FormItem top="Нужная сумма" style={{ margin: 0 }}>
-          <Input
-            type="number"
-            placeholder="10000"
-            value={filters.sum_need || ''}
-            onChange={handleSumChange}
-          />
+          <Input type="number" placeholder="10000" value={filters.sum_need || ''} onChange={handleSumChange} />
         </FormItem>
-
         <FormItem top="Срок (дней)" style={{ margin: 0 }}>
-          <Input
-            type="number"
-            placeholder="30"
-            value={filters.term_days || ''}
-            onChange={handleTermChange}
-          />
+          <Input type="number" placeholder="30" value={filters.term_days || ''} onChange={handleTermChange} />
         </FormItem>
       </div>
 
-      <FormItem top="Сортировка" style={{ padding: '0 12px', margin: '8px 0 0 0' }}>
-        <div style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(3, 1fr)', 
-          gap: '0',
-          backgroundColor: '#F3F4F6',
-          borderRadius: 'var(--radius-sm)',
-          padding: '4px',
-          position: 'relative'
-        }}>
+      <FormItem top="Сортировка" style={{ margin: 'var(--space-sm) 0 0 0' }}>
+        <div className="segmented">
           <Button
             size="m"
-            mode={currentSort === 'rate' ? 'primary' : 'secondary'}
+            className={currentSort === 'rate' ? 'is-active sort-rate' : 'sort-rate'}
             onClick={() => handleSortChange('rate')}
-            style={{
-              height: '40px',
-              backgroundColor: currentSort === 'rate' ? 'var(--accent)' : 'transparent',
-              border: 'none',
-              borderRadius: 'var(--radius-sm)',
-              color: currentSort === 'rate' ? '#fff' : 'var(--text-muted)',
-              fontWeight: currentSort === 'rate' ? '600' : '500',
-              fontSize: 'var(--text-sm)',
-              boxShadow: 'none',
-              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
-            }}
-          >
-            По ставке
-          </Button>
-          
+          >По ставке</Button>
           <Button
             size="m"
-            mode={currentSort === 'sum' ? 'primary' : 'secondary'}
+            className={currentSort === 'sum' ? 'is-active sort-sum' : 'sort-sum'}
             onClick={() => handleSortChange('sum')}
-            style={{
-              height: '40px',
-              backgroundColor: currentSort === 'sum' ? 'var(--accent)' : 'transparent',
-              border: 'none',
-              borderRadius: 'var(--radius-sm)',
-              color: currentSort === 'sum' ? '#fff' : 'var(--text-muted)',
-              fontWeight: currentSort === 'sum' ? '600' : '500',
-              fontSize: 'var(--text-sm)',
-              boxShadow: 'none',
-              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
-            }}
-          >
-            По сумме
-          </Button>
-          
+          >По сумме</Button>
           <Button
             size="m"
-            mode={currentSort === 'term' ? 'primary' : 'secondary'}
+            className={currentSort === 'term' ? 'is-active sort-term' : 'sort-term'}
             onClick={() => handleSortChange('term')}
-            style={{
-              height: '40px',
-              backgroundColor: currentSort === 'term' ? 'var(--accent)' : 'transparent',
-              border: 'none',
-              borderRadius: 'var(--radius-sm)',
-              color: currentSort === 'term' ? '#fff' : 'var(--text-muted)',
-              fontWeight: currentSort === 'term' ? '600' : '500',
-              fontSize: 'var(--text-sm)',
-              boxShadow: 'none',
-              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
-            }}
-          >
-            По сроку
-          </Button>
+          >По сроку</Button>
         </div>
       </FormItem>
-    </Group>
+    </div>
   );
 }
 

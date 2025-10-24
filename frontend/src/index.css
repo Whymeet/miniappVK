@@ -27,6 +27,16 @@ body {
   background-color: var(--bg);
 }
 
+/* Растягиваем все родительские контейнеры на полную высоту */
+html, body {
+  min-height: 100vh;
+  height: 100%;
+}
+
+body {
+  min-height: 100vh;
+}
+
 /* CSS переменные для white-label темизации */
 :root {
   --color-primary: #5181b8;
@@ -122,7 +132,7 @@ body {
 
 .vkuiGroup {
   background-color: transparent !important;
-  margin-bottom: var(--space-lg) !important;
+  margin-bottom: 0 !important;
 }
 
 .vkuiPanel {
@@ -196,5 +206,55 @@ body {
 
 .vkuiButton:active {
   transform: translateY(0);
+}
+
+/* ===== MONOLITH LAYOUT UTILS ===== */
+.page-stack { display: grid; gap: var(--space-xl); }
+
+/* Секции без лишней окраски/бордеров */
+.section { background: var(--surface); border: 1px solid #E5E7EB;
+  border-radius: var(--radius-md); padding: var(--space-lg); }
+
+/* Ровная сетка карточек, без внутреннего "пёстрого" пэддинга */
+.grid-offers { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--space-md); }
+
+/* Спокойный инфо-баннер (вместо ярко-жёлтого) */
+.alert { display: grid; grid-template-columns: 20px 1fr; gap: var(--space-sm);
+  align-items: flex-start; background: #F3F4F6; color: var(--neutral-text);
+  border: 1px solid #E5E7EB; border-radius: var(--radius-sm); padding: var(--space-md); }
+.alert__icon { line-height: 1; }
+
+/* Переключатель-сегменты (одна заливка только у активного) */
+.segmented { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px;
+  background: #F3F4F6; border-radius: var(--radius-pill); padding: 4px; }
+.segmented .vkuiButton { height: 40px !important; border: none !important;
+  background: transparent !important; color: var(--text-muted) !important;
+  font-weight: 500 !important; box-shadow: none !important; }
+.segmented .vkuiButton.is-active { background: var(--accent) !important; color: #fff !important; }
+
+/* Индивидуальные цвета для кнопок сортировки */
+.segmented .vkuiButton.is-active.sort-rate { 
+  background: var(--sort-button-rate-color, var(--accent)) !important; 
+}
+.segmented .vkuiButton.is-active.sort-sum { 
+  background: var(--sort-button-sum-color, var(--accent)) !important; 
+}
+.segmented .vkuiButton.is-active.sort-term { 
+  background: var(--sort-button-term-color, var(--accent)) !important; 
+}
+
+/* Мелкие выравнивания VKUI для «монолита» */
+.vkuiGroup { background: transparent !important; margin-bottom: 0 !important; }
+.vkuiPanel, .vkuiView, .vkuiAppRoot, #root { background: var(--bg) !important; }
+
+/* Растягиваем VKUI контейнеры на всю высоту */
+.vkuiAppRoot, .vkuiSplitLayout, .vkuiSplitCol, .vkuiView, .vkuiPanel {
+  min-height: 100vh !important;
+}
+
+.vkuiPanel__in {
+  min-height: 100vh !important;
+  background: var(--bg) !important;
 }
 

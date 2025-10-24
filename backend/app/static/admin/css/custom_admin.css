@@ -1,0 +1,277 @@
+/* Кастомные стили для Django админки */
+
+/* === Основные цвета === */
+:root {
+    --primary-color: #417690;
+    --secondary-color: #447e9b;
+    --accent-color: #79aec8;
+    --link-color: #447e9b;
+    --link-hover-color: #036;
+}
+
+/* === Кнопки === */
+
+/* Основные кнопки (Сохранить) */
+.submit-row input[type="submit"],
+.button,
+input[type="submit"].default,
+.submit-row input[type="button"],
+input[type="button"].default {
+    background: var(--primary-color) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 4px !important;
+    padding: 10px 15px !important;
+    cursor: pointer !important;
+    font-weight: 500 !important;
+}
+
+.submit-row input[type="submit"]:hover,
+.button:hover,
+input[type="submit"].default:hover,
+.submit-row input[type="button"]:hover,
+input[type="button"].default:hover {
+    background: var(--secondary-color) !important;
+}
+
+/* Кнопки действий */
+.button.default,
+button.default,
+input[type="submit"].default,
+input[type="button"].default,
+.submit-row input.default {
+    background: var(--primary-color) !important;
+}
+
+/* Добавить еще один элемент (inline) */
+.add-row a,
+.inline-related .add-row a {
+    background: var(--primary-color) !important;
+    color: white !important;
+    padding: 8px 12px !important;
+    border-radius: 4px !important;
+    text-decoration: none !important;
+}
+
+.add-row a:hover {
+    background: var(--secondary-color) !important;
+}
+
+/* === Ссылки === */
+a,
+a:link,
+a:visited {
+    color: var(--link-color) !important;
+}
+
+a:hover,
+a:active {
+    color: var(--link-hover-color) !important;
+}
+
+/* === Заголовок админки === */
+#header {
+    background: var(--primary-color) !important;
+}
+
+#branding h1,
+#branding h1 a:link,
+#branding h1 a:visited {
+    color: white !important;
+}
+
+/* === Навигация === */
+.module h2,
+.module caption,
+.inline-group h2 {
+    background: var(--primary-color) !important;
+}
+
+/* === Таблицы === */
+th a:link,
+th a:visited {
+    color: white !important;
+}
+
+/* Выбранные строки */
+table thead th.sorted a {
+    color: white !important;
+}
+
+/* === Формы === */
+
+/* Выбранные поля */
+.selector-chosen h2 {
+    background: var(--primary-color) !important;
+}
+
+/* === Календарь и время === */
+.calendarbox .calendarnav-previous:hover,
+.calendarbox .calendarnav-next:hover,
+.calendar caption:hover,
+.calendarbox .calendar-shortcuts a:hover,
+.timelist a:hover {
+    background: var(--accent-color) !important;
+    color: white !important;
+}
+
+.calendar td a:active,
+.timelist a:active,
+.calendar td.selected a {
+    background: var(--primary-color) !important;
+    color: white !important;
+}
+
+/* === Поиск === */
+#changelist-search button[type="submit"],
+#changelist-search input[type="submit"] {
+    background: var(--primary-color) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 4px !important;
+    padding: 8px 15px !important;
+}
+
+#changelist-search button[type="submit"]:hover {
+    background: var(--secondary-color) !important;
+}
+
+/* === Фильтры === */
+#changelist-filter h2,
+#changelist-filter h3 {
+    color: var(--primary-color) !important;
+}
+
+#changelist-filter li.selected a {
+    color: var(--primary-color) !important;
+    font-weight: bold !important;
+}
+
+/* === Действия === */
+.actions button,
+.actions input[type="submit"] {
+    background: var(--primary-color) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 4px !important;
+    padding: 8px 15px !important;
+}
+
+.actions button:hover,
+.actions input[type="submit"]:hover {
+    background: var(--secondary-color) !important;
+}
+
+/* === Сообщения === */
+.messagelist .success {
+    background: #4caf50 !important;
+}
+
+.messagelist .warning {
+    background: #ff9800 !important;
+}
+
+.messagelist .error {
+    background: #f44336 !important;
+}
+
+/* === Специфичные кнопки === */
+
+/* Кнопка "Добавить" в списке */
+.addlink {
+    color: var(--primary-color) !important;
+    font-weight: bold !important;
+}
+
+.addlink:hover {
+    color: var(--secondary-color) !important;
+}
+
+/* Кнопки в верхней части формы */
+.object-tools a {
+    background: var(--primary-color) !important;
+    color: white !important;
+}
+
+.object-tools a:hover {
+    background: var(--secondary-color) !important;
+}
+
+/* === Пагинация === */
+.paginator a:link,
+.paginator a:visited {
+    background: white !important;
+    border: 1px solid var(--primary-color) !important;
+    color: var(--primary-color) !important;
+}
+
+.paginator a:hover {
+    background: var(--primary-color) !important;
+    color: white !important;
+}
+
+.paginator .this-page {
+    background: var(--primary-color) !important;
+    color: white !important;
+}
+
+/* === Поля ввода цвета === */
+input[type="text"][value*="#"],
+input[type="text"][name*="color"] {
+    font-family: monospace !important;
+    font-size: 14px !important;
+}
+
+/* === Улучшенная видимость === */
+.field-color_preview div {
+    border-radius: 4px !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2) !important;
+}
+
+/* === Кнопки удаления === */
+.deletelink,
+.deletelink-box a.deletelink {
+    background: #ba2121 !important;
+    color: white !important;
+    padding: 8px 12px !important;
+    border-radius: 4px !important;
+    text-decoration: none !important;
+}
+
+.deletelink:hover {
+    background: #a41515 !important;
+}
+
+/* === Inline формы === */
+.inline-group .tabular tr.has_original td {
+    background: #f9f9f9 !important;
+}
+
+/* Кнопки в inline */
+.inline-deletelink {
+    color: #ba2121 !important;
+}
+
+/* === Дополнительные улучшения === */
+
+/* Улучшенная читаемость помощи */
+.help {
+    color: #666 !important;
+    font-size: 12px !important;
+}
+
+/* Подсветка обязательных полей */
+.required label:after {
+    content: " *" !important;
+    color: #ba2121 !important;
+}
+
+/* === Responsive улучшения === */
+@media (max-width: 768px) {
+    .submit-row input[type="submit"],
+    .button {
+        padding: 12px 20px !important;
+        font-size: 14px !important;
+    }
+}
+
