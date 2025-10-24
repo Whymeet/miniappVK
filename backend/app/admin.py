@@ -2,11 +2,26 @@ from django.contrib import admin
 from django.http import HttpResponse, JsonResponse
 from django.utils.html import format_html
 from django.shortcuts import render, redirect
-from django.urls import path
+from django.urls import path, reverse
 from django.contrib import messages
+from django.utils.safestring import mark_safe
+from django.contrib.admin import AdminSite
 import csv
 import json
 from .models import ClickLog, Subscriber, Offer, BrandConfig, AppConfig
+from .statistics import get_dashboard_summary, get_top_offers
+
+
+# Кастомизация главной страницы админки
+class CustomAdminSite(AdminSite):
+    site_header = 'Админ-панель Займов'
+    site_title = 'Админ-панель'
+    index_title = 'Управление приложением'
+    
+    def index(self, request, extra_context=None):
+        extra_context = extra_context or {}
+        extra_context['statistics_url'] = '/api/statistics/'
+        return super().index(request, extra_context)
 
 
 class ClickLogInline(admin.TabularInline):
@@ -225,16 +240,34 @@ class OfferAdmin(admin.ModelAdmin):
         'rate_text',
         'is_active',
         'priority',
-        'clicks_count',
+        'clicks_total',
+        'clicks_today',
+        'clicks_week',
+        'clicks_month',
+        'unique_users',
+        'statistics_link',
         'created_at',
     ]
     list_filter = ['is_active', 'approval_probability', 'created_at']
     search_fields = ['partner_name']
     ordering = ['-priority', '-created_at']
     
+    # Разрешаем сортировку по кликам (но не очень эффективно для больших таблиц)
+    # admin_order_field для методов не поддерживается напрямую, 
+    # но Django покажет данные правильно
+    
     fieldsets = (
         ('Основная информация', {
             'fields': ('partner_name', 'logo_url')
+        }),
+        ('📊 Статистика', {
+            'fields': (
+                ('clicks_total', 'clicks_today'),
+                ('clicks_week', 'clicks_month'),
+                ('unique_users', 'statistics_link'),
+            ),
+            'classes': ('collapse',),
+            'description': 'Статистика по кликам и пользователям'
         }),
         ('Параметры займа', {
             'fields': (
@@ -261,7 +294,10 @@ class OfferAdmin(admin.ModelAdmin):
         }),
     )
     
-    readonly_fields = ['clicks_count']
+    readonly_fields = [
+        'clicks_total', 'clicks_today', 'clicks_week', 'clicks_month',
+        'unique_users', 'statistics_link'
+    ]
     
     def sum_range(self, obj):
         return f"{obj.sum_min:,} - {obj.sum_max:,} ₽"
@@ -271,9 +307,74 @@ class OfferAdmin(admin.ModelAdmin):
         return f"{obj.term_min} - {obj.term_max} дней"
     term_range.short_description = 'Срок'
     
-    def clicks_count(self, obj):
-        return obj.clicks.count()
-    clicks_count.short_description = 'Кликов'
+    def clicks_total(self, obj):
+        """Всего кликов за всё время"""
+        count = obj.clicks.count()
+        if count > 0:
+            return format_html('<strong style="color: #155A31;">{}</strong>', count)
+        return format_html('<span style="color: #999;">0</span>')
+    clicks_total.short_description = 'Всего'
+    
+    def clicks_today(self, obj):
+        """Кликов сегодня"""
+        from django.utils import timezone
+        from datetime import timedelta
+        
+        today_start = timezone.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        count = obj.clicks.filter(created_at__gte=today_start).count()
+        
+        if count > 0:
+            return format_html('<strong style="color: #AF6E3D;">{}</strong>', count)
+        return format_html('<span style="color: #ccc;">0</span>')
+    clicks_today.short_description = 'Сегодня'
+    
+    def clicks_week(self, obj):
+        """Кликов за 7 дней"""
+        from django.utils import timezone
+        from datetime import timedelta
+        
+        week_ago = timezone.now() - timedelta(days=7)
+        count = obj.clicks.filter(created_at__gte=week_ago).count()
+        
+        if count > 0:
+            return format_html('<span style="color: #2c3e50;">{}</span>', count)
+        return format_html('<span style="color: #ccc;">0</span>')
+    clicks_week.short_description = '7 дней'
+    
+    def clicks_month(self, obj):
+        """Кликов за 30 дней"""
+        from django.utils import timezone
+        from datetime import timedelta
+        
+        month_ago = timezone.now() - timedelta(days=30)
+        count = obj.clicks.filter(created_at__gte=month_ago).count()
+        
+        if count > 0:
+            return format_html('<span style="color: #3498db;">{}</span>', count)
+        return format_html('<span style="color: #ccc;">0</span>')
+    clicks_month.short_description = '30 дней'
+    
+    def unique_users(self, obj):
+        """Уникальных пользователей"""
+        from django.utils import timezone
+        from datetime import timedelta
+        
+        month_ago = timezone.now() - timedelta(days=30)
+        count = obj.clicks.filter(created_at__gte=month_ago).values('vk_user_id').distinct().count()
+        
+        if count > 0:
+            return format_html(
+                '<span style="color: #8e44ad;" title="За последние 30 дней">👤 {}</span>', 
+                count
+            )
+        return format_html('<span style="color: #ccc;">0</span>')
+    unique_users.short_description = 'Уникальных'
+    
+    def statistics_link(self, obj):
+        """Ссылка на детальную статистику"""
+        url = f"/api/statistics/offers/{obj.id}/?days=30"
+        return format_html('<a href="{}" target="_blank" style="text-decoration: none;">📊 Подробнее</a>', url)
+    statistics_link.short_description = 'Статистика'
     
     def get_queryset(self, request):
         qs = super().get_queryset(request)

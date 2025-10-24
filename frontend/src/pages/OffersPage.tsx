@@ -58,7 +58,7 @@ export default function OffersPage({ config, launchParams }: OffersPageProps) {
           />
           <Text style={{ 
             fontSize: 'var(--text-md)', 
-            color: 'var(--muted)',
+            color: 'var(--text-muted)',
             lineHeight: '1.6'
           }}>
             Подберите выгодный займ за 1 минуту. Без скрытых комиссий

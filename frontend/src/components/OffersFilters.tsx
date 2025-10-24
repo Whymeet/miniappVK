@@ -62,7 +62,8 @@ export default function OffersFiltersComponent({
           gap: '0',
           backgroundColor: '#F3F4F6',
           borderRadius: 'var(--radius-sm)',
-          padding: '4px'
+          padding: '4px',
+          position: 'relative'
         }}>
           <Button
             size="m"
@@ -73,9 +74,11 @@ export default function OffersFiltersComponent({
               backgroundColor: currentSort === 'rate' ? 'var(--accent)' : 'transparent',
               border: 'none',
               borderRadius: 'var(--radius-sm)',
-              color: currentSort === 'rate' ? '#fff' : 'var(--muted)',
+              color: currentSort === 'rate' ? '#fff' : 'var(--text-muted)',
               fontWeight: currentSort === 'rate' ? '600' : '500',
-              fontSize: 'var(--text-sm)'
+              fontSize: 'var(--text-sm)',
+              boxShadow: 'none',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
             }}
           >
             По ставке
@@ -90,9 +93,11 @@ export default function OffersFiltersComponent({
               backgroundColor: currentSort === 'sum' ? 'var(--accent)' : 'transparent',
               border: 'none',
               borderRadius: 'var(--radius-sm)',
-              color: currentSort === 'sum' ? '#fff' : 'var(--muted)',
+              color: currentSort === 'sum' ? '#fff' : 'var(--text-muted)',
               fontWeight: currentSort === 'sum' ? '600' : '500',
-              fontSize: 'var(--text-sm)'
+              fontSize: 'var(--text-sm)',
+              boxShadow: 'none',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
             }}
           >
             По сумме
@@ -107,9 +112,11 @@ export default function OffersFiltersComponent({
               backgroundColor: currentSort === 'term' ? 'var(--accent)' : 'transparent',
               border: 'none',
               borderRadius: 'var(--radius-sm)',
-              color: currentSort === 'term' ? '#fff' : 'var(--muted)',
+              color: currentSort === 'term' ? '#fff' : 'var(--text-muted)',
               fontWeight: currentSort === 'term' ? '600' : '500',
-              fontSize: 'var(--text-sm)'
+              fontSize: 'var(--text-sm)',
+              boxShadow: 'none',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
             }}
           >
             По сроку

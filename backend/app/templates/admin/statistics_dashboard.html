@@ -1,0 +1,333 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Статистика - Админ панель</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            font-size: 32px;
+            margin-bottom: 30px;
+            color: #2c3e50;
+        }
+        
+        .period-selector {
+            margin-bottom: 30px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .period-btn {
+            padding: 10px 20px;
+            border: 2px solid #3498db;
+            background: white;
+            color: #3498db;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        
+        .period-btn:hover {
+            background: #3498db;
+            color: white;
+        }
+        
+        .period-btn.active {
+            background: #3498db;
+            color: white;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+        
+        .stat-change {
+            font-size: 14px;
+            margin-top: 8px;
+        }
+        
+        .stat-change.positive {
+            color: #27ae60;
+        }
+        
+        .stat-change.negative {
+            color: #e74c3c;
+        }
+        
+        .section {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        
+        .offers-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .offers-table th {
+            text-align: left;
+            padding: 12px;
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #7f8c8d;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .offers-table td {
+            padding: 12px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        .offers-table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .offer-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            object-fit: contain;
+        }
+        
+        .offer-name {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+        }
+        
+        .error {
+            background: #fee;
+            color: #c33;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/admin/" class="back-link">← Вернуться в админку</a>
+        
+        <h1>📊 Статистика</h1>
+        
+        <div class="period-selector">
+            <button class="period-btn active" data-days="7">7 дней</button>
+            <button class="period-btn" data-days="30">30 дней</button>
+            <button class="period-btn" data-days="90">90 дней</button>
+        </div>
+        
+        <div id="error" class="error" style="display: none;"></div>
+        
+        <div id="loading" class="loading">Загрузка...</div>
+        
+        <div id="content" style="display: none;">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Всего кликов</div>
+                    <div class="stat-value" id="total-clicks">-</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-label">Уникальных пользователей</div>
+                    <div class="stat-value" id="unique-users">-</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-label">Активных офферов</div>
+                    <div class="stat-value" id="active-offers">-</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-label">Кликов на пользователя</div>
+                    <div class="stat-value" id="avg-clicks">-</div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">ТОП-10 офферов</div>
+                <table class="offers-table">
+                    <thead>
+                        <tr>
+                            <th>Оффер</th>
+                            <th>Кликов</th>
+                            <th>Уникальных</th>
+                            <th>Среднее</th>
+                        </tr>
+                    </thead>
+                    <tbody id="top-offers">
+                        <!-- Заполняется JS -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Подписчики</div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Всего</div>
+                        <div class="stat-value" id="total-subscribers">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Активных</div>
+                        <div class="stat-value" id="active-subscribers">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">С сообщениями</div>
+                        <div class="stat-value" id="with-messages">-</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let currentDays = 7;
+        
+        // Переключение периода
+        document.querySelectorAll('.period-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentDays = parseInt(btn.dataset.days);
+                loadStatistics();
+            });
+        });
+        
+        // Загрузка статистики
+        async function loadStatistics() {
+            const loading = document.getElementById('loading');
+            const content = document.getElementById('content');
+            const error = document.getElementById('error');
+            
+            loading.style.display = 'block';
+            content.style.display = 'none';
+            error.style.display = 'none';
+            
+            try {
+                const response = await fetch(`/api/statistics/dashboard/?days=${currentDays}`);
+                const data = await response.json();
+                
+                if (!data.success) {
+                    throw new Error(data.error || 'Ошибка загрузки данных');
+                }
+                
+                // Обновляем основные метрики
+                document.getElementById('total-clicks').textContent = data.data.total_clicks.toLocaleString();
+                document.getElementById('unique-users').textContent = data.data.unique_users.toLocaleString();
+                document.getElementById('active-offers').textContent = data.data.active_offers;
+                document.getElementById('avg-clicks').textContent = data.data.conversion.avg_clicks_per_user.toFixed(2);
+                
+                // ТОП офферов
+                const topOffersHtml = data.data.top_offers.map(offer => `
+                    <tr>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <img src="${offer.offer__logo_url}" alt="${offer.offer__partner_name}" class="offer-logo">
+                                <div>
+                                    <div class="offer-name">${offer.offer__partner_name}</div>
+                                    <div style="font-size: 12px; color: #7f8c8d;">${offer.offer__rate_text || ''}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td><strong>${offer.total_clicks}</strong></td>
+                        <td>${offer.unique_users}</td>
+                        <td>${(offer.total_clicks / offer.unique_users).toFixed(2)}</td>
+                    </tr>
+                `).join('');
+                document.getElementById('top-offers').innerHTML = topOffersHtml;
+                
+                // Подписчики
+                document.getElementById('total-subscribers').textContent = data.data.subscribers.total;
+                document.getElementById('active-subscribers').textContent = data.data.subscribers.active;
+                document.getElementById('with-messages').textContent = data.data.subscribers.with_messages;
+                
+                loading.style.display = 'none';
+                content.style.display = 'block';
+                
+            } catch (err) {
+                loading.style.display = 'none';
+                error.style.display = 'block';
+                error.textContent = 'Ошибка загрузки статистики: ' + err.message;
+            }
+        }
+        
+        // Загружаем при старте
+        loadStatistics();
+    </script>
+</body>
+</html>
+

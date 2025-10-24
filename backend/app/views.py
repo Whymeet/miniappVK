@@ -10,6 +10,16 @@ from .brands import get_brand_config
 from .offers import get_offers, get_offer_by_id
 from .models import ClickLog, Subscriber, Offer, AppConfig
 from .vk_api import check_messages_allowed, VKAPIError
+from .statistics import (
+    get_offer_statistics,
+    get_brand_statistics,
+    get_daily_statistics,
+    get_top_offers,
+    get_conversion_rate,
+    get_subscriber_statistics,
+    get_offer_performance,
+    get_dashboard_summary
+)
 
 
 @api_view(['GET'])

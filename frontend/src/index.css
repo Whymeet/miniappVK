@@ -39,12 +39,15 @@ body {
   --color-error: #e64646;
   --color-success: #4bb34b;
   
-  /* Дизайн-токены */
-  --brand: #AF6E3D;
-  --accent: #155A31;
-  --text: #111827;
-  --muted: #6B7280;
-  --bg: #F7F7F8;
+  /* Дизайн-токены (6 основных цветов) */
+  --brand: #AF6E3D;      /* Карамель */
+  --accent: #155A31;     /* Зелёный CTA */
+  --text: #111827;       /* Основной текст */
+  --text-muted: #6B7280; /* Вторичный текст */
+  --bg: #F7F7F8;         /* Фон приложения */
+  --surface: #FFFFFF;    /* Белый для карточек */
+  --neutral: #F3F4F6;    /* Нейтральный для чипов */
+  --neutral-text: #374151; /* Текст на нейтральном */
   
   /* Отступы по шкале 8px */
   --space-xs: 8px;
@@ -56,9 +59,10 @@ body {
   /* Радиусы */
   --radius-sm: 12px;
   --radius-md: 16px;
+  --radius-pill: 9999px;
   
-  /* Тени */
-  --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.06);
+  /* Тени - убираем для чёткости */
+  --shadow-card: none;
   
   /* Размеры текста */
   --text-xs: 12px;
@@ -81,15 +85,39 @@ body {
 .vkuiButton--mode-primary {
   background-color: var(--accent) !important;
   border-radius: var(--radius-sm) !important;
-  min-height: 44px !important;
   font-weight: 600 !important;
+  box-shadow: none !important;
+}
+
+/* Фиксированная высота для кнопок размера M */
+.vkuiButton--size-m {
+  min-height: 36px !important;
+  max-height: 36px !important;
+  height: 36px !important;
+}
+
+/* Фиксированная высота для кнопок размера L */
+.vkuiButton--size-l {
+  min-height: 44px !important;
+  max-height: 44px !important;
+  height: 44px !important;
+}
+
+.vkuiButton {
+  box-shadow: none !important;
 }
 
 .vkuiCard {
-  background-color: #ffffff !important;
+  background-color: var(--surface) !important;
   border-radius: var(--radius-md) !important;
-  box-shadow: var(--shadow-card) !important;
-  border: none !important;
+  box-shadow: none !important;
+  border: 1px solid #E5E7EB !important;
+  transition: all 0.2s ease-in-out !important;
+}
+
+.vkuiCard:hover {
+  border-color: var(--accent) !important;
+  transform: translateY(-2px) !important;
 }
 
 .vkuiGroup {
@@ -141,9 +169,32 @@ body {
 
 .vkuiFormItem__top {
   font-size: var(--text-xs) !important;
-  color: var(--muted) !important;
+  color: var(--text-muted) !important;
   text-transform: uppercase !important;
   letter-spacing: 0.5px !important;
   font-weight: 500 !important;
+}
+
+/* Чипы - нейтральные */
+.vkuiChip {
+  background-color: var(--neutral) !important;
+  color: var(--neutral-text) !important;
+  border-radius: var(--radius-pill) !important;
+  padding: 4px 8px !important;
+  font-size: var(--text-xs) !important;
+  border: none !important;
+}
+
+/* Плавные переходы для кнопок */
+.vkuiButton {
+  transition: all 0.2s ease-in-out !important;
+}
+
+.vkuiButton:hover {
+  transform: translateY(-1px);
+}
+
+.vkuiButton:active {
+  transform: translateY(0);
 }
 

@@ -59,37 +59,29 @@ export default function OfferCard({ offer, onApply, ctaText = 'Оформить'
           gap: 'var(--space-xs)',
           fontSize: 'var(--text-sm)'
         }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Text style={{ color: 'var(--muted)', fontSize: 'var(--text-sm)' }}>Сумма</Text>
-            <Text weight="2" style={{ fontSize: 'var(--text-sm)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+            <Text style={{ color: 'var(--text-muted)', fontSize: 'var(--text-sm)' }}>Сумма</Text>
+            <Text weight="2" style={{ fontSize: 'var(--text-sm)', textAlign: 'right' }}>
               {formatMoney(offer.sum_min)}–{formatMoney(offer.sum_max)}
             </Text>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Text style={{ color: 'var(--muted)', fontSize: 'var(--text-sm)' }}>Срок</Text>
-            <Text weight="2" style={{ fontSize: 'var(--text-sm)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+            <Text style={{ color: 'var(--text-muted)', fontSize: 'var(--text-sm)' }}>Срок</Text>
+            <Text weight="2" style={{ fontSize: 'var(--text-sm)', textAlign: 'right' }}>
               {formatTerm(offer.term_min)}–{formatTerm(offer.term_max)}
             </Text>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Text style={{ color: 'var(--muted)', fontSize: 'var(--text-sm)' }}>Одобрение</Text>
-            <Text weight="2" style={{ fontSize: 'var(--text-sm)' }}>{offer.approval_time}</Text>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+            <Text style={{ color: 'var(--text-muted)', fontSize: 'var(--text-sm)' }}>Одобрение</Text>
+            <Text weight="2" style={{ fontSize: 'var(--text-sm)', textAlign: 'right' }}>{offer.approval_time}</Text>
           </div>
         </div>
 
-        {/* Чипы - маленькие и спокойные */}
+        {/* Чипы - нейтральные */}
         {offer.features.length > 0 && (
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-xs)' }}>
             {offer.features.slice(0, 2).map((feature, index) => (
-              <Chip 
-                key={index} 
-                style={{ 
-                  fontSize: 'var(--text-xs)', 
-                  padding: '4px 8px',
-                  backgroundColor: '#F3F4F6',
-                  color: 'var(--muted)'
-                }}
-              >
+              <Chip key={index}>
                 {feature}
               </Chip>
             ))}
@@ -98,11 +90,16 @@ export default function OfferCard({ offer, onApply, ctaText = 'Оформить'
 
         {/* CTA */}
         <Button
-          size="l"
+          size="m"
           stretched
           mode="primary"
           onClick={() => onApply(offer.id)}
-          style={{ marginTop: 'auto' }}
+          style={{ 
+            marginTop: 'auto',
+            minHeight: '36px',
+            maxHeight: '36px',
+            fontSize: 'var(--text-base)'
+          }}
         >
           {ctaText}
         </Button>
