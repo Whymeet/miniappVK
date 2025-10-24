@@ -1,0 +1,60 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block title %}Импорт настроек внешнего вида{% endblock %}
+
+{% block content %}
+<div id="content-main">
+    <h1>Импорт настроек внешнего вида</h1>
+    
+    <div class="module" style="max-width: 600px;">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="form-row">
+                <div>
+                    <label for="config_file">Выберите JSON файл с настройками:</label>
+                    <input type="file" name="config_file" id="config_file" accept=".json" required>
+                </div>
+            </div>
+            
+            <div class="submit-row">
+                <input type="submit" value="Импортировать" class="default">
+                <a href="../" class="button cancel-link">Отмена</a>
+            </div>
+        </form>
+    </div>
+    
+    <div class="module" style="max-width: 600px; margin-top: 20px;">
+        <h2>Формат JSON файла:</h2>
+        <pre style="background: #f8f8f8; padding: 15px; border-radius: 4px; overflow-x: auto;">
+{
+  "app_name": "Название приложения",
+  "logo_url": "https://example.com/logo.png",
+  "colors": {
+    "primary": "#FF6B35",
+    "secondary": "#FFB800",
+    "background": "#FFFFFF",
+    "surface": "#F5F5F5",
+    "text": "#000000",
+    "text_secondary": "#666666",
+    "accent": "#FF6B35",
+    "error": "#E63946",
+    "success": "#06D6A0"
+  },
+  "texts": {
+    "subtitle": "Быстрые займы онлайн",
+    "cta_text": "Получить деньги",
+    "disclaimer": "Юридический текст..."
+  },
+  "settings": {
+    "default_sort": "rate",
+    "show_filters": true,
+    "show_disclaimer": true,
+    "enable_messages": true
+  }
+}</pre>
+    </div>
+</div>
+{% endblock %}
+

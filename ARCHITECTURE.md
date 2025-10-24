@@ -110,7 +110,7 @@
 ```python
 {
   'brand': 'kokos',
-  'name': 'Кокос Займ',
+  'name': 'Кубышка Займ',
   'palette': {...},      # цветовая схема
   'logo_url': '...',     # логотип
   'copy': {...},         # тексты (title, cta, etc)

@@ -7,7 +7,6 @@ import {
   Spinner,
   Placeholder,
   Pagination,
-  Banner,
   Text,
 } from '@vkontakte/vkui';
 import { Icon28MoneyCircleOutline } from '@vkontakte/icons';
@@ -77,11 +76,15 @@ export default function OffersPage({ config, launchParams }: OffersPageProps) {
       {/* Дисклеймер */}
       {config.features.show_disclaimer && (
         <Group>
-          <Banner mode="image" background="var(--color-surface)">
+          <Div style={{ 
+            backgroundColor: 'var(--color-surface)', 
+            padding: '12px',
+            borderRadius: '8px'
+          }}>
             <Text style={{ fontSize: 13, color: 'var(--color-text-secondary)' }}>
               {config.copy.disclaimer}
             </Text>
-          </Banner>
+          </Div>
         </Group>
       )}
 
@@ -111,14 +114,23 @@ export default function OffersPage({ config, launchParams }: OffersPageProps) {
           </Placeholder>
         )}
 
-        {data && data.data.results.map((offer) => (
-          <OfferCard
-            key={offer.id}
-            offer={offer}
-            onApply={handleApplyOffer}
-            ctaText={config.copy.cta}
-          />
-        ))}
+        {data && (
+          <Div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: 'repeat(2, 1fr)', 
+            gap: '12px',
+            padding: '12px'
+          }}>
+            {data.data.results.map((offer) => (
+              <OfferCard
+                key={offer.id}
+                offer={offer}
+                onApply={handleApplyOffer}
+                ctaText={config.copy.cta}
+              />
+            ))}
+          </Div>
+        )}
 
         {/* Пагинация */}
         {data && data.data.total_pages > 1 && (

@@ -1,0 +1,17 @@
+{% extends "admin/change_form.html" %}
+{% load static %}
+
+{% block submit_buttons_bottom %}
+{{ block.super }}
+
+<div class="submit-row" style="margin-top: 10px; padding: 10px; background: #f8f8f8; border-radius: 4px;">
+    <p style="margin: 0 0 10px 0; font-weight: bold;">📦 Экспорт/Импорт настроек:</p>
+    <a href="{% url 'admin:app_appconfig_export' %}" class="button" style="margin-right: 10px;">
+        ⬇️ Скачать настройки (JSON)
+    </a>
+    <a href="{% url 'admin:app_appconfig_import' %}" class="button">
+        ⬆️ Загрузить настройки (JSON)
+    </a>
+</div>
+{% endblock %}
+

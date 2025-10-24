@@ -1,5 +1,242 @@
 from django.db import models
 from django.utils import timezone
+import json
+
+
+class AppConfig(models.Model):
+    """Единая конфигурация внешнего вида приложения"""
+    # Основная информация
+    app_name = models.CharField(max_length=200, default='Займы Онлайн', verbose_name='Название приложения')
+    logo_url = models.URLField(max_length=500, verbose_name='URL логотипа')
+    
+    # Цветовая палитра
+    color_primary = models.CharField(max_length=7, default='#FF6B35', verbose_name='Основной цвет (кнопки)',
+                                      help_text='Hex формат: #FF6B35')
+    color_secondary = models.CharField(max_length=7, default='#FFB800', verbose_name='Вторичный цвет')
+    color_background = models.CharField(max_length=7, default='#FFFFFF', verbose_name='Цвет фона')
+    color_surface = models.CharField(max_length=7, default='#F5F5F5', verbose_name='Цвет поверхности (карточки)')
+    color_text = models.CharField(max_length=7, default='#000000', verbose_name='Цвет текста')
+    color_text_secondary = models.CharField(max_length=7, default='#666666', verbose_name='Цвет вторичного текста')
+    color_accent = models.CharField(max_length=7, default='#FF6B35', verbose_name='Акцентный цвет')
+    color_error = models.CharField(max_length=7, default='#E63946', verbose_name='Цвет ошибки')
+    color_success = models.CharField(max_length=7, default='#06D6A0', verbose_name='Цвет успеха')
+    
+    # Тексты
+    subtitle = models.CharField(max_length=200, default='Быстрые займы онлайн', verbose_name='Подзаголовок')
+    cta_text = models.CharField(max_length=100, default='Получить деньги', verbose_name='Текст кнопки')
+    disclaimer = models.TextField(default='Сервис не является кредитором. Мы помогаем подобрать выгодное предложение.', 
+                                   verbose_name='Дисклеймер')
+    
+    # Настройки
+    default_sort = models.CharField(max_length=10, default='rate', verbose_name='Сортировка по умолчанию',
+                                     choices=[
+                                         ('rate', 'По ставке'),
+                                         ('sum', 'По сумме'),
+                                         ('term', 'По сроку'),
+                                     ])
+    show_filters = models.BooleanField(default=True, verbose_name='Показывать фильтры')
+    show_disclaimer = models.BooleanField(default=True, verbose_name='Показывать дисклеймер')
+    enable_messages = models.BooleanField(default=True, verbose_name='Включить уведомления')
+    
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='Обновлён')
+    
+    class Meta:
+        db_table = 'app_config'
+        verbose_name = 'Настройки внешнего вида'
+        verbose_name_plural = 'Настройки внешнего вида'
+    
+    def __str__(self):
+        return f"Настройки приложения (обновлено: {self.updated_at.strftime('%d.%m.%Y %H:%M')})"
+    
+    def to_dict(self):
+        """Преобразовать в словарь для API"""
+        return {
+            'brand': 'default',  # для совместимости с фронтендом
+            'name': self.app_name,
+            'logo_url': self.logo_url,
+            'palette': {
+                'primary': self.color_primary,
+                'secondary': self.color_secondary,
+                'background': self.color_background,
+                'surface': self.color_surface,
+                'text': self.color_text,
+                'textSecondary': self.color_text_secondary,
+                'accent': self.color_accent,
+                'error': self.color_error,
+                'success': self.color_success,
+            },
+            'copy': {
+                'title': self.app_name,
+                'subtitle': self.subtitle,
+                'cta': self.cta_text,
+                'disclaimer': self.disclaimer,
+                'policy_title': 'Политика конфиденциальности',
+                'policy_text': 'Мы заботимся о безопасности ваших данных...',
+            },
+            'features': {
+                'default_sort': self.default_sort,
+                'show_filters': self.show_filters,
+                'show_disclaimer': self.show_disclaimer,
+                'enable_messages': self.enable_messages,
+            }
+        }
+    
+    def export_to_json(self):
+        """Экспорт настроек в JSON"""
+        return json.dumps({
+            'app_name': self.app_name,
+            'logo_url': self.logo_url,
+            'colors': {
+                'primary': self.color_primary,
+                'secondary': self.color_secondary,
+                'background': self.color_background,
+                'surface': self.color_surface,
+                'text': self.color_text,
+                'text_secondary': self.color_text_secondary,
+                'accent': self.color_accent,
+                'error': self.color_error,
+                'success': self.color_success,
+            },
+            'texts': {
+                'subtitle': self.subtitle,
+                'cta_text': self.cta_text,
+                'disclaimer': self.disclaimer,
+            },
+            'settings': {
+                'default_sort': self.default_sort,
+                'show_filters': self.show_filters,
+                'show_disclaimer': self.show_disclaimer,
+                'enable_messages': self.enable_messages,
+            }
+        }, indent=2, ensure_ascii=False)
+    
+    @classmethod
+    def import_from_json(cls, json_data):
+        """Импорт настроек из JSON"""
+        data = json.loads(json_data) if isinstance(json_data, str) else json_data
+        
+        config = cls.get_or_create_config()
+        config.app_name = data.get('app_name', config.app_name)
+        config.logo_url = data.get('logo_url', config.logo_url)
+        
+        colors = data.get('colors', {})
+        config.color_primary = colors.get('primary', config.color_primary)
+        config.color_secondary = colors.get('secondary', config.color_secondary)
+        config.color_background = colors.get('background', config.color_background)
+        config.color_surface = colors.get('surface', config.color_surface)
+        config.color_text = colors.get('text', config.color_text)
+        config.color_text_secondary = colors.get('text_secondary', config.color_text_secondary)
+        config.color_accent = colors.get('accent', config.color_accent)
+        config.color_error = colors.get('error', config.color_error)
+        config.color_success = colors.get('success', config.color_success)
+        
+        texts = data.get('texts', {})
+        config.subtitle = texts.get('subtitle', config.subtitle)
+        config.cta_text = texts.get('cta_text', config.cta_text)
+        config.disclaimer = texts.get('disclaimer', config.disclaimer)
+        
+        settings = data.get('settings', {})
+        config.default_sort = settings.get('default_sort', config.default_sort)
+        config.show_filters = settings.get('show_filters', config.show_filters)
+        config.show_disclaimer = settings.get('show_disclaimer', config.show_disclaimer)
+        config.enable_messages = settings.get('enable_messages', config.enable_messages)
+        
+        config.save()
+        return config
+    
+    @classmethod
+    def get_or_create_config(cls):
+        """Получить или создать единственную конфигурацию"""
+        config = cls.objects.first()
+        if not config:
+            config = cls.objects.create(
+                app_name='Займы Онлайн',
+                logo_url='https://via.placeholder.com/200x60/FF6B35/FFFFFF?text=Займы+Онлайн'
+            )
+        return config
+
+
+class BrandConfig(models.Model):
+    """Конфигурация бренда для white-label"""
+    # Основная информация
+    brand_key = models.CharField(max_length=50, unique=True, verbose_name='Ключ бренда',
+                                   help_text='Например: kokos, kubyshka')
+    name = models.CharField(max_length=200, verbose_name='Название бренда')
+    logo_url = models.URLField(max_length=500, verbose_name='URL логотипа')
+    
+    # Цветовая палитра
+    color_primary = models.CharField(max_length=7, default='#FF6B35', verbose_name='Основной цвет',
+                                      help_text='Hex формат: #FF6B35')
+    color_secondary = models.CharField(max_length=7, default='#FFB800', verbose_name='Вторичный цвет')
+    color_background = models.CharField(max_length=7, default='#FFFFFF', verbose_name='Цвет фона')
+    color_surface = models.CharField(max_length=7, default='#F5F5F5', verbose_name='Цвет поверхности')
+    color_text = models.CharField(max_length=7, default='#000000', verbose_name='Цвет текста')
+    color_text_secondary = models.CharField(max_length=7, default='#666666', verbose_name='Цвет вторичного текста')
+    color_accent = models.CharField(max_length=7, default='#FF6B35', verbose_name='Акцентный цвет')
+    color_error = models.CharField(max_length=7, default='#E63946', verbose_name='Цвет ошибки')
+    color_success = models.CharField(max_length=7, default='#06D6A0', verbose_name='Цвет успеха')
+    
+    # Тексты
+    subtitle = models.CharField(max_length=200, default='Быстрые займы онлайн', verbose_name='Подзаголовок')
+    cta_text = models.CharField(max_length=100, default='Получить деньги', verbose_name='Текст кнопки CTA')
+    disclaimer = models.TextField(default='Сервис не является кредитором.', verbose_name='Дисклеймер')
+    
+    # Настройки
+    default_sort = models.CharField(max_length=10, default='rate', verbose_name='Сортировка по умолчанию',
+                                     choices=[
+                                         ('rate', 'По ставке'),
+                                         ('sum', 'По сумме'),
+                                         ('term', 'По сроку'),
+                                     ])
+    show_filters = models.BooleanField(default=True, verbose_name='Показывать фильтры')
+    show_disclaimer = models.BooleanField(default=True, verbose_name='Показывать дисклеймер')
+    enable_messages = models.BooleanField(default=True, verbose_name='Включить уведомления')
+    
+    is_active = models.BooleanField(default=True, verbose_name='Активен')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='Обновлён')
+    
+    class Meta:
+        db_table = 'brand_configs'
+        ordering = ['brand_key']
+        verbose_name = 'Конфигурация бренда'
+        verbose_name_plural = 'Конфигурации брендов'
+    
+    def __str__(self):
+        return f"{self.name} ({self.brand_key})"
+    
+    def to_dict(self):
+        """Преобразовать в словарь для API"""
+        return {
+            'brand': self.brand_key,
+            'name': self.name,
+            'logo_url': self.logo_url,
+            'palette': {
+                'primary': self.color_primary,
+                'secondary': self.color_secondary,
+                'background': self.color_background,
+                'surface': self.color_surface,
+                'text': self.color_text,
+                'textSecondary': self.color_text_secondary,
+                'accent': self.color_accent,
+                'error': self.color_error,
+                'success': self.color_success,
+            },
+            'copy': {
+                'title': self.name,
+                'subtitle': self.subtitle,
+                'cta': self.cta_text,
+                'disclaimer': self.disclaimer,
+                'policy_title': 'Политика конфиденциальности',
+                'policy_text': 'Мы заботимся о безопасности ваших данных...',
+            },
+            'features': {
+                'default_sort': self.default_sort,
+                'show_filters': self.show_filters,
+                'show_disclaimer': self.show_disclaimer,
+                'enable_messages': self.enable_messages,
+            }
+        }
 
 
 class Offer(models.Model):

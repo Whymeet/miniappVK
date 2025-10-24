@@ -28,25 +28,32 @@ export default function OffersFiltersComponent({
 
   return (
     <Group mode="plain">
-      <FormItem top="Нужная сумма">
-        <Input
-          type="number"
-          placeholder="Например, 10000"
-          value={filters.sum_need || ''}
-          onChange={handleSumChange}
-        />
-      </FormItem>
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: 'repeat(2, 1fr)', 
+        gap: '12px',
+        padding: '0 12px'
+      }}>
+        <FormItem top="Нужная сумма" style={{ margin: 0 }}>
+          <Input
+            type="number"
+            placeholder="10000"
+            value={filters.sum_need || ''}
+            onChange={handleSumChange}
+          />
+        </FormItem>
 
-      <FormItem top="Срок (дней)">
-        <Input
-          type="number"
-          placeholder="Например, 30"
-          value={filters.term_days || ''}
-          onChange={handleTermChange}
-        />
-      </FormItem>
+        <FormItem top="Срок (дней)" style={{ margin: 0 }}>
+          <Input
+            type="number"
+            placeholder="30"
+            value={filters.term_days || ''}
+            onChange={handleTermChange}
+          />
+        </FormItem>
+      </div>
 
-      <FormItem top="Сортировка">
+      <FormItem top="Сортировка" style={{ padding: '0 12px' }}>
         <Select
           value={filters.sort || defaultSort}
           onChange={handleSortChange}

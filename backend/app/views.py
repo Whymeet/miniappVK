@@ -8,30 +8,37 @@ from rest_framework import status
 
 from .brands import get_brand_config
 from .offers import get_offers, get_offer_by_id
-from .models import ClickLog, Subscriber, Offer
+from .models import ClickLog, Subscriber, Offer, AppConfig
 from .vk_api import check_messages_allowed, VKAPIError
 
 
 @api_view(['GET'])
 def config_view(request):
     """
-    GET /api/config?group_id=123&brand=kokos
+    GET /api/config
     
-    Возвращает конфигурацию бренда.
+    Возвращает единую конфигурацию внешнего вида приложения.
+    Параметры group_id и brand игнорируются - используется единая конфигурация из БД.
     """
-    group_id = request.GET.get('group_id')
-    brand = request.GET.get('brand')
-    default_brand = settings.DEFAULT_BRAND
-    
-    brand_config = get_brand_config(
-        group_id=group_id,
-        brand=brand,
-        default_brand=default_brand
-    )
+    # Получаем единую конфигурацию из БД
+    try:
+        app_config = AppConfig.get_or_create_config()
+        config_data = app_config.to_dict()
+    except Exception as e:
+        # Fallback на старую систему если что-то пошло не так
+        print(f"Failed to load AppConfig: {e}")
+        group_id = request.GET.get('group_id')
+        brand = request.GET.get('brand')
+        default_brand = settings.DEFAULT_BRAND
+        config_data = get_brand_config(
+            group_id=group_id,
+            brand=brand,
+            default_brand=default_brand
+        )
     
     return Response({
         'success': True,
-        'data': brand_config
+        'data': config_data
     })
 
 

@@ -58,6 +58,12 @@ staticfiles/
 static_root/
 /static/
 
+# Django collected static (не путать с исходниками)
+collected_static/
+
+# Django sessions
+django_session/
+
 # Django migrations (опционально - раскомментируйте если нужно)
 # */migrations/*.py
 # */migrations/*.pyc
@@ -226,6 +232,14 @@ tunnel.config.json
 # Analytics IDs (если храните локально)
 analytics.json
 
+# Экспортированные конфигурации (могут содержать чувствительные данные)
+app_config.json
+brand_config_*.json
+config_backup_*.json
+
+# Локальные настройки админки
+admin_settings.local.json
+
 # ============================================
 # TEMPORARY & MISC
 # ============================================
@@ -253,6 +267,25 @@ mock-data/
 TODO.local.md
 NOTES.md
 dev-notes/
+
+# Локальные скрипты и утилиты
+scripts/local/
+utils/local/
+*.local.py
+*.local.js
+*.local.ts
+
+# Сгенерированные миграции (если нужно игнорировать)
+# backend/app/migrations/0*_auto_*.py
+
+# Кэш TypeScript
+*.tsbuildinfo
+.tscache/
+
+# Локальные конфигурации разработки
+config.local.json
+settings.local.py
+local_settings.py
 
 # ============================================
 # РАЗРЕШЁННЫЕ ФАЙЛЫ (НЕ ИГНОРИРОВАТЬ)

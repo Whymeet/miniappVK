@@ -12,11 +12,16 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-background);
+  color: var(--color-text);
 }
 
 #root {
   width: 100%;
   min-height: 100vh;
+  max-width: 768px;
+  margin: 0 auto;
+  background-color: var(--color-background);
 }
 
 /* CSS переменные для white-label темизации */
@@ -36,5 +41,30 @@ body {
 .vkui__root {
   --vkui--color_background_accent: var(--color-primary);
   --vkui--color_text_accent: var(--color-primary);
+}
+
+/* Применяем цвета к элементам */
+.vkuiButton--mode-primary {
+  background-color: var(--color-primary) !important;
+}
+
+.vkuiCard {
+  background-color: var(--color-surface) !important;
+}
+
+.vkuiGroup {
+  background-color: transparent !important;
+}
+
+.vkuiPanel {
+  background-color: var(--color-background) !important;
+}
+
+.vkuiView {
+  background-color: var(--color-background) !important;
+}
+
+.vkuiAppRoot {
+  background-color: var(--color-background) !important;
 }
 

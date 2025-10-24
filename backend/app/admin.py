@@ -1,8 +1,12 @@
 from django.contrib import admin
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.utils.html import format_html
+from django.shortcuts import render, redirect
+from django.urls import path
+from django.contrib import messages
 import csv
-from .models import ClickLog, Subscriber, Offer
+import json
+from .models import ClickLog, Subscriber, Offer, BrandConfig, AppConfig
 
 
 class ClickLogInline(admin.TabularInline):
@@ -55,6 +59,153 @@ def export_subscribers_to_csv(modeladmin, request, queryset):
 
 
 export_subscribers_to_csv.short_description = "Экспорт выбранных в CSV"
+
+
+@admin.register(AppConfig)
+class AppConfigAdmin(admin.ModelAdmin):
+    """Админка для единой конфигурации внешнего вида"""
+    
+    def has_add_permission(self, request):
+        # Разрешаем создание только если нет ни одной записи
+        return not AppConfig.objects.exists()
+    
+    def has_delete_permission(self, request, obj=None):
+        # Запрещаем удаление
+        return False
+    
+    list_display = ['app_name', 'color_preview', 'updated_at']
+    
+    fieldsets = (
+        ('Основная информация', {
+            'fields': ('app_name', 'logo_url')
+        }),
+        ('🎨 Цветовая палитра', {
+            'fields': (
+                ('color_primary', 'color_secondary'),
+                ('color_background', 'color_surface'),
+                ('color_text', 'color_text_secondary'),
+                ('color_accent', 'color_error', 'color_success'),
+            ),
+            'description': 'Используйте формат HEX: #FF6B35. Основной цвет применяется к кнопкам.'
+        }),
+        ('📝 Тексты', {
+            'fields': ('subtitle', 'cta_text', 'disclaimer')
+        }),
+        ('⚙️ Настройки', {
+            'fields': (
+                'default_sort',
+                ('show_filters', 'show_disclaimer', 'enable_messages'),
+            )
+        }),
+    )
+    
+    readonly_fields = ['updated_at']
+    
+    def color_preview(self, obj):
+        return format_html(
+            '<div style="display: flex; gap: 4px;">'
+            '<div style="width: 24px; height: 24px; background: {}; border: 1px solid #ccc; border-radius: 4px;" title="Основной"></div>'
+            '<div style="width: 24px; height: 24px; background: {}; border: 1px solid #ccc; border-radius: 4px;" title="Вторичный"></div>'
+            '<div style="width: 24px; height: 24px; background: {}; border: 1px solid #ccc; border-radius: 4px;" title="Акцент"></div>'
+            '</div>',
+            obj.color_primary,
+            obj.color_secondary,
+            obj.color_accent
+        )
+    color_preview.short_description = 'Цвета'
+    
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [
+            path('export-config/', self.admin_site.admin_view(self.export_config), name='app_appconfig_export'),
+            path('import-config/', self.admin_site.admin_view(self.import_config), name='app_appconfig_import'),
+        ]
+        return custom_urls + urls
+    
+    def export_config(self, request):
+        """Экспорт конфигурации в JSON"""
+        config = AppConfig.get_or_create_config()
+        response = HttpResponse(config.export_to_json(), content_type='application/json')
+        response['Content-Disposition'] = 'attachment; filename="app_config.json"'
+        return response
+    
+    def import_config(self, request):
+        """Импорт конфигурации из JSON"""
+        if request.method == 'POST' and request.FILES.get('config_file'):
+            try:
+                config_file = request.FILES['config_file']
+                json_data = config_file.read().decode('utf-8')
+                AppConfig.import_from_json(json_data)
+                messages.success(request, 'Настройки успешно импортированы!')
+                return redirect('..')
+            except Exception as e:
+                messages.error(request, f'Ошибка импорта: {str(e)}')
+        
+        return render(request, 'admin/app/appconfig/import.html')
+    
+    def changelist_view(self, request, extra_context=None):
+        """Добавляем кнопки экспорта/импорта"""
+        extra_context = extra_context or {}
+        extra_context['show_export_import'] = True
+        return super().changelist_view(request, extra_context)
+    
+    def change_view(self, request, object_id, form_url='', extra_context=None):
+        """Добавляем кнопки экспорта/импорта на страницу редактирования"""
+        extra_context = extra_context or {}
+        extra_context['show_export_import'] = True
+        return super().change_view(request, object_id, form_url, extra_context)
+
+
+@admin.register(BrandConfig)
+class BrandConfigAdmin(admin.ModelAdmin):
+    list_display = [
+        'brand_key',
+        'name',
+        'color_preview',
+        'is_active',
+        'updated_at',
+    ]
+    list_filter = ['is_active', 'created_at']
+    search_fields = ['brand_key', 'name']
+    
+    fieldsets = (
+        ('Основная информация', {
+            'fields': ('brand_key', 'name', 'logo_url', 'is_active')
+        }),
+        ('Цветовая палитра', {
+            'fields': (
+                ('color_primary', 'color_secondary'),
+                ('color_background', 'color_surface'),
+                ('color_text', 'color_text_secondary'),
+                ('color_accent', 'color_error', 'color_success'),
+            ),
+            'description': 'Используйте формат HEX: #FF6B35'
+        }),
+        ('Тексты', {
+            'fields': ('subtitle', 'cta_text', 'disclaimer')
+        }),
+        ('Настройки', {
+            'fields': (
+                'default_sort',
+                ('show_filters', 'show_disclaimer', 'enable_messages'),
+            )
+        }),
+    )
+    
+    readonly_fields = ['created_at', 'updated_at']
+    
+    def color_preview(self, obj):
+        return format_html(
+            '<div style="display: flex; gap: 4px;">'
+            '<div style="width: 20px; height: 20px; background: {}; border: 1px solid #ccc;"></div>'
+            '<div style="width: 20px; height: 20px; background: {}; border: 1px solid #ccc;"></div>'
+            '<div style="width: 20px; height: 20px; background: {}; border: 1px solid #ccc;"></div>'
+            '</div>',
+            obj.color_primary,
+            obj.color_secondary,
+            obj.color_accent
+        )
+    color_preview.short_description = 'Цвета'
 
 
 @admin.register(Offer)

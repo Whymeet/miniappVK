@@ -5,7 +5,7 @@
 
 BRAND_CONFIGS = {
     'kokos': {
-        'name': 'Кокос Займ',
+        'name': 'Кубышка Займ',
         'palette': {
             'primary': '#FF6B35',
             'secondary': '#FFB800',
@@ -17,9 +17,9 @@ BRAND_CONFIGS = {
             'error': '#E63946',
             'success': '#06D6A0',
         },
-        'logo_url': 'https://via.placeholder.com/200x60/FF6B35/FFFFFF?text=Кокос+Займ',
+        'logo_url': 'https://via.placeholder.com/200x60/FF6B35/FFFFFF?text=Кубышка+Займ',
         'copy': {
-            'title': 'Кокос Займ',
+            'title': 'Кубышка Займ',
             'subtitle': 'Быстрые займы онлайн',
             'cta': 'Получить деньги',
             'disclaimer': 'Сервис не является кредитором. Мы помогаем подобрать выгодное предложение.',
@@ -80,14 +80,28 @@ def get_brand_config(group_id=None, brand=None, default_brand='kokos'):
     1. brand параметр (для предпросмотра)
     2. group_id маппинг
     3. default_brand
+    
+    Сначала пытается загрузить из БД, затем из BRAND_CONFIGS
     """
+    # Определяем какой бренд нужен
+    brand_key = None
     if brand and brand in BRAND_CONFIGS:
-        return {'brand': brand, **BRAND_CONFIGS[brand]}
+        brand_key = brand
+    elif group_id and group_id in GROUP_TO_BRAND:
+        brand_key = GROUP_TO_BRAND[group_id]
+    else:
+        brand_key = default_brand if default_brand in BRAND_CONFIGS else 'kokos'
     
-    if group_id and group_id in GROUP_TO_BRAND:
-        brand = GROUP_TO_BRAND[group_id]
-        return {'brand': brand, **BRAND_CONFIGS[brand]}
+    # Пытаемся загрузить из БД
+    try:
+        from .models import BrandConfig
+        db_config = BrandConfig.objects.filter(brand_key=brand_key, is_active=True).first()
+        if db_config:
+            return db_config.to_dict()
+    except Exception:
+        # Если БД недоступна или модель не мигрирована, используем fallback
+        pass
     
-    brand = default_brand if default_brand in BRAND_CONFIGS else 'kokos'
-    return {'brand': brand, **BRAND_CONFIGS[brand]}
+    # Fallback на статическую конфигурацию
+    return {'brand': brand_key, **BRAND_CONFIGS[brand_key]}
 

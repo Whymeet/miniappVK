@@ -100,7 +100,7 @@ Frontend доступен на http://localhost:5173
 ### 1. Тестирование API
 
 ```bash
-# Конфигурация бренда Кокос
+# Конфигурация бренда Кубышка
 curl "http://localhost:8000/api/config/?brand=kokos"
 
 # Конфигурация бренда Кубышка
@@ -114,7 +114,7 @@ curl "http://localhost:8000/api/offers/?sum_need=10000&term_days=30"
 
 Откройте в браузере:
 
-- Бренд Кокос: http://localhost:5173/#/?brand=kokos
+- Бренд Кубышка: http://localhost:5173/#/?brand=kokos
 - Бренд Кубышка: http://localhost:5173/#/?brand=kubyshka
 
 Обратите внимание на изменение:

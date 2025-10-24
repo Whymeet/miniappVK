@@ -138,7 +138,7 @@ sudo systemctl start vk-miniapp
 
 Для тестирования разных брендов используйте параметр `?brand=`:
 
-- `?brand=kokos` - бренд Кокос
+- `?brand=kokos` - бренд Кубышка
 - `?brand=kubyshka` - бренд Кубышка
 
 Или настройте разные group_id в `backend/app/brands.py`.

@@ -10,46 +10,49 @@ interface OfferCardProps {
 
 export default function OfferCard({ offer, onApply, ctaText = 'Перейти' }: OfferCardProps) {
   return (
-    <Card mode="shadow" style={{ marginBottom: 12 }}>
-      <Div>
-        <div style={{ display: 'flex', alignItems: 'center', marginBottom: 12 }}>
-          <Avatar src={offer.logo_url} size={64} />
-          <div style={{ marginLeft: 12, flex: 1 }}>
-            <Title level="3" weight="2">{offer.partner_name}</Title>
-            <Text weight="3" style={{ color: 'var(--color-primary)' }}>
-              {offer.rate_text}
-            </Text>
+    <Card mode="shadow" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+      <Div style={{ padding: '12px', display: 'flex', flexDirection: 'column', height: '100%' }}>
+        <div style={{ textAlign: 'center', marginBottom: 8 }}>
+          <Avatar src={offer.logo_url} size={48} style={{ margin: '0 auto' }} />
+          <Title level="3" weight="2" style={{ fontSize: '14px', marginTop: 6 }}>
+            {offer.partner_name}
+          </Title>
+          <Text weight="3" style={{ color: 'var(--color-primary)', fontSize: '13px' }}>
+            {offer.rate_text}
+          </Text>
+        </div>
+
+        <div style={{ marginBottom: 8, fontSize: '12px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+            <Text weight="2" style={{ fontSize: '12px' }}>Сумма:</Text>
+            <Text style={{ fontSize: '12px' }}>{formatMoney(offer.sum_min)}-{formatMoney(offer.sum_max)}</Text>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+            <Text weight="2" style={{ fontSize: '12px' }}>Срок:</Text>
+            <Text style={{ fontSize: '12px' }}>{formatTerm(offer.term_min)}-{formatTerm(offer.term_max)}</Text>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+            <Text weight="2" style={{ fontSize: '12px' }}>Одобрение:</Text>
+            <Text style={{ fontSize: '12px' }}>{offer.approval_time}</Text>
           </div>
         </div>
 
-        <div style={{ marginBottom: 12 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-            <Text weight="2">Сумма:</Text>
-            <Text>{formatMoney(offer.sum_min)} - {formatMoney(offer.sum_max)}</Text>
+        {offer.features.length > 0 && (
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: 8 }}>
+            {offer.features.slice(0, 2).map((feature, index) => (
+              <Chip key={index} style={{ fontSize: '10px', padding: '2px 8px' }}>
+                {feature}
+              </Chip>
+            ))}
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-            <Text weight="2">Срок:</Text>
-            <Text>{formatTerm(offer.term_min)} - {formatTerm(offer.term_max)}</Text>
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-            <Text weight="2">Одобрение:</Text>
-            <Text>{offer.approval_time}</Text>
-          </div>
-        </div>
-
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 12 }}>
-          {offer.features.map((feature, index) => (
-            <Chip key={index}>
-              {feature}
-            </Chip>
-          ))}
-        </div>
+        )}
 
         <Button
-          size="l"
+          size="m"
           stretched
           mode="primary"
           onClick={() => onApply(offer.id)}
+          style={{ marginTop: 'auto' }}
         >
           {ctaText}
         </Button>
