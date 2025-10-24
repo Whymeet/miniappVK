@@ -14,6 +14,7 @@ import { buildOfferRedirectUrl } from '@/api/offers';
 import OfferCard from '@/components/OfferCard';
 import OffersFiltersComponent from '@/components/OffersFilters';
 import AllowMessagesButton from '@/components/AllowMessagesButton';
+import Logo from '@/components/Logo';
 
 interface OffersPageProps {
   config: BrandConfig;
@@ -48,7 +49,7 @@ export default function OffersPage({ config, launchParams }: OffersPageProps) {
       {/* Лого и заголовок */}
       <div className="section" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', padding: 'var(--space-md)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <img
+          <Logo
             src={config.logo_url}
             alt={config.name}
             style={{ maxWidth: 60, height: 60, objectFit: 'contain' }}

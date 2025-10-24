@@ -1,6 +1,7 @@
-import { Card, Div, Title, Text, Button, Avatar, Chip } from '@vkontakte/vkui';
+import { Card, Div, Title, Text, Button, Chip } from '@vkontakte/vkui';
 import { Offer } from '@/types';
 import { formatMoney, formatTerm } from '@/utils/format';
+import Logo from './Logo';
 
 interface OfferCardProps {
   offer: Offer;
@@ -14,7 +15,16 @@ export default function OfferCard({ offer, onApply, ctaText = 'Оформить'
       <Div style={{ padding: 'var(--space-md)', display: 'grid', gap: 'var(--space-sm)', height: '100%' }}>
         {/* Шапка */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-sm)' }}>
-          <Avatar src={offer.logo_url} size={36} />
+          <Logo 
+            src={offer.logo_url} 
+            alt={offer.partner_name}
+            style={{ 
+              width: 36, 
+              height: 36, 
+              objectFit: 'contain',
+              borderRadius: '8px'
+            }}
+          />
           <Title level="3" weight="2" style={{ fontSize: 'var(--text-md)', margin: 0 }}>
             {offer.partner_name}
           </Title>
