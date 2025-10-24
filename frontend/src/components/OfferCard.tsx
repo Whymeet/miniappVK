@@ -19,8 +19,8 @@ export default function OfferCard({ offer, onApply, ctaText = 'Оформить'
             src={offer.logo_url} 
             alt={offer.partner_name}
             style={{ 
-              width: 36, 
-              height: 36, 
+              width: 56, 
+              height: 56, 
               objectFit: 'contain',
               borderRadius: '8px'
             }}
