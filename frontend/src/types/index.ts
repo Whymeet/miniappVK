@@ -27,6 +27,12 @@ export interface BrandFeatures {
   enable_messages: boolean;
 }
 
+export interface SortButtonColors {
+  rate_color: string;
+  sum_color: string;
+  term_color: string;
+}
+
 export interface BrandConfig {
   brand: string;
   name: string;
@@ -34,6 +40,7 @@ export interface BrandConfig {
   logo_url: string;
   copy: BrandCopy;
   features: BrandFeatures;
+  sort_buttons: SortButtonColors;
 }
 
 // Типы для офферов

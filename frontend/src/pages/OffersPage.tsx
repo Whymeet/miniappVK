@@ -69,6 +69,7 @@ export default function OffersPage({ config, launchParams }: OffersPageProps) {
             filters={filters}
             onChange={setFilters}
             defaultSort={config.features.default_sort}
+            sortButtonColors={config.sort_buttons}
           />
         </Group>
       )}

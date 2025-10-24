@@ -1,0 +1,32 @@
+{
+  "app_name": "Займы Онлайн",
+  "logo_url": "https://via.placeholder.com/200x60/ac6d3a/FFFFFF?text=Займы+Онлайн",
+  "colors": {
+    "primary": "#ac6d3a",
+    "secondary": "#d4a574",
+    "background": "#ffffff",
+    "surface": "#f6e9bc",
+    "text": "#2c2416",
+    "text_secondary": "#6b5d47",
+    "accent": "#ac6d3a",
+    "error": "#d9534f",
+    "success": "#5cb85c"
+  },
+  "texts": {
+    "subtitle": "Быстрые займы онлайн",
+    "cta_text": "Получить деньги",
+    "disclaimer": "Сервис не является кредитором. Мы помогаем подобрать выгодное предложение."
+  },
+  "settings": {
+    "default_sort": "rate",
+    "show_filters": true,
+    "show_disclaimer": true,
+    "enable_messages": true
+  },
+  "sort_buttons": {
+    "rate_color": "#ac6d3a",
+    "sum_color": "#d4a574",
+    "term_color": "#8d5628"
+  }
+}
+

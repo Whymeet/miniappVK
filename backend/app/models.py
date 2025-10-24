@@ -38,6 +38,11 @@ class AppConfig(models.Model):
     show_disclaimer = models.BooleanField(default=True, verbose_name='Показывать дисклеймер')
     enable_messages = models.BooleanField(default=True, verbose_name='Включить уведомления')
     
+    # Цвета кнопок сортировки
+    sort_button_rate_color = models.CharField(max_length=7, default='#ac6d3a', verbose_name='Цвет кнопки "По ставке"')
+    sort_button_sum_color = models.CharField(max_length=7, default='#d4a574', verbose_name='Цвет кнопки "По сумме"')
+    sort_button_term_color = models.CharField(max_length=7, default='#8d5628', verbose_name='Цвет кнопки "По сроку"')
+    
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Обновлён')
     
     class Meta:
@@ -78,6 +83,11 @@ class AppConfig(models.Model):
                 'show_filters': self.show_filters,
                 'show_disclaimer': self.show_disclaimer,
                 'enable_messages': self.enable_messages,
+            },
+            'sort_buttons': {
+                'rate_color': self.sort_button_rate_color,
+                'sum_color': self.sort_button_sum_color,
+                'term_color': self.sort_button_term_color,
             }
         }
     

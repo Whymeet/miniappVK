@@ -97,6 +97,14 @@ class AppConfigAdmin(admin.ModelAdmin):
                 ('show_filters', 'show_disclaimer', 'enable_messages'),
             )
         }),
+        ('🔘 Цвета кнопок сортировки', {
+            'fields': (
+                'sort_button_rate_color',
+                'sort_button_sum_color',
+                'sort_button_term_color',
+            ),
+            'description': 'Настройте цвет каждой кнопки сортировки'
+        }),
     )
     
     readonly_fields = ['updated_at']
