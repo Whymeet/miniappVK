@@ -39,6 +39,11 @@ export interface CardGradient {
   end: string;
 }
 
+export interface VkButton {
+  group_url: string;
+  button_color: string;
+}
+
 export interface BrandConfig {
   brand: string;
   name: string;
@@ -48,6 +53,7 @@ export interface BrandConfig {
   features: BrandFeatures;
   sort_buttons: SortButtonColors;
   card_gradient: CardGradient;
+  vk_button: VkButton;
 }
 
 // Типы для офферов

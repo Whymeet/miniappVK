@@ -48,6 +48,11 @@ class AppConfig(models.Model):
     card_gradient_end = models.CharField(max_length=7, default='#F9FAFB', verbose_name='Градиент карточек: конец')
     card_gradient_enabled = models.BooleanField(default=False, verbose_name='Включить градиент карточек')
     
+    # Кнопка "МЫ В ВК"
+    vk_group_url = models.URLField(max_length=500, blank=True, verbose_name='Ссылка на группу ВК',
+                                    help_text='Например: https://vk.com/kubyshkazaim')
+    vk_button_color = models.CharField(max_length=7, default='#0077FF', verbose_name='Цвет кнопки "МЫ В ВК"')
+    
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Обновлён')
     
     class Meta:
@@ -98,6 +103,10 @@ class AppConfig(models.Model):
                 'enabled': self.card_gradient_enabled,
                 'start': self.card_gradient_start,
                 'end': self.card_gradient_end,
+            },
+            'vk_button': {
+                'group_url': self.vk_group_url,
+                'button_color': self.vk_button_color,
             }
         }
     

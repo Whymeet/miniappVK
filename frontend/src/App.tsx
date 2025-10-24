@@ -8,7 +8,6 @@ import {
   SplitCol,
   View,
   Panel,
-  PanelHeader,
 } from '@vkontakte/vkui';
 import '@vkontakte/vkui/dist/vkui.css';
 
@@ -76,9 +75,6 @@ function App() {
               <SplitCol>
                 <View activePanel="main">
                   <Panel id="main">
-                    <PanelHeader>
-                      {config.data.copy.title}
-                    </PanelHeader>
                     <Routes>
                       <Route path="/" element={<OffersPage config={config.data} launchParams={launchParams} />} />
                       <Route path="/policy" element={<PolicyPage config={config.data} launchParams={launchParams} />} />

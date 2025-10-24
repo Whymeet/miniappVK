@@ -46,15 +46,39 @@ export default function OffersPage({ config, launchParams }: OffersPageProps) {
   return (
     <div className="page-stack">
       {/* Лого и заголовок */}
-      <div className="section" style={{ textAlign: 'center', padding: 0 }}>
-        <img
-          src={config.logo_url}
-          alt={config.name}
-          style={{ maxWidth: 160, height: 'auto', marginBottom: 'var(--space-sm)' }}
-        />
-        <Text style={{ fontSize: 'var(--text-md)', color: 'var(--text-muted)' }}>
-          Подберите выгодный займ за 1 минуту. Без скрытых комиссий
-        </Text>
+      <div className="section" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', padding: 'var(--space-md)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <img
+            src={config.logo_url}
+            alt={config.name}
+            style={{ maxWidth: 60, height: 60, objectFit: 'contain' }}
+          />
+          <Text style={{ fontSize: 'var(--text-lg)', fontWeight: 600, color: 'var(--text-primary)' }}>
+            Кубышка займ
+          </Text>
+        </div>
+        {config.vk_button?.group_url && (
+          <a
+            href={config.vk_button.group_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              backgroundColor: config.vk_button.button_color,
+              color: '#FFFFFF',
+              padding: '8px 16px',
+              borderRadius: '8px',
+              textDecoration: 'none',
+              fontSize: 'var(--text-sm)',
+              fontWeight: 600,
+              whiteSpace: 'nowrap',
+              transition: 'opacity 0.2s',
+            }}
+            onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) => e.currentTarget.style.opacity = '0.8'}
+            onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) => e.currentTarget.style.opacity = '1'}
+          >
+            МЫ В ВК
+          </a>
+        )}
       </div>
 
       {/* Фильтры */}

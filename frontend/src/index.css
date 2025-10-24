@@ -223,7 +223,7 @@ body.card-gradient-enabled .offer-card-gradient.vkuiCard {
 }
 
 /* ===== MONOLITH LAYOUT UTILS ===== */
-.page-stack { display: grid; gap: var(--space-xl); }
+.page-stack { display: grid; gap: var(--space-md); }
 
 /* Секции без лишней окраски/бордеров */
 .section { background: var(--surface); border: 1px solid #E5E7EB;
