@@ -50,14 +50,18 @@ export default function OffersPage({ config, launchParams }: OffersPageProps) {
     <>
       {/* Лого и заголовок */}
       <Group>
-        <Div style={{ textAlign: 'center' }}>
+        <Div style={{ textAlign: 'center', padding: 'var(--space-lg)' }}>
           <img 
             src={config.logo_url} 
             alt={config.name}
-            style={{ maxWidth: '200px', height: 'auto' }}
+            style={{ maxWidth: '200px', height: 'auto', marginBottom: 'var(--space-md)' }}
           />
-          <Text style={{ marginTop: 8, color: 'var(--color-text-secondary)' }}>
-            {config.copy.subtitle}
+          <Text style={{ 
+            fontSize: 'var(--text-md)', 
+            color: 'var(--muted)',
+            lineHeight: '1.6'
+          }}>
+            Подберите выгодный займ за 1 минуту. Без скрытых комиссий
           </Text>
         </Div>
       </Group>
@@ -69,7 +73,6 @@ export default function OffersPage({ config, launchParams }: OffersPageProps) {
             filters={filters}
             onChange={setFilters}
             defaultSort={config.features.default_sort}
-            sortButtonColors={config.sort_buttons}
           />
         </Group>
       )}
@@ -78,11 +81,20 @@ export default function OffersPage({ config, launchParams }: OffersPageProps) {
       {config.features.show_disclaimer && (
         <Group>
           <Div style={{ 
-            backgroundColor: 'var(--color-surface)', 
-            padding: '12px',
-            borderRadius: '8px'
+            backgroundColor: '#FFF8E1', 
+            padding: 'var(--space-md)',
+            borderRadius: 'var(--radius-sm)',
+            border: '1px solid #FDE68A',
+            display: 'flex',
+            gap: 'var(--space-sm)',
+            alignItems: 'flex-start'
           }}>
-            <Text style={{ fontSize: 13, color: 'var(--color-text-secondary)' }}>
+            <span style={{ fontSize: 'var(--text-lg)' }}>ℹ️</span>
+            <Text style={{ 
+              fontSize: 'var(--text-sm)', 
+              color: '#92400E',
+              lineHeight: '1.5'
+            }}>
               {config.copy.disclaimer}
             </Text>
           </Div>

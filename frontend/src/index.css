@@ -12,16 +12,19 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: var(--color-background);
-  color: var(--color-text);
+  background-color: var(--bg);
+  color: var(--text);
+  font-size: var(--text-base);
+  line-height: 1.5;
 }
 
 #root {
   width: 100%;
   min-height: 100vh;
-  max-width: 768px;
+  max-width: 1040px;
   margin: 0 auto;
-  background-color: var(--color-background);
+  padding: var(--space-lg);
+  background-color: var(--bg);
 }
 
 /* CSS переменные для white-label темизации */
@@ -35,6 +38,37 @@ body {
   --color-accent: #5181b8;
   --color-error: #e64646;
   --color-success: #4bb34b;
+  
+  /* Дизайн-токены */
+  --brand: #AF6E3D;
+  --accent: #155A31;
+  --text: #111827;
+  --muted: #6B7280;
+  --bg: #F7F7F8;
+  
+  /* Отступы по шкале 8px */
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  
+  /* Радиусы */
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  
+  /* Тени */
+  --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.06);
+  
+  /* Размеры текста */
+  --text-xs: 12px;
+  --text-sm: 13px;
+  --text-base: 14px;
+  --text-md: 16px;
+  --text-lg: 18px;
+  --text-xl: 20px;
+  --text-2xl: 24px;
+  --text-3xl: 28px;
 }
 
 /* Темизация VKUI */
@@ -45,26 +79,71 @@ body {
 
 /* Применяем цвета к элементам */
 .vkuiButton--mode-primary {
-  background-color: var(--color-primary) !important;
+  background-color: var(--accent) !important;
+  border-radius: var(--radius-sm) !important;
+  min-height: 44px !important;
+  font-weight: 600 !important;
 }
 
 .vkuiCard {
-  background-color: var(--color-surface) !important;
+  background-color: #ffffff !important;
+  border-radius: var(--radius-md) !important;
+  box-shadow: var(--shadow-card) !important;
+  border: none !important;
 }
 
 .vkuiGroup {
   background-color: transparent !important;
+  margin-bottom: var(--space-lg) !important;
 }
 
 .vkuiPanel {
-  background-color: var(--color-background) !important;
+  background-color: var(--bg) !important;
 }
 
 .vkuiView {
-  background-color: var(--color-background) !important;
+  background-color: var(--bg) !important;
 }
 
 .vkuiAppRoot {
-  background-color: var(--color-background) !important;
+  background-color: var(--bg) !important;
+}
+
+.vkuiPanelHeader {
+  background-color: var(--bg) !important;
+}
+
+/* Заголовки */
+.vkuiTitle--level-1 {
+  font-size: var(--text-2xl) !important;
+  font-weight: 700 !important;
+  color: var(--text) !important;
+}
+
+.vkuiTitle--level-2 {
+  font-size: var(--text-lg) !important;
+  font-weight: 600 !important;
+  color: var(--text) !important;
+}
+
+.vkuiTitle--level-3 {
+  font-size: var(--text-md) !important;
+  font-weight: 600 !important;
+  color: var(--text) !important;
+}
+
+/* Инпуты */
+.vkuiInput__el {
+  min-height: 44px !important;
+  border-radius: var(--radius-sm) !important;
+  font-size: var(--text-md) !important;
+}
+
+.vkuiFormItem__top {
+  font-size: var(--text-xs) !important;
+  color: var(--muted) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  font-weight: 500 !important;
 }
 
