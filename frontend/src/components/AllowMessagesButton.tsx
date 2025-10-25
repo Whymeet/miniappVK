@@ -7,13 +7,14 @@ import { useAllowMessages, useSubscriptionStatus } from '@/hooks/useSubscription
 interface AllowMessagesButtonProps {
   groupId: string | null;
   userId: string | null;
+  launchParams?: Record<string, any>;
 }
 
-export default function AllowMessagesButton({ groupId, userId }: AllowMessagesButtonProps) {
+export default function AllowMessagesButton({ groupId, userId, launchParams }: AllowMessagesButtonProps) {
   const [snackbar, setSnackbar] = useState<React.ReactNode>(null);
   const [isAllowed, setIsAllowed] = useState(false);
   const allowMessagesMutation = useAllowMessages();
-  const { data: subscriptionStatus } = useSubscriptionStatus(userId);
+  const { data: subscriptionStatus } = useSubscriptionStatus(userId, launchParams);
 
   // Проверяем статус из базы данных
   useEffect(() => {
@@ -23,7 +24,7 @@ export default function AllowMessagesButton({ groupId, userId }: AllowMessagesBu
   }, [subscriptionStatus]);
 
   const handleAllowMessages = async () => {
-    if (!groupId || !userId) {
+    if (!groupId || !userId || !launchParams) {
       setSnackbar(
         <Snackbar
           onClose={() => setSnackbar(null)}
@@ -44,7 +45,7 @@ export default function AllowMessagesButton({ groupId, userId }: AllowMessagesBu
       if (result.result) {
         // Сохраняем разрешение в базу данных
         allowMessagesMutation.mutate(
-          { vkUserId: userId, groupId },
+          { launchParams, groupId },
           {
             onSuccess: (response) => {
               if (response.success) {

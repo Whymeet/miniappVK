@@ -49,10 +49,9 @@ function App() {
 
   // Автоматическая подписка при входе
   useEffect(() => {
-    if (launchParams.userId && config?.data?.brand) {
+    if (launchParams.userId && config?.data?.brand && (launchParams as any).rawParams) {
       subscribeMutation.mutate({
-        vkUserId: launchParams.userId,
-        groupId: launchParams.groupId,
+        launchParams: (launchParams as any).rawParams,
         brand: config.data.brand,
       });
     }

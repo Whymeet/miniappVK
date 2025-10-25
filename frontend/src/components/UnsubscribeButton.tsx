@@ -5,13 +5,14 @@ import { useUnsubscribe, useSubscriptionStatus } from '@/hooks/useSubscription';
 
 interface UnsubscribeButtonProps {
   userId: string | null;
+  launchParams?: Record<string, any>;
 }
 
-export default function UnsubscribeButton({ userId }: UnsubscribeButtonProps) {
+export default function UnsubscribeButton({ userId, launchParams }: UnsubscribeButtonProps) {
   const [snackbar, setSnackbar] = useState<React.ReactNode>(null);
   const [showAlert, setShowAlert] = useState(false);
   const unsubscribeMutation = useUnsubscribe();
-  const { data: subscriptionStatus } = useSubscriptionStatus(userId);
+  const { data: subscriptionStatus } = useSubscriptionStatus(userId, launchParams);
 
   // Проверяем, подписан ли пользователь
   const isSubscribed = subscriptionStatus?.success && subscriptionStatus.data?.subscribed;
@@ -23,7 +24,7 @@ export default function UnsubscribeButton({ userId }: UnsubscribeButtonProps) {
   const handleConfirmUnsubscribe = async () => {
     setShowAlert(false);
 
-    if (!userId) {
+    if (!userId || !launchParams) {
       setSnackbar(
         <Snackbar
           onClose={() => setSnackbar(null)}
@@ -35,7 +36,7 @@ export default function UnsubscribeButton({ userId }: UnsubscribeButtonProps) {
       return;
     }
 
-    unsubscribeMutation.mutate(userId, {
+    unsubscribeMutation.mutate({ launchParams, vkUserId: userId }, {
       onSuccess: (response) => {
         if (response.success) {
           setSnackbar(

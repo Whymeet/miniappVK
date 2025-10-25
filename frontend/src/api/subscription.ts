@@ -38,8 +38,7 @@ export interface AllowMessagesResponse {
  * Подписка пользователя при входе в приложение
  */
 export async function subscribe(
-  vkUserId: string,
-  groupId: string | null,
+  launchParams: Record<string, any>,
   brand: string
 ): Promise<SubscribeResponse> {
   const response = await fetch(`${API_BASE}/api/subscribe/`, {
@@ -48,8 +47,7 @@ export async function subscribe(
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      vk_user_id: vkUserId,
-      group_id: groupId,
+      launch_params: launchParams,  // Отправляем все параметры с подписью
       brand,
     }),
   });
@@ -61,7 +59,7 @@ export async function subscribe(
  * Обновление статуса после разрешения уведомлений
  */
 export async function allowMessages(
-  vkUserId: string,
+  launchParams: Record<string, any>,
   groupId: string
 ): Promise<AllowMessagesResponse> {
   const response = await fetch(`${API_BASE}/api/subscribe/allow-messages/`, {
@@ -70,7 +68,7 @@ export async function allowMessages(
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      vk_user_id: vkUserId,
+      launch_params: launchParams,  // Отправляем все параметры с подписью
       group_id: groupId,
     }),
   });
@@ -81,14 +79,14 @@ export async function allowMessages(
 /**
  * Отписка от рассылки
  */
-export async function unsubscribe(vkUserId: string): Promise<{ success: boolean; error?: string }> {
+export async function unsubscribe(launchParams: Record<string, any>): Promise<{ success: boolean; error?: string }> {
   const response = await fetch(`${API_BASE}/api/unsubscribe/`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      vk_user_id: vkUserId,
+      launch_params: launchParams,  // Отправляем все параметры с подписью
     }),
   });
 
@@ -99,9 +97,19 @@ export async function unsubscribe(vkUserId: string): Promise<{ success: boolean;
  * Получение статуса подписки
  */
 export async function getSubscriptionStatus(
-  vkUserId: string
+  launchParams: Record<string, any>
 ): Promise<{ success: boolean; data: SubscriptionStatus }> {
-  const response = await fetch(`${API_BASE}/api/subscription/status/?vk_user_id=${vkUserId}`);
+  // Передаем параметры запуска через query string для GET запроса
+  const params = new URLSearchParams();
+  
+  // Добавляем все vk_* параметры и sign
+  Object.keys(launchParams).forEach(key => {
+    if (key.startsWith('vk_') || key === 'sign') {
+      params.append(key, String(launchParams[key]));
+    }
+  });
+  
+  const response = await fetch(`${API_BASE}/api/subscription/status/?${params.toString()}`);
   return response.json();
 }
 

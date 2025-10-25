@@ -13,11 +13,11 @@ import {
 /**
  * Хук для получения статуса подписки
  */
-export function useSubscriptionStatus(vkUserId: string | null) {
+export function useSubscriptionStatus(vkUserId: string | null, launchParams?: Record<string, any>) {
   return useQuery({
     queryKey: ['subscription', vkUserId],
-    queryFn: () => getSubscriptionStatus(vkUserId!),
-    enabled: !!vkUserId,
+    queryFn: () => getSubscriptionStatus(launchParams!),
+    enabled: !!vkUserId && !!launchParams,
     staleTime: 5 * 60 * 1000, // 5 минут
   });
 }
@@ -30,14 +30,12 @@ export function useSubscribe() {
 
   return useMutation({
     mutationFn: ({
-      vkUserId,
-      groupId,
+      launchParams,
       brand,
     }: {
-      vkUserId: string;
-      groupId: string | null;
+      launchParams: Record<string, any>;
       brand: string;
-    }) => subscribe(vkUserId, groupId, brand),
+    }) => subscribe(launchParams, brand),
     onSuccess: (data) => {
       if (data.success && data.data) {
         // Обновляем кеш статуса подписки
@@ -62,8 +60,8 @@ export function useAllowMessages() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ vkUserId, groupId }: { vkUserId: string; groupId: string }) =>
-      allowMessages(vkUserId, groupId),
+    mutationFn: ({ launchParams, groupId }: { launchParams: Record<string, any>; groupId: string }) =>
+      allowMessages(launchParams, groupId),
     onSuccess: (data) => {
       if (data.success && data.data) {
         // Обновляем кеш
@@ -80,8 +78,9 @@ export function useUnsubscribe() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (vkUserId: string) => unsubscribe(vkUserId),
-    onSuccess: (_, vkUserId) => {
+    mutationFn: ({ launchParams }: { launchParams: Record<string, any>; vkUserId: string }) => 
+      unsubscribe(launchParams),
+    onSuccess: (_, { vkUserId }) => {
       // Обновляем кеш
       queryClient.invalidateQueries({ queryKey: ['subscription', vkUserId] });
     },

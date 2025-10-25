@@ -5,6 +5,7 @@ from django.utils import timezone
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+from django_ratelimit.decorators import ratelimit
 
 from .brands import get_brand_config
 from .offers import get_offers, get_offer_by_id
@@ -22,6 +23,7 @@ from .statistics import (
 )
 
 
+@ratelimit(key='ip', rate='60/m', method='GET')  # 60 запросов в минуту с IP
 @api_view(['GET'])
 def config_view(request):
     """
@@ -52,6 +54,7 @@ def config_view(request):
     })
 
 
+@ratelimit(key='ip', rate='100/m', method='GET')  # 100 запросов в минуту с IP
 @api_view(['GET'])
 def offers_view(request):
     """
@@ -151,6 +154,7 @@ def health_check(request):
 # SUBSCRIPTION API
 # ============================================================================
 
+@ratelimit(key='ip', rate='20/m', method='POST')  # 20 запросов в минуту с IP
 @api_view(['POST'])
 def subscribe_view(request):
     """
@@ -159,17 +163,23 @@ def subscribe_view(request):
     Сохранение VK ID при входе пользователя в приложение.
     Создаёт или обновляет запись подписчика.
     
-    Body: { vk_user_id, group_id, brand }
+    Body: { launch_params: {...} }  - параметры запуска VK с подписью
+    
+    Примечание: VK подпись проверяется автоматически через middleware.
     """
-    vk_user_id = request.data.get('vk_user_id')
-    group_id = request.data.get('group_id')
-    brand = request.data.get('brand')
+    # Получаем проверенный vk_user_id из middleware
+    vk_user_id = getattr(request, 'vk_user_id', None)
     
     if not vk_user_id:
         return Response(
-            {'success': False, 'error': 'vk_user_id is required'},
+            {'success': False, 'error': 'VK user ID not found in verified launch params'},
             status=status.HTTP_400_BAD_REQUEST
         )
+    
+    # Получаем дополнительные параметры из launch_params
+    launch_params = getattr(request, 'launch_params', {})
+    group_id = launch_params.get('vk_group_id') or request.data.get('group_id')
+    brand = request.data.get('brand')
     
     # Создаём или обновляем подписчика
     subscriber, created = Subscriber.objects.get_or_create(
@@ -208,6 +218,7 @@ def subscribe_view(request):
     })
 
 
+@ratelimit(key='ip', rate='20/m', method='POST')
 @api_view(['POST'])
 def allow_messages_view(request):
     """
@@ -216,14 +227,18 @@ def allow_messages_view(request):
     Обновление статуса после разрешения уведомлений.
     Проверяет через VK API и устанавливает allowed_from_group=True.
     
-    Body: { vk_user_id, group_id }
+    Body: { launch_params: {...} }  - параметры запуска VK с подписью
+    
+    Примечание: VK подпись проверяется автоматически через middleware.
     """
-    vk_user_id = request.data.get('vk_user_id')
-    group_id = request.data.get('group_id')
+    # Получаем проверенные данные из middleware
+    vk_user_id = getattr(request, 'vk_user_id', None)
+    launch_params = getattr(request, 'launch_params', {})
+    group_id = launch_params.get('vk_group_id') or request.data.get('group_id')
     
     if not vk_user_id or not group_id:
         return Response(
-            {'success': False, 'error': 'vk_user_id and group_id are required'},
+            {'success': False, 'error': 'vk_user_id and group_id not found in verified launch params'},
             status=status.HTTP_400_BAD_REQUEST
         )
     
@@ -259,6 +274,7 @@ def allow_messages_view(request):
     })
 
 
+@ratelimit(key='ip', rate='10/m', method='POST')
 @api_view(['POST'])
 def unsubscribe_view(request):
     """
@@ -266,13 +282,16 @@ def unsubscribe_view(request):
     
     Отписка пользователя от рассылки.
     
-    Body: { vk_user_id }
+    Body: { launch_params: {...} }  - параметры запуска VK с подписью
+    
+    Примечание: VK подпись проверяется автоматически через middleware.
     """
-    vk_user_id = request.data.get('vk_user_id')
+    # Получаем проверенный vk_user_id из middleware
+    vk_user_id = getattr(request, 'vk_user_id', None)
     
     if not vk_user_id:
         return Response(
-            {'success': False, 'error': 'vk_user_id is required'},
+            {'success': False, 'error': 'VK user ID not found in verified launch params'},
             status=status.HTTP_400_BAD_REQUEST
         )
     
@@ -296,18 +315,23 @@ def unsubscribe_view(request):
         )
 
 
+@ratelimit(key='ip', rate='30/m', method='GET')
 @api_view(['GET'])
 def subscription_status_view(request):
     """
-    GET /api/subscription/status/?vk_user_id=123
+    GET /api/subscription/status/
     
     Получение статуса подписки пользователя.
+    Параметры запуска VK должны быть переданы через query параметры с подписью.
+    
+    Примечание: VK подпись проверяется автоматически через middleware.
     """
-    vk_user_id = request.GET.get('vk_user_id')
+    # Получаем проверенный vk_user_id из middleware
+    vk_user_id = getattr(request, 'vk_user_id', None)
     
     if not vk_user_id:
         return Response(
-            {'success': False, 'error': 'vk_user_id is required'},
+            {'success': False, 'error': 'VK user ID not found in verified launch params'},
             status=status.HTTP_400_BAD_REQUEST
         )
     

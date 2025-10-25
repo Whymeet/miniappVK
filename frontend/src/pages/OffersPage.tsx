@@ -167,6 +167,7 @@ export default function OffersPage({ config, launchParams }: OffersPageProps) {
           <AllowMessagesButton 
             groupId={launchParams.groupId}
             userId={launchParams.userId}
+            launchParams={(launchParams as any).rawParams}
           />
         </div>
       )}
