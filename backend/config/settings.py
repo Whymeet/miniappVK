@@ -1,6 +1,8 @@
 """
 Django settings for VK Mini App White-Label project.
 """
+from __future__ import annotations
+
 import os
 from pathlib import Path
 from dotenv import load_dotenv
@@ -9,11 +11,34 @@ load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+
+def get_env_bool(var_name: str, default: bool = False) -> bool:
+    value = os.getenv(var_name)
+    if value is None:
+        return default
+    return value.strip().lower() in {'1', 'true', 'yes', 'on'}
+
+
+def get_env_list(var_name: str, default: str | None = None) -> list[str]:
+    if default is None:
+        value = os.getenv(var_name)
+    else:
+        value = os.getenv(var_name, default)
+    if not value:
+        return []
+    return [item.strip() for item in value.split(',') if item.strip()]
+
+
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-dev-key-change-in-production')
 
-DEBUG = os.getenv('DJANGO_DEBUG', 'True') == 'True'
+DEBUG = get_env_bool('DJANGO_DEBUG', True)
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+ALLOWED_HOSTS = get_env_list('ALLOWED_HOSTS', 'localhost,127.0.0.1')
+
+CSRF_TRUSTED_ORIGINS = get_env_list(
+    'CSRF_TRUSTED_ORIGINS',
+    'http://localhost:5173,https://localhost:5173',
+)
 
 # Application definition
 INSTALLED_APPS = [
@@ -36,7 +61,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'config.middleware.ContentSecurityPolicyMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -96,8 +121,13 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CORS settings для VK Mini App
-CORS_ALLOW_ALL_ORIGINS = DEBUG  # В продакшене нужно указать конкретные origins
-CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_ALL_ORIGINS = get_env_bool('CORS_ALLOW_ALL_ORIGINS', False)
+CORS_ALLOWED_ORIGINS = get_env_list(
+    'CORS_ALLOWED_ORIGINS',
+    'http://localhost:5173,https://localhost:5173',
+)
+CORS_ALLOWED_ORIGIN_REGEXES = get_env_list('CORS_ALLOWED_ORIGIN_REGEXES')
+CORS_ALLOW_CREDENTIALS = get_env_bool('CORS_ALLOW_CREDENTIALS', True)
 
 # REST Framework
 REST_FRAMEWORK = {
@@ -115,6 +145,11 @@ VK_CALLBACK_SECRET = os.getenv('VK_CALLBACK_SECRET', '')
 VK_CONFIRMATION_CODE = os.getenv('VK_CONFIRMATION_CODE', '')
 DEFAULT_BRAND = os.getenv('DEFAULT_BRAND', 'kokos')
 
-# X-Frame-Options для работы внутри VK
-X_FRAME_OPTIONS = 'ALLOW-FROM https://vk.com'
+# Security headers
+SECURE_HSTS_SECONDS = int(os.getenv('SECURE_HSTS_SECONDS', '0'))
+SECURE_SSL_REDIRECT = get_env_bool('SECURE_SSL_REDIRECT', False)
+SESSION_COOKIE_SECURE = get_env_bool('SESSION_COOKIE_SECURE', False)
+CSRF_COOKIE_SECURE = get_env_bool('CSRF_COOKIE_SECURE', False)
+
+CSP_FRAME_ANCESTORS = get_env_list('CSP_FRAME_ANCESTORS', 'https://vk.com')
 
