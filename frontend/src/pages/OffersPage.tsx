@@ -210,7 +210,7 @@ export default function OffersPage({ config, launchParams }: OffersPageProps) {
           display: 'block',
           marginBottom: 'var(--space-sm)'
         }}>
-          Информация на сайте: бабкиманки.рф
+          Информация на сайте: https://kubyshka-zaim.ru/
         </Text>
         <Text style={{ 
           fontSize: 'var(--text-xs)', 

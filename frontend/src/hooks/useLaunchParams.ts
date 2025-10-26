@@ -23,12 +23,21 @@ export function useLaunchParams(): LaunchParams & { rawParams?: Record<string, a
         console.log('VK Launch Params received:', params);
         
         // Извлекаем нужные данные
-        const groupId = params.vk_group_id || null;
+        // Если нет group_id в параметрах - используем дефолтный ID нашей группы
+        const groupId = params.vk_group_id || '218513564'; // ID группы https://vk.com/public218513564
         const userId = params.vk_user_id ? String(params.vk_user_id) : null;
         
         // Получаем brand из URL параметров (если передан)
         const urlParams = new URLSearchParams(window.location.search);
         const brand = urlParams.get('brand');
+        
+        console.log('Launch params extracted:', {
+          vk_group_id: params.vk_group_id,
+          vk_app_id: params.vk_app_id,
+          finalGroupId: groupId,
+          userId,
+          allParams: Object.keys(params)
+        });
         
         setLaunchParams({
           groupId: groupId ? String(groupId) : null,
