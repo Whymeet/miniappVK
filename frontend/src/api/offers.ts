@@ -1,6 +1,6 @@
 import { ApiResponse, OffersResponse, OffersFilters } from '@/types';
 
-const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8000';
+const API_BASE = 'https://kybyshka-dev.ru';
 
 /**
  * Получить список офферов
