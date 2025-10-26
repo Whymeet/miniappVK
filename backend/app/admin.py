@@ -8,7 +8,7 @@ from django.utils.safestring import mark_safe
 from django.contrib.admin import AdminSite
 import csv
 import json
-from .models import ClickLog, Subscriber, Offer, BrandConfig, AppConfig
+from .models import ClickLog, Subscriber, Offer, BrandConfig, AppConfig, ModalSettings
 from .statistics import get_dashboard_summary, get_top_offers
 
 
@@ -470,4 +470,122 @@ class ClickLogAdmin(admin.ModelAdmin):
             return format_html('<a href="{}">{}</a>', url, obj.subscriber.vk_user_id)
         return '-'
     subscriber_link.short_description = 'Подписчик'
+
+
+@admin.register(ModalSettings)
+class ModalSettingsAdmin(admin.ModelAdmin):
+    """Админка для настроек модального окна подписки"""
+    
+    def has_add_permission(self, request):
+        # Разрешаем создание только если нет ни одной записи
+        return not ModalSettings.objects.exists()
+    
+    def has_delete_permission(self, request, obj=None):
+        # Запрещаем удаление
+        return False
+    
+    list_display = ['title', 'is_enabled', 'show_delay', 'updated_at']
+    
+    fieldsets = (
+        ('🔧 Основные настройки', {
+            'fields': ('is_enabled', 'show_delay'),
+            'description': 'Включите модальное окно и настройте задержку показа'
+        }),
+        ('📝 Тексты', {
+            'fields': (
+                'title',
+                'main_title',
+                'subtitle',
+                'description',
+            ),
+            'description': 'Настройте все тексты в модальном окне'
+        }),
+        ('🔘 Кнопки', {
+            'fields': (
+                'button_text',
+                'skip_button_text',
+            ),
+            'description': 'Тексты кнопок'
+        }),
+        ('🎨 Цвета фона', {
+            'fields': (
+                'background_color',
+                ('background_gradient_start', 'background_gradient_end'),
+            ),
+            'description': 'Настройте фон модального окна'
+        }),
+        ('🎨 Цвета иконки', {
+            'fields': (
+                'icon_background_color',
+                ('icon_background_gradient_start', 'icon_background_gradient_end'),
+                'icon_shadow',
+            ),
+            'description': 'Настройте внешний вид иконки'
+        }),
+        ('🎨 Цвета текста', {
+            'fields': (
+                'title_color',
+                'subtitle_color',
+                'description_color',
+            ),
+            'description': 'Цвета всех текстов'
+        }),
+        ('🎨 Цвета кнопок', {
+            'fields': (
+                'button_background_color',
+                ('button_background_gradient_start', 'button_background_gradient_end'),
+                'button_text_color',
+                'button_shadow',
+                'skip_button_color',
+            ),
+            'description': 'Настройте внешний вид кнопок'
+        }),
+        ('📏 Размеры', {
+            'fields': (
+                'icon_size',
+                'title_font_size',
+                'subtitle_font_size',
+                'description_font_size',
+                'button_height',
+                'button_font_size',
+            ),
+            'description': 'Размеры элементов'
+        }),
+        ('✨ Эффекты', {
+            'fields': (
+                'border_radius',
+            ),
+            'description': 'Дополнительные эффекты'
+        }),
+    )
+    
+    readonly_fields = ['created_at', 'updated_at']
+    
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [
+            path('preview/', self.admin_site.admin_view(self.preview_modal), name='app_modalsettings_preview'),
+        ]
+        return custom_urls + urls
+    
+    def preview_modal(self, request):
+        """Предварительный просмотр модального окна"""
+        settings = ModalSettings.get_or_create_settings()
+        context = {
+            'settings': settings.to_dict(),
+            'title': 'Предварительный просмотр модального окна'
+        }
+        return render(request, 'admin/app/modalsettings/preview.html', context)
+    
+    def changelist_view(self, request, extra_context=None):
+        """Добавляем кнопку предварительного просмотра"""
+        extra_context = extra_context or {}
+        extra_context['show_preview'] = True
+        return super().changelist_view(request, extra_context)
+    
+    def change_view(self, request, object_id, form_url='', extra_context=None):
+        """Добавляем кнопку предварительного просмотра на страницу редактирования"""
+        extra_context = extra_context or {}
+        extra_context['show_preview'] = True
+        return super().change_view(request, object_id, form_url, extra_context)
 

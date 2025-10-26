@@ -13,7 +13,6 @@ import { useOffers } from '@/hooks/useOffers';
 import { buildOfferRedirectUrl } from '@/api/offers';
 import OfferCard from '@/components/OfferCard';
 import OffersFiltersComponent from '@/components/OffersFilters';
-import AllowMessagesButton from '@/components/AllowMessagesButton';
 import Logo from '@/components/Logo';
 
 interface OffersPageProps {
@@ -161,16 +160,6 @@ export default function OffersPage({ config, launchParams }: OffersPageProps) {
         </div>
       )}
 
-      {/* Кнопка разрешения уведомлений */}
-      {config.features.enable_messages && launchParams.groupId && launchParams.userId && (
-        <div className="section">
-          <AllowMessagesButton 
-            groupId={launchParams.groupId}
-            userId={launchParams.userId}
-            launchParams={(launchParams as any).rawParams}
-          />
-        </div>
-      )}
 
       {/* Политика конфиденциальности */}
       <div style={{ textAlign: 'center', padding: 'var(--space-md)' }}>

@@ -354,6 +354,145 @@ class Subscriber(models.Model):
         return self.subscribed and self.allowed_from_group
 
 
+class ModalSettings(models.Model):
+    """Настройки модального окна подписки"""
+    # Основные настройки
+    is_enabled = models.BooleanField(default=True, verbose_name='Включить модальное окно')
+    show_delay = models.IntegerField(default=2000, verbose_name='Задержка показа (мс)',
+                                     help_text='Через сколько миллисекунд показать модалку')
+    
+    # Тексты
+    title = models.CharField(max_length=200, default='🎉 Эксклюзивное предложение', 
+                             verbose_name='Заголовок модального окна')
+    main_title = models.CharField(max_length=200, default='ЭКСКЛЮЗИВНОЕ ПРЕДЛОЖЕНИЕ',
+                                  verbose_name='Основной заголовок')
+    subtitle = models.CharField(max_length=200, default='Получите займ под 0%',
+                                verbose_name='Подзаголовок')
+    description = models.TextField(default='Подпишитесь на уведомления, чтобы первыми узнавать о новых предложениях и эксклюзивных условиях',
+                                   verbose_name='Описание')
+    
+    # Кнопки
+    button_text = models.CharField(max_length=200, default='🔔 Подписаться и получить займ',
+                                   verbose_name='Текст кнопки подписки')
+    skip_button_text = models.CharField(max_length=100, default='Пропустить',
+                                        verbose_name='Текст кнопки "Пропустить"')
+    
+    # Цвета
+    background_color = models.CharField(max_length=7, default='#f8f9fa', 
+                                        verbose_name='Цвет фона модального окна')
+    background_gradient_start = models.CharField(max_length=7, default='#f8f9fa',
+                                                 verbose_name='Градиент фона: начало')
+    background_gradient_end = models.CharField(max_length=7, default='#e9ecef',
+                                               verbose_name='Градиент фона: конец')
+    icon_background_color = models.CharField(max_length=7, default='#007bff',
+                                             verbose_name='Цвет фона иконки')
+    icon_background_gradient_start = models.CharField(max_length=7, default='#007bff',
+                                                      verbose_name='Градиент иконки: начало')
+    icon_background_gradient_end = models.CharField(max_length=7, default='#0056b3',
+                                                    verbose_name='Градиент иконки: конец')
+    title_color = models.CharField(max_length=7, default='#000000',
+                                   verbose_name='Цвет заголовка')
+    subtitle_color = models.CharField(max_length=7, default='#007bff',
+                                      verbose_name='Цвет подзаголовка')
+    description_color = models.CharField(max_length=7, default='#666666',
+                                         verbose_name='Цвет описания')
+    button_background_color = models.CharField(max_length=7, default='#007bff',
+                                               verbose_name='Цвет фона кнопки')
+    button_background_gradient_start = models.CharField(max_length=7, default='#007bff',
+                                                         verbose_name='Градиент кнопки: начало')
+    button_background_gradient_end = models.CharField(max_length=7, default='#0056b3',
+                                                       verbose_name='Градиент кнопки: конец')
+    button_text_color = models.CharField(max_length=7, default='#ffffff',
+                                         verbose_name='Цвет текста кнопки')
+    skip_button_color = models.CharField(max_length=7, default='#666666',
+                                         verbose_name='Цвет кнопки "Пропустить"')
+    
+    # Настройки отображения
+    icon_size = models.IntegerField(default=80, verbose_name='Размер иконки (px)')
+    title_font_size = models.IntegerField(default=24, verbose_name='Размер шрифта заголовка (px)')
+    subtitle_font_size = models.IntegerField(default=20, verbose_name='Размер шрифта подзаголовка (px)')
+    description_font_size = models.IntegerField(default=16, verbose_name='Размер шрифта описания (px)')
+    button_height = models.IntegerField(default=48, verbose_name='Высота кнопки (px)')
+    button_font_size = models.IntegerField(default=16, verbose_name='Размер шрифта кнопки (px)')
+    
+    # Тени и эффекты
+    icon_shadow = models.CharField(max_length=100, default='0 8px 24px rgba(0, 123, 255, 0.3)',
+                                   verbose_name='Тень иконки')
+    button_shadow = models.CharField(max_length=100, default='0 4px 16px rgba(0, 123, 255, 0.3)',
+                                     verbose_name='Тень кнопки')
+    border_radius = models.IntegerField(default=12, verbose_name='Скругление углов (px)')
+    
+    # Даты
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создано')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='Обновлено')
+    
+    class Meta:
+        db_table = 'modal_settings'
+        verbose_name = 'Настройки модального окна'
+        verbose_name_plural = 'Настройки модального окна'
+    
+    def __str__(self):
+        return f"Настройки модального окна (обновлено: {self.updated_at.strftime('%d.%m.%Y %H:%M')})"
+    
+    @classmethod
+    def get_or_create_settings(cls):
+        """Получить или создать настройки модального окна"""
+        settings = cls.objects.first()
+        if not settings:
+            settings = cls.objects.create()
+        return settings
+    
+    def to_dict(self):
+        """Преобразовать в словарь для API"""
+        return {
+            'enabled': self.is_enabled,
+            'show_delay': self.show_delay,
+            'texts': {
+                'title': self.title,
+                'main_title': self.main_title,
+                'subtitle': self.subtitle,
+                'description': self.description,
+                'button_text': self.button_text,
+                'skip_button_text': self.skip_button_text,
+            },
+            'colors': {
+                'background': self.background_color,
+                'background_gradient': {
+                    'start': self.background_gradient_start,
+                    'end': self.background_gradient_end,
+                },
+                'icon_background': self.icon_background_color,
+                'icon_background_gradient': {
+                    'start': self.icon_background_gradient_start,
+                    'end': self.icon_background_gradient_end,
+                },
+                'title': self.title_color,
+                'subtitle': self.subtitle_color,
+                'description': self.description_color,
+                'button_background': self.button_background_color,
+                'button_background_gradient': {
+                    'start': self.button_background_gradient_start,
+                    'end': self.button_background_gradient_end,
+                },
+                'button_text': self.button_text_color,
+                'skip_button': self.skip_button_color,
+            },
+            'sizes': {
+                'icon_size': self.icon_size,
+                'title_font_size': self.title_font_size,
+                'subtitle_font_size': self.subtitle_font_size,
+                'description_font_size': self.description_font_size,
+                'button_height': self.button_height,
+                'button_font_size': self.button_font_size,
+            },
+            'effects': {
+                'icon_shadow': self.icon_shadow,
+                'button_shadow': self.button_shadow,
+                'border_radius': self.border_radius,
+            }
+        }
+
+
 class ClickLog(models.Model):
     """Логирование кликов по офферам"""
     offer = models.ForeignKey(

@@ -15,6 +15,9 @@ urlpatterns = [
     path('unsubscribe/', views.unsubscribe_view, name='unsubscribe'),
     path('subscription/status/', views.subscription_status_view, name='subscription_status'),
     
+    # Modal Settings API
+    path('modal-settings/', views.modal_settings_view, name='modal_settings'),
+    
     # Statistics HTML (для админов)
     path('statistics/', statistics_views.statistics_dashboard_html, name='statistics_html'),
     

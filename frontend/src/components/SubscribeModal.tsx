@@ -4,10 +4,6 @@ import {
   ModalPage,
   ModalPageHeader,
   Button,
-  Title,
-  Text,
-  Div,
-  Spacing,
 } from '@vkontakte/vkui';
 import { Icon56NotificationOutline } from '@vkontakte/icons';
 import bridge from '@vkontakte/vk-bridge';
@@ -106,76 +102,125 @@ export default function SubscribeModal({ groupId, userId, launchParams, onClose 
         onClose={handleSkip}
         header={
           <ModalPageHeader>
-            Эксклюзивное предложение
+            <div style={{ 
+              textAlign: 'center', 
+              fontSize: '18px', 
+              fontWeight: '600',
+              color: 'var(--text-primary)'
+            }}>
+              🎉 Эксклюзивное предложение
+            </div>
           </ModalPageHeader>
         }
       >
-        <Div style={{ 
-          display: 'flex', 
-          flexDirection: 'column', 
+        <div style={{ 
+          padding: '32px 24px',
+          minHeight: '400px',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
           alignItems: 'center',
           textAlign: 'center',
-          padding: '24px'
+          background: 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)',
+          borderRadius: '12px',
+          margin: '16px'
         }}>
-          <Icon56NotificationOutline style={{ color: 'var(--accent)' }} />
+          {/* Иконка */}
+          <div style={{
+            width: '80px',
+            height: '80px',
+            borderRadius: '50%',
+            background: 'linear-gradient(135deg, #007bff 0%, #0056b3 100%)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginBottom: '24px',
+            boxShadow: '0 8px 24px rgba(0, 123, 255, 0.3)'
+          }}>
+            <Icon56NotificationOutline style={{ 
+              color: 'white',
+              fontSize: '40px'
+            }} />
+          </div>
           
-          <Spacing size={16} />
-          
-          <Title level="2" weight="2">
+          {/* Заголовок */}
+          <h2 style={{
+            fontSize: '24px',
+            fontWeight: '700',
+            color: 'var(--text-primary)',
+            margin: '0 0 12px 0',
+            lineHeight: '1.2'
+          }}>
             ЭКСКЛЮЗИВНОЕ ПРЕДЛОЖЕНИЕ
-          </Title>
+          </h2>
           
-          <Spacing size={12} />
-          
-          <Text style={{ 
-            fontSize: '18px',
-            fontWeight: 600,
-            color: 'var(--accent)'
+          {/* Подзаголовок */}
+          <div style={{
+            fontSize: '20px',
+            fontWeight: '600',
+            color: '#007bff',
+            marginBottom: '16px',
+            background: 'linear-gradient(135deg, #007bff 0%, #0056b3 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text'
           }}>
             Получите займ под 0%
-          </Text>
+          </div>
           
-          <Spacing size={8} />
-          
-          <Text style={{ 
-            fontSize: '15px',
+          {/* Описание */}
+          <p style={{
+            fontSize: '16px',
             color: 'var(--text-secondary)',
-            lineHeight: '1.5'
+            lineHeight: '1.5',
+            margin: '0 0 32px 0',
+            maxWidth: '320px'
           }}>
             {groupId 
               ? 'Подпишитесь на уведомления, чтобы первыми узнавать о новых предложениях и эксклюзивных условиях'
               : 'Зарегистрируйтесь в нашем сервисе, чтобы получить доступ к лучшим предложениям по займам'
             }
-          </Text>
+          </p>
           
-          <Spacing size={24} />
-          
-          <Button
-            size="l"
-            stretched
-            mode="primary"
-            onClick={handleSubscribe}
-            loading={isLoading}
-            style={{ 
-              marginBottom: '12px',
-              background: 'var(--button-primary-background)',
-              fontSize: '16px',
-              fontWeight: 600
-            }}
-          >
-            {groupId ? '🔔 Подписаться и получить займ' : '✅ Зарегистрироваться и получить займ'}
-          </Button>
-          
-          <Button
-            size="l"
-            stretched
-            mode="tertiary"
-            onClick={handleSkip}
-            disabled={isLoading}
-          >
-            Пропустить
-          </Button>
-        </Div>
+          {/* Кнопки */}
+          <div style={{ width: '100%', maxWidth: '280px' }}>
+            <Button
+              size="l"
+              stretched
+              mode="primary"
+              onClick={handleSubscribe}
+              loading={isLoading}
+              style={{ 
+                marginBottom: '16px',
+                background: 'linear-gradient(135deg, #007bff 0%, #0056b3 100%)',
+                border: 'none',
+                fontSize: '16px',
+                fontWeight: '600',
+                height: '48px',
+                borderRadius: '12px',
+                boxShadow: '0 4px 16px rgba(0, 123, 255, 0.3)'
+              }}
+            >
+              {groupId ? '🔔 Подписаться и получить займ' : '✅ Зарегистрироваться и получить займ'}
+            </Button>
+            
+            <Button
+              size="l"
+              stretched
+              mode="tertiary"
+              onClick={handleSkip}
+              disabled={isLoading}
+              style={{
+                fontSize: '14px',
+                color: 'var(--text-secondary)',
+                height: '40px',
+                borderRadius: '8px'
+              }}
+            >
+              Пропустить
+            </Button>
+          </div>
+        </div>
       </ModalPage>
     </ModalRoot>
   );

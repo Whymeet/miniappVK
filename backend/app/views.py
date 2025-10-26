@@ -9,7 +9,7 @@ from django_ratelimit.decorators import ratelimit
 
 from .brands import get_brand_config
 from .offers import get_offers, get_offer_by_id
-from .models import ClickLog, Subscriber, Offer, AppConfig
+from .models import ClickLog, Subscriber, Offer, AppConfig, ModalSettings
 from .vk_api import check_messages_allowed, VKAPIError
 from .statistics import (
     get_offer_statistics,
@@ -359,4 +359,27 @@ def subscription_status_view(request):
                 'can_receive_messages': False,
             }
         })
+
+
+@ratelimit(key='ip', rate='60/m', method='GET')
+@api_view(['GET'])
+def modal_settings_view(request):
+    """
+    GET /api/modal-settings/
+    
+    Возвращает настройки модального окна подписки.
+    """
+    try:
+        modal_settings = ModalSettings.get_or_create_settings()
+        settings_data = modal_settings.to_dict()
+        
+        return Response({
+            'success': True,
+            'data': settings_data
+        })
+    except Exception as e:
+        return Response({
+            'success': False,
+            'error': f'Failed to load modal settings: {str(e)}'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
