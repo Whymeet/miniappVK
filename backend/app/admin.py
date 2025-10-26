@@ -488,7 +488,7 @@ class ModalSettingsAdmin(admin.ModelAdmin):
     
     fieldsets = (
         ('🔧 Основные настройки', {
-            'fields': ('is_enabled', 'show_delay'),
+            'fields': ('is_enabled', 'show_delay', 'show_mode'),
             'description': 'Включите модальное окно и настройте задержку показа'
         }),
         ('📝 Тексты', {

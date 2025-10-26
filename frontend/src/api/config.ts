@@ -30,3 +30,18 @@ export async function fetchConfig(
   return response.json();
 }
 
+/**
+ * Получить настройки модального окна
+ */
+export async function fetchModalSettings(): Promise<ApiResponse<any>> {
+  const url = `${API_BASE}/api/modal-settings/`;
+  
+  const response = await fetch(url);
+  
+  if (!response.ok) {
+    throw new Error(`Failed to fetch modal settings: ${response.statusText}`);
+  }
+  
+  return response.json();
+}
+

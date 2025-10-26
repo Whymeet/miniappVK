@@ -14,7 +14,7 @@ import '@vkontakte/vkui/dist/vkui.css';
 import bridge from '@vkontakte/vk-bridge';
 import { useConfig } from './hooks/useConfig';
 import { useLaunchParams } from './hooks/useLaunchParams';
-import { useSubscribe } from './hooks/useSubscription';
+import { useModalSettings } from './hooks/useModalSettings';
 import OffersPage from './pages/OffersPage';
 import PolicyPage from './pages/PolicyPage';
 import { applyTheme } from './utils/theme';
@@ -27,7 +27,7 @@ function App() {
   const [showSubscribeModal, setShowSubscribeModal] = useState(false);
   const launchParams = useLaunchParams();
   const { data: config, isLoading, error } = useConfig(launchParams.groupId, launchParams.brand);
-  const subscribeMutation = useSubscribe();
+  const { data: modalSettings } = useModalSettings();
 
   useEffect(() => {
     // Инициализация VK Bridge
@@ -49,56 +49,52 @@ function App() {
     }
   }, [config]);
 
-  // Автоматическая подписка при входе
-  useEffect(() => {
-    if (launchParams.userId && config?.data?.brand && (launchParams as any).rawParams) {
-      console.log('Auto-subscribing with params:', {
-        hasRawParams: !!(launchParams as any).rawParams,
-        rawParamsKeys: Object.keys((launchParams as any).rawParams || {}),
-        brand: config.data.brand
-      });
-      
-      subscribeMutation.mutate({
-        launchParams: (launchParams as any).rawParams,
-        brand: config.data.brand,
-      });
-    } else {
-      console.warn('Cannot auto-subscribe:', {
-        hasUserId: !!launchParams.userId,
-        hasBrand: !!config?.data?.brand,
-        hasRawParams: !!(launchParams as any).rawParams
-      });
-    }
-  }, [launchParams.userId, config?.data?.brand]);
+  // Автоматическая подписка убрана - теперь только через модальное окно
 
   // Показываем модалку подписки после загрузки конфига
   useEffect(() => {
-    if (config?.data && launchParams.userId) {
+    if (config?.data && launchParams.userId && modalSettings?.data && modalSettings.data.success) {
       console.log('Checking if should show modal:', {
         userId: launchParams.userId,
         groupId: launchParams.groupId,
         hasRawParams: !!(launchParams as any).rawParams,
-        rawParams: (launchParams as any).rawParams
+        rawParams: (launchParams as any).rawParams,
+        modalSettings: modalSettings.data
       });
       
       console.log('Full rawParams object:', (launchParams as any).rawParams);
       
-      // Проверяем localStorage - показывали ли уже модалку
-      const modalShown = localStorage.getItem(`subscribe_modal_shown_${launchParams.userId}`);
+      // Проверяем настройки модального окна
+      const shouldShow = () => {
+        if (!modalSettings.data.data.enabled || !config.data.features.enable_messages) {
+          return false;
+        }
+        
+        if (modalSettings.data.data.show_mode === 'every_time') {
+          return true; // Показывать при каждом заходе
+        } else if (modalSettings.data.data.show_mode === 'until_subscribed') {
+          // Показывать только если не подписан (текущая логика)
+          const modalShown = localStorage.getItem(`subscribe_modal_shown_${launchParams.userId}`);
+          return !modalShown;
+        }
+        
+        return false;
+      };
       
-      if (!modalShown && config.data.features.enable_messages) {
-        // Небольшая задержка для лучшего UX
+      if (shouldShow()) {
+        // Задержка из настроек или по умолчанию
+        const delay = modalSettings.data.data.show_delay || 500;
         setTimeout(() => {
           setShowSubscribeModal(true);
-        }, 500);
+        }, delay);
       }
     }
-  }, [config, launchParams.userId]);
+  }, [config, launchParams.userId, modalSettings]);
 
   const handleCloseSubscribeModal = () => {
     setShowSubscribeModal(false);
-    // Сохраняем, что модалка была показана
-    if (launchParams.userId) {
+    // Сохраняем, что модалка была показана только в режиме "пока не подписался"
+    if (launchParams.userId && modalSettings?.data?.data?.show_mode === 'until_subscribed') {
       localStorage.setItem(`subscribe_modal_shown_${launchParams.userId}`, 'true');
     }
   };

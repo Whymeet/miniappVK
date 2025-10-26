@@ -360,6 +360,13 @@ class ModalSettings(models.Model):
     is_enabled = models.BooleanField(default=True, verbose_name='Включить модальное окно')
     show_delay = models.IntegerField(default=2000, verbose_name='Задержка показа (мс)',
                                      help_text='Через сколько миллисекунд показать модалку')
+    show_mode = models.CharField(max_length=20, default='until_subscribed', 
+                                 verbose_name='Режим показа',
+                                 choices=[
+                                     ('every_time', 'При каждом заходе'),
+                                     ('until_subscribed', 'Пока не подписался'),
+                                 ],
+                                 help_text='Когда показывать модальное окно')
     
     # Тексты
     title = models.CharField(max_length=200, default='🎉 Эксклюзивное предложение', 
@@ -447,6 +454,7 @@ class ModalSettings(models.Model):
         return {
             'enabled': self.is_enabled,
             'show_delay': self.show_delay,
+            'show_mode': self.show_mode,
             'texts': {
                 'title': self.title,
                 'main_title': self.main_title,
