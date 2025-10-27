@@ -117,11 +117,11 @@
 
 /* ===== АДАПТИВНОСТЬ ===== */
 
-/* Мобильные устройства - bottom sheet style */
+/* Мобильные устройства - по центру */
 @media (max-width: 768px) {
     .custom-modal-overlay {
-        align-items: flex-end; /* прижать к низу */
-        padding: 0;
+        align-items: center; /* по центру, а не снизу */
+        padding: 16px;
         justify-content: center;
     }
     
@@ -132,7 +132,7 @@
     }
     
     .custom-modal-card {
-        border-radius: 20px 20px 0 0; /* скругление только сверху */
+        border-radius: 16px; /* полное скругление */
         max-height: 90vh;
         overflow-y: auto;
         margin: 0;
