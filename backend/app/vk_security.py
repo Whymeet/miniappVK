@@ -67,17 +67,15 @@ def verify_vk_launch_params(params: Dict[str, str]) -> bool:
         ).digest()
         
         # Конвертируем в base64url (как VK отправляет)
-        # VK использует стандартную base64url кодировку с заменой символов
+        # VK использует стандартную base64url кодировку с символами - и _
         calculated_sign = base64.urlsafe_b64encode(signature).decode('utf-8').rstrip('=')
         
-        # Простое сравнение с заменой символов base64url
-        # VK использует base64url с символами _ и -, а мы вычисляем с / и +
-        normalized_sign = sign.replace('_', '/').replace('-', '+')
-        is_valid = calculated_sign == normalized_sign
+        # Сравниваем напрямую в URL-safe формате (без нормализации)
+        is_valid = calculated_sign == sign
         
         if not is_valid:
             logger.warning(
-                f"VK signature check failed: expected {calculated_sign}, got {sign}, normalized: {normalized_sign}"
+                f"VK signature check failed: expected {calculated_sign}, got {sign}"
             )
         
         return is_valid
