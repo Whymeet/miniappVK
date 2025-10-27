@@ -1,0 +1,18 @@
+.vkuiModalPage {
+    /* Убираем белую область вокруг */
+    background: transparent !important;
+}
+
+.vkuiModalPage__in {
+    /* Центрируем модальное окно */
+    margin: 0 auto !important;
+    /* Добавляем максимальную ширину */
+    max-width: 500px;
+    /* Убираем белый фон */
+    background: var(--vkui--color_background_modal) !important;
+}
+
+/* Убираем белый фон у внутреннего контейнера */
+.vkuiModalPage__content-in {
+    background: var(--vkui--color_background_modal) !important;
+}

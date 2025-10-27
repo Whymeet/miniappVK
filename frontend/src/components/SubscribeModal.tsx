@@ -9,6 +9,7 @@ import {
   Div,
   Spacing,
 } from '@vkontakte/vkui';
+import './SubscribeModal.css';
 import { Icon56NotificationOutline } from '@vkontakte/icons';
 import bridge from '@vkontakte/vk-bridge';
 import { useAllowMessages, useSubscriptionStatus } from '@/hooks/useSubscription';
