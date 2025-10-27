@@ -9,6 +9,8 @@
 .env.production
 .env.staging
 *.env
+!/frontend/.env.desktop
+!/frontend/.env.mobile
 
 # Секретные ключи и конфиги
 secrets/
