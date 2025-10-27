@@ -1,21 +1,29 @@
 /* ===== OVERLAY / BACKDROP ===== */
 /* Затемненный фон вокруг модального окна */
 .vkuiModalRoot__mask,
-.vkuiPopoutWrapper {
+.vkuiPopoutWrapper,
+.vkuiModalRoot__overlay,
+[class*="ModalRoot__mask"],
+[class*="PopoutWrapper"] {
+    background: rgba(0, 0, 0, 0.6) !important;
+}
+
+/* Дополнительная обертка ModalRoot */
+.vkuiModalRoot {
     background: rgba(0, 0, 0, 0.6) !important;
 }
 
 /* ===== МОДАЛЬНОЕ ОКНО - БАЗОВЫЕ СТИЛИ ===== */
 /* Контейнер модального окна */
-.vkuiModalPage {
-    background: #FFFFFF !important;
-    border-radius: 16px !important;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
-    overflow: hidden !important;
+#subscribe.vkuiModalPage,
+.vkuiModalPage#subscribe {
+    background: transparent !important;
+    position: relative !important;
 }
 
-/* Обертка для анимации */
-.vkuiModalPage__in-wrap {
+/* Обертка для анимации - здесь происходит центрирование */
+#subscribe .vkuiModalPage__in-wrap,
+.vkuiModalPage#subscribe .vkuiModalPage__in-wrap {
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -23,51 +31,54 @@
     padding: 16px !important;
 }
 
-/* Внутренний контейнер */
-.vkuiModalPage__in {
+/* Внутренний контейнер - это белая карточка */
+#subscribe .vkuiModalPage__in,
+.vkuiModalPage#subscribe .vkuiModalPage__in {
     background: #FFFFFF !important;
     width: 100% !important;
     max-width: 500px !important;
     margin: 0 auto !important;
     border-radius: 16px !important;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+    overflow: hidden !important;
 }
 
 /* ===== HEADER / ЗАГОЛОВОК ===== */
-.vkuiModalPageHeader,
-.vkuiInternalModalPageHeader__in,
-.vkuiPanelHeader,
-.vkuiInternalPanelHeader {
+#subscribe .vkuiModalPageHeader,
+#subscribe .vkuiInternalModalPageHeader__in,
+#subscribe .vkuiPanelHeader,
+#subscribe .vkuiInternalPanelHeader {
     background: #FFFFFF !important;
     border-radius: 16px 16px 0 0 !important;
 }
 
-.vkuiPanelHeader__content-in {
+#subscribe .vkuiPanelHeader__content-in {
     color: #111827 !important;
     font-weight: 600 !important;
 }
 
 /* Разделитель под заголовком */
-.vkuiSeparator {
+#subscribe .vkuiSeparator {
     background: #E5E7EB !important;
 }
 
-.vkuiSeparator__in {
+#subscribe .vkuiSeparator__in {
     border-color: #E5E7EB !important;
 }
 
 /* ===== CONTENT / КОНТЕНТ ===== */
-.vkuiModalPage__content-wrap,
-.vkuiModalPage__content,
-.vkuiModalPage__content-in {
+#subscribe .vkuiModalPage__content-wrap,
+#subscribe .vkuiModalPage__content,
+#subscribe .vkuiModalPage__content-in {
     background: #FFFFFF !important;
 }
 
 /* ===== КНОПКА ЗАКРЫТИЯ (X) ===== */
-.vkuiModalDismissButton {
+#subscribe .vkuiModalDismissButton {
     color: #6B7280 !important;
 }
 
-.vkuiModalDismissButton:hover {
+#subscribe .vkuiModalDismissButton:hover {
     color: #111827 !important;
 }
 
@@ -112,43 +123,44 @@
 
 /* Десктоп (большие экраны) */
 @media (min-width: 769px) {
-    .vkuiModalPage__in-wrap {
+    #subscribe .vkuiModalPage__in-wrap {
         padding: 24px !important;
     }
     
-    .vkuiModalPage__in {
+    #subscribe .vkuiModalPage__in {
         max-width: 500px !important;
     }
 }
 
 /* Планшеты */
 @media (min-width: 481px) and (max-width: 768px) {
-    .vkuiModalPage__in-wrap {
+    #subscribe .vkuiModalPage__in-wrap {
         padding: 20px !important;
     }
     
-    .vkuiModalPage__in {
+    #subscribe .vkuiModalPage__in {
         max-width: 480px !important;
     }
 }
 
 /* Мобильные устройства */
 @media (max-width: 480px) {
-    .vkuiModalPage__in-wrap {
+    #subscribe .vkuiModalPage__in-wrap {
         padding: 12px !important;
     }
     
-    .vkuiModalPage__in {
+    #subscribe .vkuiModalPage__in {
         max-width: 100% !important;
-    }
-    
-    .vkuiModalPage {
         border-radius: 12px !important;
     }
     
-    .vkuiModalPageHeader,
-    .vkuiInternalModalPageHeader__in,
-    .vkuiPanelHeader {
+    #subscribe.vkuiModalPage {
+        border-radius: 0 !important;
+    }
+    
+    #subscribe .vkuiModalPageHeader,
+    #subscribe .vkuiInternalModalPageHeader__in,
+    #subscribe .vkuiPanelHeader {
         border-radius: 12px 12px 0 0 !important;
     }
     
@@ -176,7 +188,7 @@
 
 /* Очень маленькие экраны */
 @media (max-width: 360px) {
-    .vkuiModalPage__in-wrap {
+    #subscribe .vkuiModalPage__in-wrap {
         padding: 8px !important;
     }
 }
