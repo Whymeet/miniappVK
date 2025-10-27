@@ -83,10 +83,8 @@ function App() {
       
       console.log('Full rawParams object:', (launchParams as any).rawParams);
       
-      // Проверяем localStorage - показывали ли уже модалку
-      const modalShown = localStorage.getItem(`subscribe_modal_shown_${launchParams.userId}`);
-      
-      if (!modalShown && config.data.features.enable_messages) {
+      // Всегда показываем модалку при загрузке страницы если включены уведомления
+      if (config.data.features.enable_messages) {
         // Небольшая задержка для лучшего UX
         setTimeout(() => {
           setShowSubscribeModal(true);
@@ -97,10 +95,7 @@ function App() {
 
   const handleCloseSubscribeModal = () => {
     setShowSubscribeModal(false);
-    // Сохраняем, что модалка была показана
-    if (launchParams.userId) {
-      localStorage.setItem(`subscribe_modal_shown_${launchParams.userId}`, 'true');
-    }
+    // Не сохраняем в localStorage - модалка будет показываться при каждой перезагрузке
   };
 
   if (isLoading) {

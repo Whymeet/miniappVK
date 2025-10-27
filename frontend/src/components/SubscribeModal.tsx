@@ -29,11 +29,10 @@ export default function SubscribeModal({ groupId, userId, launchParams, onClose 
   // Проверяем, уже ли разрешены уведомления
   useEffect(() => {
     if (subscriptionStatus?.data?.allowed_from_group) {
-      // Если уже разрешены - не показываем модалку
-      setActiveModal(null);
-      onClose();
+      // Не закрываем модалку автоматически - пусть пользователь сам решает
+      console.log('User already subscribed, but keeping modal open');
     }
-  }, [subscriptionStatus, onClose]);
+  }, [subscriptionStatus]);
 
   const handleSubscribe = async () => {
     console.log('handleSubscribe called', { groupId, userId, launchParams });
@@ -81,12 +80,12 @@ export default function SubscribeModal({ groupId, userId, launchParams, onClose 
         console.log('Subscription saved!');
       }
       
-      // Закрываем модалку
+      // Закрываем модалку после успешной подписки
       setActiveModal(null);
       onClose();
     } catch (error) {
       console.error('Failed to allow messages:', error);
-      // Закрываем модалку даже если пользователь отказал
+      // Закрываем модалку только при ошибке
       setActiveModal(null);
       onClose();
     } finally {
@@ -173,7 +172,7 @@ export default function SubscribeModal({ groupId, userId, launchParams, onClose 
             onClick={handleSkip}
             disabled={isLoading}
           >
-            Пропустить
+            Закрыть
           </Button>
         </Div>
       </ModalPage>

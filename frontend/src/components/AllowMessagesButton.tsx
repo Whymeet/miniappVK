@@ -16,12 +16,27 @@ export default function AllowMessagesButton({ groupId, userId, launchParams }: A
   const allowMessagesMutation = useAllowMessages();
   const { data: subscriptionStatus } = useSubscriptionStatus(userId, launchParams);
 
-  // Проверяем статус из базы данных
+  // Проверяем статус из базы данных и localStorage
   useEffect(() => {
+    console.log('AllowMessagesButton: checking subscription status', {
+      subscriptionStatus,
+      userId,
+      isAllowed
+    });
+    
     if (subscriptionStatus?.success && subscriptionStatus.data) {
-      setIsAllowed(subscriptionStatus.data.allowed_from_group);
+      const newAllowed = subscriptionStatus.data.allowed_from_group;
+      console.log('AllowMessagesButton: setting isAllowed from API:', newAllowed);
+      setIsAllowed(newAllowed);
+    } else if (userId) {
+      // Проверяем localStorage как fallback
+      const localAllowed = localStorage.getItem(`messages_allowed_${userId}`);
+      if (localAllowed === 'true') {
+        console.log('AllowMessagesButton: setting isAllowed from localStorage: true');
+        setIsAllowed(true);
+      }
     }
-  }, [subscriptionStatus]);
+  }, [subscriptionStatus, userId]);
 
   const handleAllowMessages = async () => {
     if (!groupId || !userId || !launchParams) {
@@ -49,6 +64,7 @@ export default function AllowMessagesButton({ groupId, userId, launchParams }: A
           {
             onSuccess: (response) => {
               if (response.success) {
+                console.log('AllowMessagesButton: subscription successful, updating state');
                 setIsAllowed(true);
                 // Сохраняем в localStorage для быстрого доступа
                 localStorage.setItem(`messages_allowed_${userId}`, 'true');
@@ -88,7 +104,7 @@ export default function AllowMessagesButton({ groupId, userId, launchParams }: A
     }
   };
 
-  // Если уже разрешено, показываем статус
+  // Если уже разрешено, показываем кнопку отписки
   if (isAllowed) {
     return (
       <>
@@ -96,9 +112,19 @@ export default function AllowMessagesButton({ groupId, userId, launchParams }: A
           size="l"
           stretched
           mode="secondary"
-          disabled
+          onClick={() => {
+            // TODO: Реализовать функционал отписки позже
+            setSnackbar(
+              <Snackbar
+                onClose={() => setSnackbar(null)}
+                before={<Avatar size={24}><Icon28CheckCircleOutline fill="var(--color-success)" /></Avatar>}
+              >
+                Функция отписки будет добавлена позже
+              </Snackbar>
+            );
+          }}
         >
-          ✓ Уведомления включены
+          Отписаться от уведомлений
         </Button>
         {snackbar}
       </>
