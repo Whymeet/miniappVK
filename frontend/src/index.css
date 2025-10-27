@@ -272,3 +272,21 @@ body.card-gradient-enabled .offer-card-gradient.vkuiCard {
   background: var(--bg) !important;
 }
 
+/* Исправление проблемы с модальным заголовком - убираем белые полоски по бокам */
+.vkuiModalPageHeader {
+  background-color: var(--bg) !important;
+}
+
+.vkuiInternalModalPageHeader__in {
+  background-color: var(--bg) !important;
+  width: 100% !important;
+}
+
+.vkuiPanelHeader {
+  background-color: var(--bg) !important;
+}
+
+.vkuiInternalPanelHeader {
+  background-color: var(--bg) !important;
+}
+

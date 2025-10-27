@@ -120,7 +120,7 @@ export default function SubscribeModal({ groupId, userId, launchParams, onClose 
           
           <Spacing size={16} />
           
-          <Title level="2" weight="2">
+          <Title level="2" weight="2" style={{ color: '#FFFFFF' }}>
             ЭКСКЛЮЗИВНОЕ ПРЕДЛОЖЕНИЕ
           </Title>
           
@@ -157,7 +157,7 @@ export default function SubscribeModal({ groupId, userId, launchParams, onClose 
             loading={isLoading}
             style={{ 
               marginBottom: '12px',
-              background: 'var(--button-primary-background)',
+              background: 'var(--accent)',
               fontSize: '16px',
               fontWeight: 600
             }}

@@ -163,12 +163,14 @@ export default function OffersPage({ config, launchParams }: OffersPageProps) {
 
       {/* Кнопка разрешения уведомлений */}
       {config.features.enable_messages && launchParams.groupId && launchParams.userId && (
-        <div className="section">
-          <AllowMessagesButton 
-            groupId={launchParams.groupId}
-            userId={launchParams.userId}
-            launchParams={(launchParams as any).rawParams}
-          />
+        <div className="section" style={{ display: 'flex', justifyContent: 'center' }}>
+          <div style={{ maxWidth: '400px', width: '100%' }}>
+            <AllowMessagesButton 
+              groupId={launchParams.groupId}
+              userId={launchParams.userId}
+              launchParams={(launchParams as any).rawParams}
+            />
+          </div>
         </div>
       )}
 
