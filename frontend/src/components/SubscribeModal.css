@@ -59,14 +59,14 @@
 }
 
 .custom-modal-close:hover {
-    background: #F3F4F6;
+    background: #000205;
     color: #111827;
 }
 
 /* Заголовок */
 .custom-modal-header {
     padding: 20px 24px 16px;
-    border-bottom: 1px solid #E5E7EB;
+    border-bottom: 1px solid #17bacf2c;
     text-align: center;
 }
 
@@ -115,47 +115,44 @@
     margin: 0;
 }
 
-/* Кнопка подписки */
-.custom-modal-primary-button {
-    background: var(--accent) !important;
-    font-size: 16px !important;
-    font-weight: 600 !important;
-}
-
 /* ===== АДАПТИВНОСТЬ ===== */
 
-/* Планшеты */
-@media (min-width: 481px) and (max-width: 768px) {
-    .custom-modal-container {
-        max-width: 480px;
+/* Мобильные устройства - bottom sheet style */
+@media (max-width: 768px) {
+    .custom-modal-overlay {
+        align-items: flex-end; /* прижать к низу */
+        padding: 0;
+        justify-content: center;
     }
     
-    .custom-modal-overlay {
-        padding: 20px;
-    }
-}
-
-/* Мобильные устройства */
-@media (max-width: 480px) {
-    .custom-modal-overlay {
-        padding: 12px;
-        align-items: flex-end;
+    .custom-modal-container {
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
     }
     
     .custom-modal-card {
-        border-radius: 12px;
+        border-radius: 20px 20px 0 0; /* скругление только сверху */
+        max-height: 90vh;
+        overflow-y: auto;
+        margin: 0;
+        width: 100%;
+    }
+    
+    .custom-modal-close {
+        width: 40px;
+        height: 40px; /* увеличить для удобства нажатия */
+        top: 16px;
+        right: 16px;
+        font-size: 20px;
     }
     
     .custom-modal-header {
-        padding: 16px 20px 12px;
-    }
-    
-    .custom-modal-header h2 {
-        font-size: 16px;
+        padding: 24px 24px 16px;
     }
     
     .custom-modal-content {
-        padding: 20px 16px;
+        padding: 16px 24px 32px; /* увеличить нижний отступ для удобства */
     }
     
     .custom-modal-title {
@@ -168,55 +165,23 @@
     
     .custom-modal-description {
         font-size: 14px !important;
-    }
-    
-    .custom-modal-primary-button {
-        font-size: 15px !important;
-    }
-    
-    .custom-modal-close {
-        width: 28px;
-        height: 28px;
-        font-size: 20px;
+        line-height: 1.6 !important;
     }
 }
 
-/* Очень маленькие экраны */
-@media (max-width: 360px) {
+/* Планшеты */
+@media (min-width: 481px) and (max-width: 768px) {
+    .custom-modal-container {
+        max-width: 480px;
+    }
+    
     .custom-modal-overlay {
-        padding: 8px;
+        padding: 20px;
+        align-items: center; /* вернуть центрирование для планшетов */
     }
     
-    .custom-modal-content {
-        padding: 16px 12px;
+    .custom-modal-card {
+        border-radius: 16px; /* вернуть полное скругление */
+        max-height: none;
     }
-}
-
-/* Анимация появления */
-@keyframes modalFadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes modalSlideUp {
-    from {
-        transform: translateY(20px);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
-
-.custom-modal-overlay {
-    animation: modalFadeIn 0.2s ease-out;
-}
-
-.custom-modal-card {
-    animation: modalSlideUp 0.3s ease-out;
 }

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Spinner,
@@ -26,6 +26,18 @@ export default function OffersPage({ config, launchParams }: OffersPageProps) {
     sort: config.features.default_sort,
     page: 1,
   });
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 480);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const { data, isLoading, error } = useOffers(launchParams.groupId, filters);
 
@@ -47,14 +59,36 @@ export default function OffersPage({ config, launchParams }: OffersPageProps) {
   return (
     <div className="page-stack">
       {/* Лого и заголовок */}
-      <div className="section" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', padding: 'var(--space-md)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+      <div className="section" style={{ 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'space-between', 
+        gap: '12px', 
+        padding: isMobile ? 'var(--space-sm)' : 'var(--space-md)',
+        flexDirection: isMobile ? 'column' : 'row'
+      }}>
+        <div style={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          gap: '12px',
+          width: isMobile ? '100%' : 'auto',
+          justifyContent: isMobile ? 'center' : 'flex-start'
+        }}>
           <Logo
             src={config.logo_url}
             alt={config.name}
-            style={{ maxWidth: 60, height: 60, objectFit: 'contain' }}
+            style={{ 
+              maxWidth: isMobile ? 48 : 60, 
+              height: isMobile ? 48 : 60, 
+              objectFit: 'contain' 
+            }}
           />
-          <Text style={{ fontSize: 'var(--text-lg)', fontWeight: 600, color: 'var(--text-primary)' }}>
+          <Text style={{ 
+            fontSize: isMobile ? 'var(--text-md)' : 'var(--text-lg)', 
+            fontWeight: 600, 
+            color: 'var(--text-primary)',
+            textAlign: isMobile ? 'center' : 'left'
+          }}>
             Кубышка займ
           </Text>
         </div>
@@ -66,13 +100,16 @@ export default function OffersPage({ config, launchParams }: OffersPageProps) {
             style={{
               backgroundColor: config.vk_button.button_color,
               color: '#FFFFFF',
-              padding: '8px 16px',
+              padding: isMobile ? '10px 20px' : '8px 16px',
               borderRadius: '8px',
               textDecoration: 'none',
-              fontSize: 'var(--text-sm)',
+              fontSize: isMobile ? 'var(--text-sm)' : 'var(--text-sm)',
               fontWeight: 600,
               whiteSpace: 'nowrap',
               transition: 'opacity 0.2s',
+              width: isMobile ? '100%' : 'auto',
+              textAlign: 'center',
+              display: 'block'
             }}
             onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) => e.currentTarget.style.opacity = '0.8'}
             onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) => e.currentTarget.style.opacity = '1'}
@@ -98,7 +135,7 @@ export default function OffersPage({ config, launchParams }: OffersPageProps) {
         <div className="alert">
           <span className="alert__icon">ℹ️</span>
           <Text style={{ 
-            fontSize: 'var(--text-sm)', 
+            fontSize: isMobile ? 'var(--text-xs)' : 'var(--text-sm)', 
             lineHeight: '1.5'
           }}>
             {config.copy.disclaimer}
@@ -151,8 +188,8 @@ export default function OffersPage({ config, launchParams }: OffersPageProps) {
             <div style={{ marginTop: 'var(--space-md)' }}>
               <Pagination
                 currentPage={filters.page || 1}
-                siblingCount={1}
-                boundaryCount={1}
+                siblingCount={isMobile ? 0 : 1}
+                boundaryCount={isMobile ? 1 : 1}
                 totalPages={data.data.total_pages}
                 onChange={handlePageChange}
               />
@@ -175,13 +212,16 @@ export default function OffersPage({ config, launchParams }: OffersPageProps) {
       )}
 
       {/* Политика конфиденциальности */}
-      <div style={{ textAlign: 'center', padding: 'var(--space-md)' }}>
+      <div style={{ 
+        textAlign: 'center', 
+        padding: isMobile ? 'var(--space-sm)' : 'var(--space-md)' 
+      }}>
         <Link 
           to="/policy" 
           style={{ 
             color: 'var(--text-muted)', 
             textDecoration: 'none',
-            fontSize: 'var(--text-sm)',
+            fontSize: isMobile ? 'var(--text-xs)' : 'var(--text-sm)',
           }}
         >
           Политика конфиденциальности
@@ -191,12 +231,12 @@ export default function OffersPage({ config, launchParams }: OffersPageProps) {
       {/* Юридическая информация */}
       <div style={{ 
         textAlign: 'center', 
-        padding: 'var(--space-lg) var(--space-md)',
+        padding: isMobile ? 'var(--space-md) var(--space-sm)' : 'var(--space-lg) var(--space-md)',
         borderTop: '1px solid #E5E7EB',
         marginTop: 'var(--space-xl)'
       }}>
         <Text style={{ 
-          fontSize: 'var(--text-xs)', 
+          fontSize: isMobile ? '10px' : 'var(--text-xs)', 
           color: 'var(--text-muted)',
           lineHeight: '1.6',
           display: 'block',
@@ -206,7 +246,7 @@ export default function OffersPage({ config, launchParams }: OffersPageProps) {
           Услуги посредника предоставляет ООО "ЛИДСТЕХ". ПСК 0% - 292%.
         </Text>
         <Text style={{ 
-          fontSize: 'var(--text-xs)', 
+          fontSize: isMobile ? '10px' : 'var(--text-xs)', 
           color: 'var(--text-muted)',
           lineHeight: '1.6',
           display: 'block',
@@ -215,7 +255,7 @@ export default function OffersPage({ config, launchParams }: OffersPageProps) {
           Информация на сайте: https://kubyshka-zaim.ru/
         </Text>
         <Text style={{ 
-          fontSize: 'var(--text-xs)', 
+          fontSize: isMobile ? '10px' : 'var(--text-xs)', 
           color: 'var(--text-muted)',
           lineHeight: '1.6',
           display: 'block'

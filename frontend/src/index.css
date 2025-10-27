@@ -385,10 +385,43 @@ body.card-gradient-enabled .offer-card-gradient.vkuiCard {
   }
 }
 
+/* Предотвращение автозума на iOS */
+input[type="text"],
+input[type="number"],
+textarea {
+  font-size: 16px !important;
+}
+
 /* Адаптивные отступы для страницы */
 @media (max-width: 768px) {
   .page-stack {
     gap: var(--space-sm);
+  }
+}
+
+/* Очень маленькие экраны (360px и меньше) */
+@media (max-width: 360px) {
+  #root {
+    padding: var(--space-xs);
+  }
+  
+  .grid-offers {
+    gap: var(--space-xs);
+  }
+  
+  .section {
+    padding: var(--space-sm);
+  }
+  
+  /* Увеличиваем минимальные размеры touch-таргетов */
+  .vkuiButton--size-m {
+    min-height: 48px !important;
+    font-size: 16px !important;
+  }
+  
+  .vkuiButton--size-l {
+    min-height: 52px !important;
+    font-size: 17px !important;
   }
 }
 
