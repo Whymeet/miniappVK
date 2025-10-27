@@ -359,6 +359,15 @@ body.card-gradient-enabled .offer-card-gradient.vkuiCard {
 
 /* Стили модального окна для ПК */
 @media (min-width: 769px) {
+  /* Затемнённый overlay */
+  .vkuiModalRoot__mask {
+    background: rgba(0, 0, 0, 0.6) !important;
+  }
+  
+  .vkuiPopoutWrapper {
+    background: rgba(0, 0, 0, 0.6) !important;
+  }
+  
   .vkuiModalPage {
     background: var(--surface) !important;
     border-radius: var(--radius-md) !important;
