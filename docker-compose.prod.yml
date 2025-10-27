@@ -18,7 +18,7 @@ services:
   # Backend (Django + DRF)
   backend:
     build:
-      context: ./backend
+      context: ./backend/backend
       dockerfile: Dockerfile
     container_name: vk_miniapp_backend
     env_file:
