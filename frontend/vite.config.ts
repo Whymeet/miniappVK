@@ -7,7 +7,11 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   
   // Определяем базовый путь для assets
-  const basePath = env.VITE_PLATFORM === 'mobile' ? '/mob/' : '/';
+  // Проверяем и переменные окружения, и .env файлы
+  const platform = process.env.VITE_PLATFORM || env.VITE_PLATFORM;
+  const basePath = platform === 'mobile' ? '/mob/' : '/';
+  
+  console.log('Vite config - Platform:', platform, 'Base path:', basePath);
   
   return {
     plugins: [react()],

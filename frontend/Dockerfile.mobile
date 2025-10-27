@@ -3,6 +3,8 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
+# Используем .env.mobile файл для мобильной версии
+COPY .env.mobile .env
 ARG VITE_API_BASE
 ARG VITE_PLATFORM=mobile
 ENV VITE_API_BASE=$VITE_API_BASE
