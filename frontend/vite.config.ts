@@ -6,8 +6,12 @@ import path from 'path';
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   
+  // Определяем базовый путь для assets
+  const basePath = env.VITE_PLATFORM === 'mobile' ? '/mob/' : '/';
+  
   return {
     plugins: [react()],
+    base: basePath,
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src'),
