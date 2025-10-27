@@ -103,10 +103,27 @@ body {
   --card-gradient-end: #F9FAFB;
 }
 
-/* Темизация VKUI */
+/* Темизация VKUI - принудительно светлая тема */
 .vkui__root {
   --vkui--color_background_accent: var(--color-primary);
   --vkui--color_text_accent: var(--color-primary);
+}
+
+/* Принудительно отключаем темную тему VK */
+.vkui--vkBase--dark,
+.vkui--vkIOS--dark,
+.vkui--vkCom--dark,
+[scheme="space_gray"],
+[scheme="vkcom_dark"],
+[scheme="bright_light"] {
+  color-scheme: light !important;
+}
+
+/* Переопределяем все возможные темные стили */
+.vkui__root[scheme="space_gray"],
+.vkui__root[scheme="vkcom_dark"] {
+  background-color: var(--bg) !important;
+  color: var(--text) !important;
 }
 
 /* Применяем цвета к элементам */
@@ -115,6 +132,21 @@ body {
   border-radius: var(--radius-sm) !important;
   font-weight: 600 !important;
   box-shadow: none !important;
+  color: #FFFFFF !important; /* Белый текст на кнопках */
+}
+
+/* Текст внутри кнопок всегда белый */
+.vkuiButton--mode-primary .vkuiButton__content {
+  color: #FFFFFF !important;
+}
+
+/* Кнопки в модальном окне */
+.custom-modal-primary-button {
+  color: #FFFFFF !important;
+}
+
+.custom-modal-primary-button .vkuiButton__content {
+  color: #FFFFFF !important;
 }
 
 /* Фиксированная высота для кнопок размера M */
@@ -203,6 +235,20 @@ body.card-gradient-enabled .offer-card-gradient.vkuiCard {
   min-height: 44px !important;
   border-radius: var(--radius-sm) !important;
   font-size: var(--text-md) !important;
+  background-color: #FFFFFF !important; /* Белый фон для инпутов */
+  color: #000000 !important; /* Черный текст */
+}
+
+/* Placeholder тоже должен быть виден */
+.vkuiInput__el::placeholder {
+  color: #9CA3AF !important;
+  opacity: 1 !important;
+}
+
+/* Инпут в фокусе */
+.vkuiInput__el:focus {
+  background-color: #FFFFFF !important;
+  color: #000000 !important;
 }
 
 .vkuiFormItem__top {
