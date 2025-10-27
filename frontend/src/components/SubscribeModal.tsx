@@ -9,6 +9,7 @@ import {
   Div,
   Spacing,
 } from '@vkontakte/vkui';
+import './SubscribeModal.css';
 import { Icon56NotificationOutline } from '@vkontakte/icons';
 import bridge from '@vkontakte/vk-bridge';
 import { useAllowMessages, useSubscriptionStatus } from '@/hooks/useSubscription';
@@ -114,10 +115,14 @@ export default function SubscribeModal({ groupId, userId, launchParams, onClose 
   };
 
   return (
-    <ModalRoot activeModal={activeModal} onClose={handleSkip}>
+    <ModalRoot 
+      activeModal={activeModal} 
+      onClose={handleSkip}
+    >
       <ModalPage
         id="subscribe"
         onClose={handleSkip}
+        className="custom-modal"
         header={
           <ModalPageHeader>
             Эксклюзивное предложение
