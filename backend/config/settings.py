@@ -120,7 +120,10 @@ USE_I18N = True
 USE_TZ = True
 
 # Static files
-STATIC_URL = 'static/'
+# STATIC_URL должен быть абсолютным (начинаться с "/"),
+# иначе ссылки на статику в шаблонах будут относительными
+# и браузер будет запрашивать их как /admin/static/... вместо /static/...
+STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
