@@ -21,6 +21,7 @@ import { applyTheme } from './utils/theme';
 import LoadingScreen from './components/LoadingScreen';
 import ErrorScreen from './components/ErrorScreen';
 import SubscribeModal from './components/SubscribeModal';
+import { platform } from './api/config';
 
 function App() {
   const [scheme, setScheme] = useState<'light' | 'dark'>('light');
@@ -28,6 +29,11 @@ function App() {
   const launchParams = useLaunchParams();
   const { data: config, isLoading, error } = useConfig(launchParams.groupId, launchParams.brand);
   const subscribeMutation = useSubscribe();
+
+  useEffect(() => {
+    // Установить data-platform атрибут на body
+    document.body.setAttribute('data-platform', platform);
+  }, []);
 
   useEffect(() => {
     // Инициализация VK Bridge

@@ -1,5 +1,6 @@
 import { ApiResponse, BrandConfig } from '@/types';
 
+export const platform = import.meta.env.VITE_PLATFORM || 'desktop';
 export const API_BASE = import.meta.env.VITE_API_BASE || 'https://kybyshka-dev.ru/api';
 
 /**

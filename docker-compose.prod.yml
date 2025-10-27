@@ -1,16 +1,32 @@
 version: '3.8'
 
 services:
-  # Frontend (React + Vite + Nginx)
-  frontend:
+  # Десктопный фронтенд
+  frontend-desktop:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.desktop
       args:
         - VITE_API_BASE=https://kybyshka-dev.ru/api
-    container_name: vk_miniapp_frontend
+        - VITE_PLATFORM=desktop
+    container_name: vk_miniapp_frontend_desktop
     volumes:
-      - frontend_static:/usr/share/nginx/html
+      - frontend_desktop_static:/usr/share/nginx/html
+    restart: always
+    networks:
+      - vk_miniapp_network
+
+  # Мобильный фронтенд
+  frontend-mobile:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.mobile
+      args:
+        - VITE_API_BASE=https://kybyshka-dev.ru/api
+        - VITE_PLATFORM=mobile
+    container_name: vk_miniapp_frontend_mobile
+    volumes:
+      - frontend_mobile_static:/usr/share/nginx/html
     restart: always
     networks:
       - vk_miniapp_network
@@ -65,18 +81,21 @@ services:
     volumes:
       - ./nginx/prod.conf:/etc/nginx/conf.d/default.conf
       - ./nginx/ssl:/etc/nginx/ssl
-      - frontend_static:/var/www/frontend
+      - frontend_desktop_static:/var/www/frontend-desktop
+      - frontend_mobile_static:/var/www/frontend-mobile
       - backend_static:/var/www/static
       - backend_media:/var/www/media
     depends_on:
-      - frontend
+      - frontend-desktop
+      - frontend-mobile
       - backend
     restart: always
     networks:
       - vk_miniapp_network
 
 volumes:
-  frontend_static:
+  frontend_desktop_static:
+  frontend_mobile_static:
   backend_static:
   backend_media:
   postgres_data:

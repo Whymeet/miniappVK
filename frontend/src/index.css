@@ -483,3 +483,40 @@ body.card-gradient-enabled .offer-card-gradient.vkuiCard {
   }
 }
 
+/* ===== ПЛАТФОРМО-ЗАВИСИМЫЕ СТИЛИ ===== */
+
+/* Десктопные стили */
+body[data-platform="desktop"] .segmented {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 4px !important;
+  background: #F3F4F6 !important;
+  border-radius: var(--radius-pill) !important;
+  padding: 4px !important;
+}
+
+body[data-platform="desktop"] .grid-offers {
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)) !important;
+}
+
+/* Мобильные стили */
+body[data-platform="mobile"] .segmented {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: var(--space-sm) !important;
+  background: transparent !important;
+  padding: 0 !important;
+}
+
+body[data-platform="mobile"] .segmented .vkuiButton {
+  width: 100% !important;
+  height: 48px !important;
+  border-radius: var(--radius-sm) !important;
+  background: var(--surface) !important;
+  border: 1px solid #E5E7EB !important;
+}
+
+body[data-platform="mobile"] .grid-offers {
+  grid-template-columns: 1fr !important;
+}
+
