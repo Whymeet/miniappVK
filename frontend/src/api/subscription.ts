@@ -41,7 +41,7 @@ export async function subscribe(
   launchParams: Record<string, any>,
   brand: string
 ): Promise<SubscribeResponse> {
-  const response = await fetch(`${API_BASE}/api/subscribe/`, {
+  const response = await fetch(`${API_BASE}/subscribe/`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -70,7 +70,7 @@ export async function allowMessages(
   launchParams: Record<string, any>,
   groupId: string
 ): Promise<AllowMessagesResponse> {
-  const response = await fetch(`${API_BASE}/api/subscribe/allow-messages/`, {
+  const response = await fetch(`${API_BASE}/subscribe/allow-messages/`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -96,7 +96,7 @@ export async function allowMessages(
  * Отписка от рассылки
  */
 export async function unsubscribe(launchParams: Record<string, any>): Promise<{ success: boolean; error?: string }> {
-  const response = await fetch(`${API_BASE}/api/unsubscribe/`, {
+  const response = await fetch(`${API_BASE}/unsubscribe/`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -125,7 +125,7 @@ export async function getSubscriptionStatus(
     }
   });
   
-  const response = await fetch(`${API_BASE}/api/subscription/status/?${params.toString()}`);
+  const response = await fetch(`${API_BASE}/subscription/status/?${params.toString()}`);
   
   if (!response.ok) {
     console.error(`HTTP error ${response.status}: ${response.statusText}`);

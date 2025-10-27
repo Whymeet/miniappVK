@@ -1,6 +1,6 @@
 import { ApiResponse, OffersResponse, OffersFilters } from '@/types';
 
-const API_BASE = 'https://kybyshka-dev.ru';
+const API_BASE = import.meta.env.VITE_API_BASE || 'https://kybyshka-dev.ru/api';
 
 /**
  * Получить список офферов
@@ -31,7 +31,7 @@ export async function fetchOffers(
     params.append('page', filters.page.toString());
   }
 
-  const url = `${API_BASE}/api/offers/?${params.toString()}`;
+  const url = `${API_BASE}/offers/?${params.toString()}`;
   
   const response = await fetch(url);
   
@@ -65,6 +65,6 @@ export function buildOfferRedirectUrl(
     params.append('brand', brand);
   }
 
-  return `${API_BASE}/api/go/${offerId}/?${params.toString()}`;
+  return `${API_BASE}/go/${offerId}/?${params.toString()}`;
 }
 

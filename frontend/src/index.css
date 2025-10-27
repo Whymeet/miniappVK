@@ -27,6 +27,20 @@ body {
   background-color: var(--bg);
 }
 
+/* Адаптивные стили для разных устройств */
+@media (max-width: 768px) {
+  #root {
+    padding: var(--space-md);
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  #root {
+    padding: var(--space-sm);
+  }
+}
+
 /* Растягиваем все родительские контейнеры на полную высоту */
 html, body {
   min-height: 100vh;
@@ -226,12 +240,50 @@ body.card-gradient-enabled .offer-card-gradient.vkuiCard {
 .page-stack { display: grid; gap: var(--space-md); }
 
 /* Секции без лишней окраски/бордеров */
-.section { background: var(--surface); border: 1px solid #E5E7EB;
-  border-radius: var(--radius-md); padding: var(--space-lg); }
+.section { 
+  background: var(--surface); 
+  border: 1px solid #E5E7EB;
+  border-radius: var(--radius-md); 
+  padding: var(--space-lg); 
+}
+
+/* Адаптивные секции */
+@media (max-width: 768px) {
+  .section {
+    padding: var(--space-md);
+    border-radius: var(--radius-sm);
+  }
+}
+
+@media (max-width: 480px) {
+  .section {
+    padding: var(--space-sm);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--space-sm);
+  }
+}
 
 /* Ровная сетка карточек, без внутреннего "пёстрого" пэддинга */
-.grid-offers { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: var(--space-md); }
+.grid-offers { 
+  display: grid; 
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--space-md); 
+}
+
+/* Адаптивная сетка для разных устройств */
+@media (max-width: 768px) {
+  .grid-offers {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--space-sm);
+  }
+}
+
+@media (max-width: 480px) {
+  .grid-offers {
+    grid-template-columns: 1fr;
+    gap: var(--space-sm);
+  }
+}
 
 /* Спокойный инфо-баннер (вместо ярко-жёлтого) */
 .alert { display: grid; grid-template-columns: 20px 1fr; gap: var(--space-sm);
@@ -301,5 +353,133 @@ body.card-gradient-enabled .offer-card-gradient.vkuiCard {
 
 .vkuiPanelHeader__content-in {
   text-align: center !important;
+}
+
+/* ===== АДАПТИВНЫЕ СТИЛИ ===== */
+
+/* Стили модального окна для ПК */
+@media (min-width: 769px) {
+  .vkuiModalPage {
+    background: var(--surface) !important;
+    border-radius: var(--radius-md) !important;
+    max-width: 500px !important;
+    margin: 0 auto !important;
+  }
+  
+  .vkuiModalPageHeader {
+    background: var(--surface) !important;
+    color: var(--text) !important;
+    border-radius: var(--radius-md) var(--radius-md) 0 0 !important;
+  }
+  
+  .vkuiPanelHeader__content-in {
+    color: var(--text) !important;
+  }
+  
+  .vkuiSeparator {
+    background: #E5E7EB !important;
+  }
+  
+  .vkuiSeparator__in {
+    border-color: #E5E7EB !important;
+  }
+}
+
+/* Мобильные стили для модального окна */
+@media (max-width: 768px) {
+  .vkuiModalPage {
+    background: linear-gradient(135deg, var(--accent) 0%, #0d4a2a 100%) !important;
+    color: #FFFFFF !important;
+  }
+  
+  .vkuiModalPage__content {
+    background: transparent !important;
+  }
+  
+  .vkuiModalPage__content-in {
+    background: transparent !important;
+  }
+  
+  .vkuiModalPageHeader {
+    background: transparent !important;
+    color: #FFFFFF !important;
+  }
+  
+  .vkuiPanelHeader__content-in {
+    color: #FFFFFF !important;
+  }
+  
+  .vkuiSeparator {
+    background: rgba(255, 255, 255, 0.2) !important;
+  }
+  
+  .vkuiSeparator__in {
+    border-color: rgba(255, 255, 255, 0.2) !important;
+  }
+  
+  /* Android-специфичные стили */
+  .vkuiPanelHeader--android {
+    background: transparent !important;
+  }
+  
+  .vkuiInternalPanelHeader--static {
+    background: transparent !important;
+  }
+  
+  .vkuiPanelHeader__in {
+    background: transparent !important;
+  }
+  
+  /* Исправляем позиционирование модального окна */
+  .vkuiModalRoot {
+    z-index: 9999 !important;
+  }
+  
+  .vkuiModalPage {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    max-height: 100vh !important;
+    border-radius: 0 !important;
+  }
+}
+
+/* Адаптивные кнопки */
+@media (max-width: 480px) {
+  .vkuiButton--size-l {
+    min-height: 48px !important;
+    font-size: 16px !important;
+  }
+  
+  .vkuiButton--size-m {
+    min-height: 44px !important;
+    font-size: 15px !important;
+  }
+}
+
+/* Адаптивные заголовки */
+@media (max-width: 768px) {
+  .vkuiTitle--level-1 {
+    font-size: var(--text-xl) !important;
+  }
+  
+  .vkuiTitle--level-2 {
+    font-size: var(--text-lg) !important;
+  }
+  
+  .vkuiTitle--level-3 {
+    font-size: var(--text-md) !important;
+  }
+}
+
+/* Адаптивные отступы для страницы */
+@media (max-width: 768px) {
+  .page-stack {
+    gap: var(--space-sm);
+  }
 }
 

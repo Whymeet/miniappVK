@@ -1,6 +1,6 @@
 import { ApiResponse, BrandConfig } from '@/types';
 
-export const API_BASE = 'https://kybyshka-dev.ru';
+export const API_BASE = import.meta.env.VITE_API_BASE || 'https://kybyshka-dev.ru/api';
 
 /**
  * Получить конфигурацию бренда
@@ -19,7 +19,7 @@ export async function fetchConfig(
     params.append('brand', brand);
   }
 
-  const url = `${API_BASE}/api/config/?${params.toString()}`;
+  const url = `${API_BASE}/config/?${params.toString()}`;
   
   const response = await fetch(url);
   
