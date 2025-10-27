@@ -125,38 +125,24 @@ export default function SubscribeModal({ groupId, userId, launchParams, onClose 
           </ModalPageHeader>
         }
       >
-        <Div style={{ 
-          display: 'flex', 
-          flexDirection: 'column', 
-          alignItems: 'center',
-          textAlign: 'center',
-          padding: '24px'
-        }}>
-          <Icon56NotificationOutline style={{ color: 'var(--accent)' }} />
+        <Div className="subscribe-modal-content">
+          <Icon56NotificationOutline className="subscribe-modal-icon" />
           
           <Spacing size={16} />
           
-          <Title level="2" weight="2" style={{ color: '#FFFFFF' }}>
+          <Title level="2" weight="2" className="subscribe-modal-title">
             ЭКСКЛЮЗИВНОЕ ПРЕДЛОЖЕНИЕ
           </Title>
           
           <Spacing size={12} />
           
-          <Text style={{ 
-            fontSize: '18px',
-            fontWeight: 600,
-            color: 'var(--accent)'
-          }}>
+          <Text className="subscribe-modal-subtitle">
             Получите займ под 0%
           </Text>
           
           <Spacing size={8} />
           
-          <Text style={{ 
-            fontSize: '15px',
-            color: 'var(--text-secondary)',
-            lineHeight: '1.5'
-          }}>
+          <Text className="subscribe-modal-description">
             {groupId 
               ? 'Подпишитесь на уведомления, чтобы первыми узнавать о новых предложениях и эксклюзивных условиях'
               : 'Зарегистрируйтесь в нашем сервисе, чтобы получить доступ к лучшим предложениям по займам'
@@ -171,12 +157,7 @@ export default function SubscribeModal({ groupId, userId, launchParams, onClose 
             mode="primary"
             onClick={handleSubscribe}
             loading={isLoading}
-            style={{ 
-              marginBottom: '12px',
-              background: 'var(--accent)',
-              fontSize: '16px',
-              fontWeight: 600
-            }}
+            className="subscribe-modal-primary-button"
           >
             {groupId ? '🔔 Подписаться и получить займ' : '✅ Зарегистрироваться и получить займ'}
           </Button>

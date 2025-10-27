@@ -1,23 +1,182 @@
-/* Затемнённый overlay вокруг модального окна */
-.vkuiModalRoot__mask {
-    background: rgba(0, 0, 0, 0.4) !important;
-}
-
+/* ===== OVERLAY / BACKDROP ===== */
+/* Затемненный фон вокруг модального окна */
+.vkuiModalRoot__mask,
 .vkuiPopoutWrapper {
-    background: rgba(0, 0, 0, 0.4) !important;
+    background: rgba(0, 0, 0, 0.6) !important;
 }
 
-/* Само модальное окно */
+/* ===== МОДАЛЬНОЕ ОКНО - БАЗОВЫЕ СТИЛИ ===== */
+/* Контейнер модального окна */
 .vkuiModalPage {
-    background: transparent !important;
+    background: #FFFFFF !important;
+    border-radius: 16px !important;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+    overflow: hidden !important;
 }
 
+/* Обертка для анимации */
+.vkuiModalPage__in-wrap {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-height: 100vh !important;
+    padding: 16px !important;
+}
+
+/* Внутренний контейнер */
 .vkuiModalPage__in {
+    background: #FFFFFF !important;
+    width: 100% !important;
+    max-width: 500px !important;
     margin: 0 auto !important;
-    max-width: 500px;
-    background: var(--vkui--color_background_modal) !important;
+    border-radius: 16px !important;
 }
 
+/* ===== HEADER / ЗАГОЛОВОК ===== */
+.vkuiModalPageHeader,
+.vkuiInternalModalPageHeader__in,
+.vkuiPanelHeader,
+.vkuiInternalPanelHeader {
+    background: #FFFFFF !important;
+    border-radius: 16px 16px 0 0 !important;
+}
+
+.vkuiPanelHeader__content-in {
+    color: #111827 !important;
+    font-weight: 600 !important;
+}
+
+/* Разделитель под заголовком */
+.vkuiSeparator {
+    background: #E5E7EB !important;
+}
+
+.vkuiSeparator__in {
+    border-color: #E5E7EB !important;
+}
+
+/* ===== CONTENT / КОНТЕНТ ===== */
+.vkuiModalPage__content-wrap,
+.vkuiModalPage__content,
 .vkuiModalPage__content-in {
-    background: var(--vkui--color_background_modal) !important;
+    background: #FFFFFF !important;
+}
+
+/* ===== КНОПКА ЗАКРЫТИЯ (X) ===== */
+.vkuiModalDismissButton {
+    color: #6B7280 !important;
+}
+
+.vkuiModalDismissButton:hover {
+    color: #111827 !important;
+}
+
+/* ===== СТИЛИ КОНТЕНТА МОДАЛЬНОГО ОКНА ===== */
+.subscribe-modal-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 24px;
+}
+
+.subscribe-modal-icon {
+    color: var(--accent);
+}
+
+.subscribe-modal-title {
+    color: #111827;
+    font-weight: 700;
+}
+
+.subscribe-modal-subtitle {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--accent);
+}
+
+.subscribe-modal-description {
+    font-size: 15px;
+    color: #6B7280;
+    line-height: 1.5;
+}
+
+.subscribe-modal-primary-button {
+    margin-bottom: 12px;
+    background: var(--accent) !important;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+/* ===== АДАПТИВНЫЕ СТИЛИ ===== */
+
+/* Десктоп (большие экраны) */
+@media (min-width: 769px) {
+    .vkuiModalPage__in-wrap {
+        padding: 24px !important;
+    }
+    
+    .vkuiModalPage__in {
+        max-width: 500px !important;
+    }
+}
+
+/* Планшеты */
+@media (min-width: 481px) and (max-width: 768px) {
+    .vkuiModalPage__in-wrap {
+        padding: 20px !important;
+    }
+    
+    .vkuiModalPage__in {
+        max-width: 480px !important;
+    }
+}
+
+/* Мобильные устройства */
+@media (max-width: 480px) {
+    .vkuiModalPage__in-wrap {
+        padding: 12px !important;
+    }
+    
+    .vkuiModalPage__in {
+        max-width: 100% !important;
+    }
+    
+    .vkuiModalPage {
+        border-radius: 12px !important;
+    }
+    
+    .vkuiModalPageHeader,
+    .vkuiInternalModalPageHeader__in,
+    .vkuiPanelHeader {
+        border-radius: 12px 12px 0 0 !important;
+    }
+    
+    /* Адаптивный контент */
+    .subscribe-modal-content {
+        padding: 20px 16px;
+    }
+    
+    .subscribe-modal-title {
+        font-size: 20px;
+    }
+    
+    .subscribe-modal-subtitle {
+        font-size: 16px;
+    }
+    
+    .subscribe-modal-description {
+        font-size: 14px;
+    }
+    
+    .subscribe-modal-primary-button {
+        font-size: 15px;
+    }
+}
+
+/* Очень маленькие экраны */
+@media (max-width: 360px) {
+    .vkuiModalPage__in-wrap {
+        padding: 8px !important;
+    }
 }
