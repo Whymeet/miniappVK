@@ -237,6 +237,7 @@ body.card-gradient-enabled .offer-card-gradient.vkuiCard {
   font-size: var(--text-md) !important;
   background-color: #FFFFFF !important; /* Белый фон для инпутов */
   color: #000000 !important; /* Черный текст */
+  border: 1px solid #E5E7EB !important; /* Серая рамка */
 }
 
 /* Placeholder тоже должен быть виден */
@@ -249,11 +250,23 @@ body.card-gradient-enabled .offer-card-gradient.vkuiCard {
 .vkuiInput__el:focus {
   background-color: #FFFFFF !important;
   color: #000000 !important;
+  border-color: var(--accent) !important; /* Цветная рамка при фокусе */
+  outline: none !important;
+}
+
+/* Убираем черные закругления */
+.vkuiInput {
+  border-radius: var(--radius-sm) !important;
+  overflow: hidden !important;
+}
+
+.vkuiFormItem {
+  margin-bottom: 0 !important;
 }
 
 .vkuiFormItem__top {
   font-size: var(--text-xs) !important;
-  color: var(--text-muted) !important;
+  color: #6B7280 !important; /* Серый текст для лейблов */
   text-transform: uppercase !important;
   letter-spacing: 0.5px !important;
   font-weight: 500 !important;
@@ -341,9 +354,11 @@ body.card-gradient-enabled .offer-card-gradient.vkuiCard {
 .segmented { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px;
   background: #F3F4F6; border-radius: var(--radius-pill); padding: 4px; }
 .segmented .vkuiButton { height: 40px !important; border: none !important;
-  background: transparent !important; color: var(--text-muted) !important;
+  background: transparent !important; color: #6B7280 !important;
   font-weight: 500 !important; box-shadow: none !important; }
+.segmented .vkuiButton .vkuiButton__content { color: #6B7280 !important; }
 .segmented .vkuiButton.is-active { background: var(--accent) !important; color: #fff !important; }
+.segmented .vkuiButton.is-active .vkuiButton__content { color: #FFFFFF !important; }
 
 /* Кнопки сортировки в столбец на узких экранах */
 @media screen and (max-width: 480px) {
