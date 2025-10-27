@@ -3,9 +3,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
-# Используем .env.desktop файл для десктопной версии
-COPY .env.desktop .env
-ARG VITE_API_BASE
+ARG VITE_API_BASE=https://kybyshka-dev.ru/api
 ARG VITE_PLATFORM=desktop
 ENV VITE_API_BASE=$VITE_API_BASE
 ENV VITE_PLATFORM=$VITE_PLATFORM

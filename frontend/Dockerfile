@@ -1,34 +1,16 @@
-# Build stage
 FROM node:18-alpine as builder
-
 WORKDIR /app
-
-# Копируем package files
 COPY package*.json ./
-
-# Устанавливаем зависимости
 RUN npm install
-
-# Копируем исходники
 COPY . .
-
-# Билдим приложение
-ARG VITE_API_BASE
+ARG VITE_API_BASE=https://kybyshka-dev.ru/api
+ARG VITE_PLATFORM=desktop
 ENV VITE_API_BASE=$VITE_API_BASE
-
+ENV VITE_PLATFORM=$VITE_PLATFORM
 RUN npm run build
 
-# Production stage
 FROM nginx:alpine
-
-# Копируем билд
 COPY --from=builder /app/dist /usr/share/nginx/html
-
-# Копируем конфиг nginx
 COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-# Открываем порт
 EXPOSE 80
-
 CMD ["nginx", "-g", "daemon off;"]
-
