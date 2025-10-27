@@ -52,6 +52,14 @@ export async function subscribe(
     }),
   });
 
+  if (!response.ok) {
+    console.error(`HTTP error ${response.status}: ${response.statusText}`);
+    return {
+      success: false,
+      error: `HTTP ${response.status}: ${response.statusText}`
+    };
+  }
+
   return response.json();
 }
 
@@ -72,6 +80,14 @@ export async function allowMessages(
       group_id: groupId,
     }),
   });
+
+  if (!response.ok) {
+    console.error(`HTTP error ${response.status}: ${response.statusText}`);
+    return {
+      success: false,
+      error: `HTTP ${response.status}: ${response.statusText}`
+    };
+  }
 
   return response.json();
 }
@@ -110,6 +126,20 @@ export async function getSubscriptionStatus(
   });
   
   const response = await fetch(`${API_BASE}/api/subscription/status/?${params.toString()}`);
+  
+  if (!response.ok) {
+    console.error(`HTTP error ${response.status}: ${response.statusText}`);
+    return {
+      success: false,
+      data: {
+        vk_user_id: '',
+        subscribed: false,
+        allowed_from_group: false,
+        can_receive_messages: false,
+      }
+    };
+  }
+  
   return response.json();
 }
 

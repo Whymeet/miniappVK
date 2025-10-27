@@ -275,18 +275,31 @@ body.card-gradient-enabled .offer-card-gradient.vkuiCard {
 /* Исправление проблемы с модальным заголовком - убираем белые полоски по бокам */
 .vkuiModalPageHeader {
   background-color: var(--bg) !important;
+  border-radius: var(--radius-md) var(--radius-md) 0 0 !important;
 }
 
 .vkuiInternalModalPageHeader__in {
   background-color: var(--bg) !important;
   width: 100% !important;
+  border-radius: var(--radius-md) var(--radius-md) 0 0 !important;
 }
 
 .vkuiPanelHeader {
   background-color: var(--bg) !important;
+  border-radius: var(--radius-md) var(--radius-md) 0 0 !important;
 }
 
 .vkuiInternalPanelHeader {
   background-color: var(--bg) !important;
+  border-radius: var(--radius-md) var(--radius-md) 0 0 !important;
+}
+
+/* Центрирование текста в заголовке модального окна */
+.vkuiPanelHeader__content {
+  text-align: center !important;
+}
+
+.vkuiPanelHeader__content-in {
+  text-align: center !important;
 }
 

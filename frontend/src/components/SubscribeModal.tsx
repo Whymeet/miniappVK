@@ -63,21 +63,31 @@ export default function SubscribeModal({ groupId, userId, launchParams, onClose 
           console.log('Saving to backend...');
           
           // Сохраняем разрешение в базу данных
-          await allowMessagesMutation.mutateAsync(
+          const backendResult = await allowMessagesMutation.mutateAsync(
             { launchParams, groupId },
           );
 
-          console.log('Saved successfully!');
+          if (backendResult.success) {
+            console.log('Saved successfully!');
+          } else {
+            console.error('Backend error:', backendResult.error);
+            throw new Error(backendResult.error || 'Failed to save subscription');
+          }
         }
       } else {
         // Если нет groupId - просто сохраняем подписку без разрешения на уведомления
         console.log('No groupId, saving subscription without notifications...');
         
-        await allowMessagesMutation.mutateAsync(
+        const backendResult = await allowMessagesMutation.mutateAsync(
           { launchParams, groupId: '218513564' }, // Используем ID нашей группы
         );
 
-        console.log('Subscription saved!');
+        if (backendResult.success) {
+          console.log('Subscription saved!');
+        } else {
+          console.error('Backend error:', backendResult.error);
+          throw new Error(backendResult.error || 'Failed to save subscription');
+        }
       }
       
       // Закрываем модалку после успешной подписки
@@ -85,6 +95,11 @@ export default function SubscribeModal({ groupId, userId, launchParams, onClose 
       onClose();
     } catch (error) {
       console.error('Failed to allow messages:', error);
+      
+      // Показываем пользователю ошибку
+      const errorMessage = error instanceof Error ? error.message : 'Произошла ошибка при подписке';
+      alert(`Ошибка: ${errorMessage}`);
+      
       // Закрываем модалку только при ошибке
       setActiveModal(null);
       onClose();
