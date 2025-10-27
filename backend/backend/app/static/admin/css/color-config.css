@@ -1,0 +1,182 @@
+/* ============================================
+   ПРОСТАЯ НАСТРОЙКА ЦВЕТОВ АДМИНКИ
+   ============================================
+   
+   Измените только эти значения, сохраните файл
+   и перезагрузите страницу с Ctrl+Shift+R
+   ============================================ */
+
+:root {
+    /* 🎨 ГЛАВНЫЙ ЦВЕТ - используется для всех кнопок и заголовков */
+    --main-color: #417690;
+    
+    /* 🎨 ТЕМНЕЕ НА 10% - для эффекта при наведении */
+    --main-color-hover: #3a6a82;
+    
+    /* 🎨 ЦВЕТ ССЫЛОК */
+    --link-color: #447e9b;
+    
+    /* 🎨 АКЦЕНТНЫЙ ЦВЕТ - для выделений */
+    --accent-color: #79aec8;
+}
+
+/* ============================================
+   ПРИМЕРЫ ГОТОВЫХ ЦВЕТОВЫХ СХЕМ
+   ============================================
+   
+   Раскомментируйте (уберите /*  и  */) нужную схему:
+   
+   
+   /* ЗЕЛЕНАЯ СХЕМА */
+   /*
+   :root {
+       --main-color: #4CAF50;
+       --main-color-hover: #45a049;
+       --link-color: #4CAF50;
+       --accent-color: #81C784;
+   }
+   */
+   
+   /* СИНЯЯ СХЕМА */
+   /*
+   :root {
+       --main-color: #2196F3;
+       --main-color-hover: #1976D2;
+       --link-color: #2196F3;
+       --accent-color: #64B5F6;
+   }
+   */
+   
+   /* ФИОЛЕТОВАЯ СХЕМА */
+   /*
+   :root {
+       --main-color: #9C27B0;
+       --main-color-hover: #7B1FA2;
+       --link-color: #9C27B0;
+       --accent-color: #BA68C8;
+   }
+   */
+   
+   /* ОРАНЖЕВАЯ СХЕМА */
+   /*
+   :root {
+       --main-color: #FF9800;
+       --main-color-hover: #F57C00;
+       --link-color: #FF9800;
+       --accent-color: #FFB74D;
+   }
+   */
+   
+   /* КРАСНАЯ СХЕМА */
+   /*
+   :root {
+       --main-color: #F44336;
+       --main-color-hover: #D32F2F;
+       --link-color: #F44336;
+       --accent-color: #E57373;
+   }
+   */
+   
+   /* БИРЮЗОВАЯ СХЕМА */
+   /*
+   :root {
+       --main-color: #00BCD4;
+       --main-color-hover: #0097A7;
+       --link-color: #00BCD4;
+       --accent-color: #4DD0E1;
+   }
+   */
+   
+   /* РОЗОВАЯ СХЕМА */
+   /*
+   :root {
+       --main-color: #E91E63;
+       --main-color-hover: #C2185B;
+       --link-color: #E91E63;
+       --accent-color: #F06292;
+   }
+   */
+   
+   /* ИНДИГО СХЕМА */
+   /*
+   :root {
+       --main-color: #3F51B5;
+       --main-color-hover: #303F9F;
+       --link-color: #3F51B5;
+       --accent-color: #7986CB;
+   }
+   */
+
+/* ============================================
+   НЕ ИЗМЕНЯЙТЕ КОД НИЖЕ
+   (он применяет ваши цвета ко всем элементам)
+   ============================================ */
+
+/* Все кнопки */
+.submit-row input[type="submit"],
+.button,
+input[type="submit"].default,
+.submit-row input[type="button"],
+input[type="button"].default,
+.add-row a,
+.object-tools a,
+.actions button,
+.actions input[type="submit"],
+#changelist-search button[type="submit"] {
+    background: var(--main-color) !important;
+    color: white !important;
+    border: none !important;
+}
+
+/* Кнопки при наведении */
+.submit-row input[type="submit"]:hover,
+.button:hover,
+input[type="submit"].default:hover,
+.add-row a:hover,
+.object-tools a:hover,
+.actions button:hover,
+.actions input[type="submit"]:hover,
+#changelist-search button[type="submit"]:hover {
+    background: var(--main-color-hover) !important;
+}
+
+/* Шапка сайта */
+#header {
+    background: var(--main-color) !important;
+}
+
+/* Заголовки разделов */
+.module h2,
+.module caption,
+.inline-group h2 {
+    background: var(--main-color) !important;
+    color: white !important;
+}
+
+/* Ссылки */
+a, a:link, a:visited {
+    color: var(--link-color) !important;
+}
+
+a:hover {
+    color: var(--main-color-hover) !important;
+}
+
+/* Активная страница в пагинации */
+.paginator .this-page {
+    background: var(--main-color) !important;
+    color: white !important;
+}
+
+/* Выбранный элемент в календаре */
+.calendar td.selected a {
+    background: var(--main-color) !important;
+    color: white !important;
+}
+
+/* Выбранный элемент в фильтрах */
+#changelist-filter li.selected a {
+    color: var(--main-color) !important;
+    font-weight: bold !important;
+}
+
