@@ -75,28 +75,16 @@ export default function OffersFiltersComponent({
             size="m"
             className={currentSort === 'rate' ? 'is-active sort-rate' : 'sort-rate'}
             onClick={() => handleSortChange('rate')}
-            style={{ 
-              minHeight: isMobile ? '48px' : '40px',
-              fontSize: isMobile ? '16px' : '14px'
-            }}
           >По ставке</Button>
           <Button
             size="m"
             className={currentSort === 'sum' ? 'is-active sort-sum' : 'sort-sum'}
             onClick={() => handleSortChange('sum')}
-            style={{ 
-              minHeight: isMobile ? '48px' : '40px',
-              fontSize: isMobile ? '16px' : '14px'
-            }}
           >По сумме</Button>
           <Button
             size="m"
             className={currentSort === 'term' ? 'is-active sort-term' : 'sort-term'}
             onClick={() => handleSortChange('term')}
-            style={{ 
-              minHeight: isMobile ? '48px' : '40px',
-              fontSize: isMobile ? '16px' : '14px'
-            }}
           >По сроку</Button>
         </div>
       </FormItem>

@@ -118,41 +118,42 @@
 /* ===== АДАПТИВНОСТЬ ===== */
 
 /* Мобильные устройства - по центру */
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
     .custom-modal-overlay {
-        align-items: center; /* по центру, а не снизу */
-        padding: 16px;
-        justify-content: center;
+        align-items: center !important; /* по центру */
+        display: flex !important;
+        padding: 16px !important;
+        justify-content: center !important;
     }
     
     .custom-modal-container {
-        width: 100%;
-        max-width: 100%;
-        margin: 0;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
     }
     
     .custom-modal-card {
-        border-radius: 16px; /* полное скругление */
-        max-height: 90vh;
-        overflow-y: auto;
-        margin: 0;
-        width: 100%;
+        border-radius: 16px !important; /* полное скругление */
+        max-height: 90vh !important;
+        overflow-y: auto !important;
+        margin: 0 !important;
+        width: 100% !important;
     }
     
     .custom-modal-close {
-        width: 40px;
-        height: 40px; /* увеличить для удобства нажатия */
-        top: 16px;
-        right: 16px;
-        font-size: 20px;
+        width: 40px !important;
+        height: 40px !important;
+        top: 16px !important;
+        right: 16px !important;
+        font-size: 20px !important;
     }
     
     .custom-modal-header {
-        padding: 24px 24px 16px;
+        padding: 24px 24px 16px !important;
     }
     
     .custom-modal-content {
-        padding: 16px 24px 32px; /* увеличить нижний отступ для удобства */
+        padding: 16px 24px 32px !important;
     }
     
     .custom-modal-title {
@@ -172,16 +173,10 @@
 /* Планшеты */
 @media (min-width: 481px) and (max-width: 768px) {
     .custom-modal-container {
-        max-width: 480px;
+        max-width: 480px !important;
     }
     
     .custom-modal-overlay {
-        padding: 20px;
-        align-items: center; /* вернуть центрирование для планшетов */
-    }
-    
-    .custom-modal-card {
-        border-radius: 16px; /* вернуть полное скругление */
-        max-height: none;
+        padding: 20px !important;
     }
 }
