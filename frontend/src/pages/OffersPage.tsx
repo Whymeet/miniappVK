@@ -41,14 +41,17 @@ export default function OffersPage({ config, launchParams }: OffersPageProps) {
 
   const { data, isLoading, error } = useOffers(launchParams.groupId, filters);
 
-  const handleApplyOffer = (offerId: string) => {
+  const handleApplyOffer = async (offerId: string) => {
     const url = buildOfferRedirectUrl(
       offerId,
       launchParams.userId,
       launchParams.groupId,
       config.brand
     );
-    window.open(url, '_blank');
+
+    // Для iOS VK Mini Apps: просто заменяем текущую страницу
+    // Это работает везде: iOS Safari, Android Chrome, Desktop
+    window.location.href = url;
   };
 
   const handlePageChange = (page: number) => {
