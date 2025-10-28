@@ -28,18 +28,6 @@ export default defineConfig(({ mode }) => {
           drop_debugger: true,
         },
       },
-      // Разделение кода на чанки
-      rollupOptions: {
-        output: {
-          manualChunks: {
-            // Выносим большие библиотеки в отдельные чанки
-            'vkui': ['@vkontakte/vkui'],
-            'vkui-icons': ['@vkontakte/icons'],
-            'vk-bridge': ['@vkontakte/vk-bridge'],
-            'vendor': ['react', 'react-dom', 'react-router-dom'],
-          },
-        },
-      },
       // Увеличиваем лимит для предупреждений о размере чанков
       chunkSizeWarningLimit: 1000,
     },
