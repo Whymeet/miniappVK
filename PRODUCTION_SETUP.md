@@ -18,6 +18,11 @@
 ```bash
 cp production.env.example production.env
 ```
+z
+z
+
+z
+z
 
 **Обязательно измените:**
 ```env
