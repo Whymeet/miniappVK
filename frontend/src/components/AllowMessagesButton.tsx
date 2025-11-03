@@ -52,10 +52,19 @@ export default function AllowMessagesButton({ groupId, userId, launchParams }: A
     }
 
     try {
-      // Запрашиваем разрешение у VK
+      // Сначала запрашиваем общее разрешение на уведомления (особенно важно для Android)
+      const notificationResult = await bridge.send('VKWebAppAllowNotifications');
+      console.log('VKWebAppAllowNotifications result:', notificationResult);
+
+      if (!notificationResult.result) {
+        throw new Error('notifications_denied');
+      }
+
+      // После получения общего разрешения запрашиваем разрешение для группы
       const result = await bridge.send('VKWebAppAllowMessagesFromGroup', {
         group_id: parseInt(groupId),
       });
+      console.log('VKWebAppAllowMessagesFromGroup result:', result);
 
       if (result.result) {
         // Сохраняем разрешение в базу данных
@@ -66,7 +75,6 @@ export default function AllowMessagesButton({ groupId, userId, launchParams }: A
               if (response.success) {
                 console.log('AllowMessagesButton: subscription successful, updating state');
                 setIsAllowed(true);
-                // Сохраняем в localStorage для быстрого доступа
                 localStorage.setItem(`messages_allowed_${userId}`, 'true');
                 
                 setSnackbar(
@@ -74,7 +82,7 @@ export default function AllowMessagesButton({ groupId, userId, launchParams }: A
                     onClose={() => setSnackbar(null)}
                     before={<Avatar size={24}><Icon28CheckCircleOutline fill="var(--color-success)" /></Avatar>}
                   >
-                    Уведомления разрешены
+                    Уведомления успешно разрешены
                   </Snackbar>
                 );
               }
@@ -91,14 +99,29 @@ export default function AllowMessagesButton({ groupId, userId, launchParams }: A
             },
           }
         );
+      } else {
+        throw new Error('messages_denied');
       }
     } catch (error) {
+      console.error('Ошибка при запросе разрешений:', error);
+      let errorMessage = 'Не удалось разрешить уведомления';
+      
+      if (error instanceof Error) {
+        if (error.message === 'notifications_denied') {
+          errorMessage = 'Необходимо разрешить уведомления в настройках приложения';
+        } else if (error.message === 'messages_denied') {
+          errorMessage = 'Необходимо разрешить сообщения от сообщества';
+        } else if (error.message.includes('Client doesnt support')) {
+          errorMessage = 'Ваше устройство не поддерживает уведомления';
+        }
+      }
+
       setSnackbar(
         <Snackbar
           onClose={() => setSnackbar(null)}
           before={<Avatar size={24}><Icon28CancelCircleOutline fill="var(--color-error)" /></Avatar>}
         >
-          Не удалось разрешить уведомления
+          {errorMessage}
         </Snackbar>
       );
     }
