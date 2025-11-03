@@ -40,27 +40,36 @@ export default function SubscribeModal({ groupId, userId, launchParams, onClose 
 
     try {
       if (groupId) {
-        console.log('Requesting VK permission for group:', groupId);
+        console.log('🔔 Requesting VK notifications permission for group:', groupId);
         
         const result = await bridge.send('VKWebAppAllowMessagesFromGroup', {
           group_id: parseInt(groupId),
         });
-
-        console.log('VK permission result:', result);
+        console.log('✅ VK notification permission result:', result);
+        
+        // Проверяем статус подписки сразу после разрешения
+        const subscriptionCheck = await bridge.send('VKWebAppAllowMessagesFromGroup', {
+          group_id: parseInt(groupId),
+        });
+        console.log('📱 Current notification status:', subscriptionCheck);
 
         if (result.result) {
-          console.log('Saving to backend...');
+          console.log('💫 Saving subscription to backend...');
           
           const backendResult = await allowMessagesMutation.mutateAsync(
             { launchParams, groupId },
           );
 
           if (backendResult.success) {
-            console.log('Saved successfully!');
+            console.log('🎉 Subscription saved successfully!');
+            alert('Уведомления успешно подключены! Теперь вы будете получать важные обновления.');
           } else {
-            console.error('Backend error:', backendResult.error);
+            console.error('❌ Backend error:', backendResult.error);
             throw new Error(backendResult.error || 'Failed to save subscription');
           }
+        } else {
+          console.log('⚠️ User declined notifications');
+          alert('Вы отключили уведомления. Вы можете включить их позже в настройках.');
         }
       } else {
         console.log('No groupId, saving subscription without notifications...');
