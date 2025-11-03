@@ -40,6 +40,13 @@ export default function AllowMessagesButton({ groupId, userId, launchParams }: A
 
   const handleAllowMessages = async () => {
     if (!groupId || !userId || !launchParams) {
+      console.error('AllowMessagesButton: missing required params', {
+        hasGroupId: !!groupId,
+        hasUserId: !!userId,
+        hasLaunchParams: !!launchParams,
+        launchParamsKeys: launchParams ? Object.keys(launchParams) : []
+      });
+      
       setSnackbar(
         <Snackbar
           onClose={() => setSnackbar(null)}
@@ -52,26 +59,33 @@ export default function AllowMessagesButton({ groupId, userId, launchParams }: A
     }
 
     try {
-      // Сначала запрашиваем общее разрешение на уведомления (особенно важно для Android)
-      const notificationResult = await bridge.send('VKWebAppAllowNotifications');
-      console.log('VKWebAppAllowNotifications result:', notificationResult);
+      console.log('AllowMessagesButton: requesting messages permission', {
+        groupId,
+        userId,
+        hasSign: 'sign' in launchParams
+      });
 
-      if (!notificationResult.result) {
-        throw new Error('notifications_denied');
-      }
-
-      // После получения общего разрешения запрашиваем разрешение для группы
+      // Запрашиваем разрешение на сообщения от группы
       const result = await bridge.send('VKWebAppAllowMessagesFromGroup', {
         group_id: parseInt(groupId),
       });
+      
       console.log('VKWebAppAllowMessagesFromGroup result:', result);
 
       if (result.result) {
         // Сохраняем разрешение в базу данных
+        console.log('AllowMessagesButton: saving to backend', {
+          groupId,
+          userId,
+          launchParamsKeys: Object.keys(launchParams)
+        });
+
         allowMessagesMutation.mutate(
           { launchParams, groupId },
           {
             onSuccess: (response) => {
+              console.log('AllowMessagesButton: backend response', response);
+              
               if (response.success) {
                 console.log('AllowMessagesButton: subscription successful, updating state');
                 setIsAllowed(true);
@@ -85,15 +99,19 @@ export default function AllowMessagesButton({ groupId, userId, launchParams }: A
                     Уведомления успешно разрешены
                   </Snackbar>
                 );
+              } else {
+                console.error('AllowMessagesButton: backend returned error', response.error);
+                throw new Error(response.error || 'Backend error');
               }
             },
-            onError: () => {
+            onError: (error) => {
+              console.error('AllowMessagesButton: backend request failed', error);
               setSnackbar(
                 <Snackbar
                   onClose={() => setSnackbar(null)}
                   before={<Avatar size={24}><Icon28CancelCircleOutline fill="var(--color-error)" /></Avatar>}
                 >
-                  Не удалось сохранить разрешение
+                  Не удалось сохранить разрешение. Проверьте консоль для деталей.
                 </Snackbar>
               );
             },
@@ -103,16 +121,16 @@ export default function AllowMessagesButton({ groupId, userId, launchParams }: A
         throw new Error('messages_denied');
       }
     } catch (error) {
-      console.error('Ошибка при запросе разрешений:', error);
+      console.error('AllowMessagesButton: error during permission request', error);
       let errorMessage = 'Не удалось разрешить уведомления';
       
       if (error instanceof Error) {
-        if (error.message === 'notifications_denied') {
-          errorMessage = 'Необходимо разрешить уведомления в настройках приложения';
-        } else if (error.message === 'messages_denied') {
+        if (error.message === 'messages_denied') {
           errorMessage = 'Необходимо разрешить сообщения от сообщества';
         } else if (error.message.includes('Client doesnt support')) {
           errorMessage = 'Ваше устройство не поддерживает уведомления';
+        } else if (error.message.includes('User denied')) {
+          errorMessage = 'Вы отклонили запрос на разрешение уведомлений';
         }
       }
 
@@ -142,12 +160,12 @@ export default function AllowMessagesButton({ groupId, userId, launchParams }: A
                 onClose={() => setSnackbar(null)}
                 before={<Avatar size={24}><Icon28CheckCircleOutline fill="var(--color-success)" /></Avatar>}
               >
-                Функция отписки будет добавлена позже
+                Вы уже подписаны на уведомления
               </Snackbar>
             );
           }}
         >
-          Отписаться от уведомлений
+          ✓ Уведомления разрешены
         </Button>
         {snackbar}
       </>

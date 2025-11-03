@@ -259,3 +259,7 @@ docker-compose up --build
 
 *Проект создан с ❤️ для VK Mini Apps экосистемы*
 
+docker compose -f docker-compose.prod.yml down
+docker volume rm miniappvk_frontend_static
+docker compose -f docker-compose.prod.yml build frontend --no-cache
+docker compose -f docker-compose.prod.yml up -d
