@@ -62,7 +62,7 @@ export default function SubscribeModal({ groupId, userId, launchParams, onClose 
 
           if (backendResult.success) {
             console.log('🎉 Subscription saved successfully!');
-            alert('Уведомления успешно подключены! Теперь вы будете получать важные обновления.');
+            // Убираем alert - никаких попапов!
           } else {
             console.error('❌ Backend error:', backendResult.error);
             throw new Error(backendResult.error || 'Failed to save subscription');

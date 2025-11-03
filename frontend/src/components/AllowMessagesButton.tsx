@@ -59,25 +59,25 @@ export default function AllowMessagesButton({ groupId, userId, launchParams }: A
     }
 
     try {
-      console.log('AllowMessagesButton: requesting notifications permission');
+      console.log('AllowMessagesButton: saving notification permission without VK Bridge calls');
 
-      // Используем только стандартные уведомления браузера
-      let permissionGranted = false;
-      
-      try {
-        const notifResult = await bridge.send('VKWebAppAllowNotifications');
-        console.log('VKWebAppAllowNotifications result:', notifResult);
-        permissionGranted = notifResult.result === true;
-      } catch (notifError: any) {
-        console.error('VKWebAppAllowNotifications failed:', notifError);
-        
-        // Fallback - пробуем через сообщества (может показать попап)
-        try {
-          const result = await bridge.send('VKWebAppAllowMessagesFromGroup', {
-            group_id: parseInt(groupId),
-          });
-          console.log('VKWebAppAllowMessagesFromGroup result:', result);
-          permissionGranted = result.result === true;
+      // Просто сохраняем в базу данных без вызовов VK Bridge (чтобы избежать попапов)
+      allowMessagesMutation.mutate(
+        { launchParams, groupId },
+        {
+          onSuccess: (response) => {
+            console.log('AllowMessagesButton: backend response', response);
+            
+            if (response.success) {
+              console.log('AllowMessagesButton: subscription successful, updating state');
+              setIsAllowed(true);
+              localStorage.setItem(`messages_allowed_${userId}`, 'true');
+              // Никаких попапов - просто тихо меняем состояние кнопки
+            } else {
+              console.error('AllowMessagesButton: backend returned error', response.error);
+              setSnackbar(
+                <Snackbar
+                  onClose={() => setSnackbar(null)}
         } catch (bridgeError) {
           throw notifError; // Возвращаем исходную ошибку
         }
