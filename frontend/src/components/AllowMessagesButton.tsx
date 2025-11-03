@@ -59,38 +59,49 @@ export default function AllowMessagesButton({ groupId, userId, launchParams }: A
     }
 
     try {
-      console.log('AllowMessagesButton: requesting messages permission', {
-        groupId,
-        userId,
-        hasSign: 'sign' in launchParams
-      });
+      console.log('AllowMessagesButton: requesting notifications permission');
 
-      // Пробуем сначала VKWebAppAllowMessagesFromGroup
-      let result;
+      // Используем только стандартные уведомления браузера
       let permissionGranted = false;
       
       try {
-        result = await bridge.send('VKWebAppAllowMessagesFromGroup', {
-          group_id: parseInt(groupId),
-        });
+        const notifResult = await bridge.send('VKWebAppAllowNotifications');
+        console.log('VKWebAppAllowNotifications result:', notifResult);
+        permissionGranted = notifResult.result === true;
+      } catch (notifError: any) {
+        console.error('VKWebAppAllowNotifications failed:', notifError);
         
-        console.log('VKWebAppAllowMessagesFromGroup result:', result);
-        permissionGranted = result.result === true;
-      } catch (bridgeError: any) {
-        console.warn('VKWebAppAllowMessagesFromGroup failed, trying VKWebAppAllowNotifications:', bridgeError);
-        
-        // Если не получилось через Messages, пробуем через Notifications
+        // Fallback - пробуем через сообщества (может показать попап)
         try {
-          const notifResult = await bridge.send('VKWebAppAllowNotifications');
-          console.log('VKWebAppAllowNotifications result:', notifResult);
-          permissionGranted = notifResult.result === true;
-        } catch (notifError) {
-          console.error('VKWebAppAllowNotifications also failed:', notifError);
-          throw bridgeError; // Возвращаем исходную ошибку
+          const result = await bridge.send('VKWebAppAllowMessagesFromGroup', {
+            group_id: parseInt(groupId),
+          });
+          console.log('VKWebAppAllowMessagesFromGroup result:', result);
+          permissionGranted = result.result === true;
+        } catch (bridgeError) {
+          throw notifError; // Возвращаем исходную ошибку
         }
       }
       
       if (permissionGranted) {
+        // Пытаемся скрыть системные уведомления VK
+        try {
+          // Попытка скрыть toast уведомления
+          await bridge.send('VKWebAppSetViewSettings', {
+            status_bar_style: 'dark',
+            action_bar_color: '#000000'
+          });
+        } catch (e) {
+          console.log('Cannot hide VK notifications:', e);
+        }
+
+        // Пытаемся очистить возможные toast уведомления
+        try {
+          await bridge.send('VKWebAppShowImages', { images: [] });
+        } catch (e) {
+          // Игнорируем ошибку
+        }
+
         // Сохраняем разрешение в базу данных без показа попапов
         console.log('AllowMessagesButton: saving to backend', {
           groupId,
@@ -135,7 +146,7 @@ export default function AllowMessagesButton({ groupId, userId, launchParams }: A
           }
         );
       } else {
-        throw new Error('messages_denied');
+        throw new Error('notifications_denied');
       }
     } catch (error: any) {
       console.error('AllowMessagesButton: error during permission request', error);
