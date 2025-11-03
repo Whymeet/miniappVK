@@ -91,6 +91,13 @@ export default function AllowMessagesButton({ groupId, userId, launchParams }: A
       }
       
       if (permissionGranted) {
+        // Скрываем стандартный попап VK (если возможно)
+        try {
+          await bridge.send('VKWebAppFlashSetLevel', { level: 0 });
+        } catch (e) {
+          // Игнорируем ошибку, если метод не поддерживается
+        }
+
         // Сохраняем разрешение в базу данных
         console.log('AllowMessagesButton: saving to backend', {
           groupId,
@@ -109,12 +116,13 @@ export default function AllowMessagesButton({ groupId, userId, launchParams }: A
                 setIsAllowed(true);
                 localStorage.setItem(`messages_allowed_${userId}`, 'true');
                 
+                // Показываем наш кастомный попап вместо стандартного VK
                 setSnackbar(
                   <Snackbar
                     onClose={() => setSnackbar(null)}
                     before={<Avatar size={24}><Icon28CheckCircleOutline fill="var(--vkui--color_icon_positive)" /></Avatar>}
                   >
-                    Уведомления успешно разрешены
+                    Уведомления успешно разрешены! Теперь вы не пропустите выгодные предложения
                   </Snackbar>
                 );
               } else {
