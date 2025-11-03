@@ -65,14 +65,32 @@ export default function AllowMessagesButton({ groupId, userId, launchParams }: A
         hasSign: 'sign' in launchParams
       });
 
-      // Запрашиваем разрешение на сообщения от группы
-      const result = await bridge.send('VKWebAppAllowMessagesFromGroup', {
-        group_id: parseInt(groupId),
-      });
+      // Пробуем сначала VKWebAppAllowMessagesFromGroup
+      let result;
+      let permissionGranted = false;
       
-      console.log('VKWebAppAllowMessagesFromGroup result:', result);
+      try {
+        result = await bridge.send('VKWebAppAllowMessagesFromGroup', {
+          group_id: parseInt(groupId),
+        });
+        
+        console.log('VKWebAppAllowMessagesFromGroup result:', result);
+        permissionGranted = result.result === true;
+      } catch (bridgeError: any) {
+        console.warn('VKWebAppAllowMessagesFromGroup failed, trying VKWebAppAllowNotifications:', bridgeError);
+        
+        // Если не получилось через Messages, пробуем через Notifications
+        try {
+          const notifResult = await bridge.send('VKWebAppAllowNotifications');
+          console.log('VKWebAppAllowNotifications result:', notifResult);
+          permissionGranted = notifResult.result === true;
+        } catch (notifError) {
+          console.error('VKWebAppAllowNotifications also failed:', notifError);
+          throw bridgeError; // Возвращаем исходную ошибку
+        }
+      }
       
-      if (result.result) {
+      if (permissionGranted) {
         // Сохраняем разрешение в базу данных
         console.log('AllowMessagesButton: saving to backend', {
           groupId,
@@ -127,11 +145,26 @@ export default function AllowMessagesButton({ groupId, userId, launchParams }: A
       } else {
         throw new Error('messages_denied');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('AllowMessagesButton: error during permission request', error);
       let errorMessage = 'Не удалось разрешить уведомления';
       
-      if (error instanceof Error) {
+      // Обрабатываем разные типы ошибок VK Bridge
+      if (error?.error_type) {
+        console.error('VK Bridge error:', error);
+        
+        if (error.error_type === 'client_error') {
+          errorMessage = 'Ваше устройство не поддерживает уведомления';
+        } else if (error.error_type === 'api_error') {
+          if (error.error_data?.error_reason === 'Community messages are disabled') {
+            errorMessage = 'Сообщения от сообщества отключены. Обратитесь к администратору.';
+          } else if (error.error_data?.error_code === 901) {
+            errorMessage = 'У приложения нет прав на отправку сообщений от сообщества';
+          } else {
+            errorMessage = `Ошибка VK API: ${error.error_data?.error_reason || 'Неизвестная ошибка'}`;
+          }
+        }
+      } else if (error instanceof Error) {
         if (error.message === 'messages_denied') {
           errorMessage = 'Необходимо разрешить сообщения от сообщества';
         } else if (error.message.includes('Client doesnt support')) {

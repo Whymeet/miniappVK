@@ -225,7 +225,7 @@ def allow_messages_view(request):
     POST /api/subscribe/allow-messages/
     
     Обновление статуса после разрешения уведомлений.
-    Проверяет через VK API и устанавливает allowed_from_group=True.
+    Сохраняет флаг allowed_from_group=True без проверки через VK API.
     
     Body: { launch_params: {...}, group_id: "123" }  - параметры запуска VK с подписью
     
@@ -248,12 +248,6 @@ def allow_messages_view(request):
             status=status.HTTP_400_BAD_REQUEST
         )
     
-    if not group_id:
-        return Response(
-            {'success': False, 'error': 'group_id is required. Please provide group_id in request body.'},
-            status=status.HTTP_400_BAD_REQUEST
-        )
-    
     try:
         subscriber = Subscriber.objects.get(vk_user_id=vk_user_id)
     except Subscriber.DoesNotExist:
@@ -262,18 +256,15 @@ def allow_messages_view(request):
             status=status.HTTP_404_NOT_FOUND
         )
     
-    # Проверяем через VK API (опционально)
-    vk_allowed = None
-    try:
-        vk_allowed = check_messages_allowed(group_id, vk_user_id)
-    except VKAPIError as e:
-        # Если VK API недоступен, просто логируем, но не падаем
-        print(f"VK API check failed: {e}")
-    
-    # Обновляем статус
+    # Обновляем статус (без проверки через VK API, так как токен не используется)
     subscriber.allowed_from_group = True
     if not subscriber.subscribed_at:
         subscriber.subscribed_at = timezone.now()
+    
+    # Обновляем group_id если передан
+    if group_id and subscriber.group_id != group_id:
+        subscriber.group_id = group_id
+    
     subscriber.save()
     
     return Response({
@@ -281,7 +272,7 @@ def allow_messages_view(request):
         'data': {
             'vk_user_id': subscriber.vk_user_id,
             'allowed_from_group': subscriber.allowed_from_group,
-            'vk_api_confirmed': vk_allowed,
+            'vk_api_confirmed': None,  # Не проверяем через API
         }
     })
 
