@@ -227,18 +227,30 @@ def allow_messages_view(request):
     Обновление статуса после разрешения уведомлений.
     Проверяет через VK API и устанавливает allowed_from_group=True.
     
-    Body: { launch_params: {...} }  - параметры запуска VK с подписью
+    Body: { launch_params: {...}, group_id: "123" }  - параметры запуска VK с подписью
     
     Примечание: VK подпись проверяется автоматически через middleware.
     """
     # Получаем проверенные данные из middleware
     vk_user_id = getattr(request, 'vk_user_id', None)
     launch_params = getattr(request, 'launch_params', {})
-    group_id = launch_params.get('vk_group_id') or request.data.get('group_id')
     
-    if not vk_user_id or not group_id:
+    # Получаем group_id из разных источников
+    group_id = (
+        request.data.get('group_id') or 
+        launch_params.get('vk_group_id') or 
+        launch_params.get('group_id')
+    )
+    
+    if not vk_user_id:
         return Response(
-            {'success': False, 'error': 'vk_user_id and group_id not found in verified launch params'},
+            {'success': False, 'error': 'vk_user_id not found in verified launch params'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    if not group_id:
+        return Response(
+            {'success': False, 'error': 'group_id is required. Please provide group_id in request body.'},
             status=status.HTTP_400_BAD_REQUEST
         )
     
@@ -246,7 +258,7 @@ def allow_messages_view(request):
         subscriber = Subscriber.objects.get(vk_user_id=vk_user_id)
     except Subscriber.DoesNotExist:
         return Response(
-            {'success': False, 'error': 'Subscriber not found'},
+            {'success': False, 'error': 'Subscriber not found. Please subscribe first.'},
             status=status.HTTP_404_NOT_FOUND
         )
     

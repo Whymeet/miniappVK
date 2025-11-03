@@ -50,7 +50,7 @@ export default function AllowMessagesButton({ groupId, userId, launchParams }: A
       setSnackbar(
         <Snackbar
           onClose={() => setSnackbar(null)}
-          before={<Avatar size={24}><Icon28CancelCircleOutline fill="var(--color-error)" /></Avatar>}
+          before={<Avatar size={24}><Icon28CancelCircleOutline fill="var(--vkui--color_icon_negative)" /></Avatar>}
         >
           Ошибка: данные пользователя не найдены
         </Snackbar>
@@ -71,7 +71,7 @@ export default function AllowMessagesButton({ groupId, userId, launchParams }: A
       });
       
       console.log('VKWebAppAllowMessagesFromGroup result:', result);
-
+      
       if (result.result) {
         // Сохраняем разрешение в базу данных
         console.log('AllowMessagesButton: saving to backend', {
@@ -79,7 +79,7 @@ export default function AllowMessagesButton({ groupId, userId, launchParams }: A
           userId,
           launchParamsKeys: Object.keys(launchParams)
         });
-
+        
         allowMessagesMutation.mutate(
           { launchParams, groupId },
           {
@@ -94,14 +94,21 @@ export default function AllowMessagesButton({ groupId, userId, launchParams }: A
                 setSnackbar(
                   <Snackbar
                     onClose={() => setSnackbar(null)}
-                    before={<Avatar size={24}><Icon28CheckCircleOutline fill="var(--color-success)" /></Avatar>}
+                    before={<Avatar size={24}><Icon28CheckCircleOutline fill="var(--vkui--color_icon_positive)" /></Avatar>}
                   >
                     Уведомления успешно разрешены
                   </Snackbar>
                 );
               } else {
                 console.error('AllowMessagesButton: backend returned error', response.error);
-                throw new Error(response.error || 'Backend error');
+                setSnackbar(
+                  <Snackbar
+                    onClose={() => setSnackbar(null)}
+                    before={<Avatar size={24}><Icon28CancelCircleOutline fill="var(--vkui--color_icon_negative)" /></Avatar>}
+                  >
+                    Ошибка сервера: {response.error || 'Неизвестная ошибка'}
+                  </Snackbar>
+                );
               }
             },
             onError: (error) => {
@@ -109,9 +116,9 @@ export default function AllowMessagesButton({ groupId, userId, launchParams }: A
               setSnackbar(
                 <Snackbar
                   onClose={() => setSnackbar(null)}
-                  before={<Avatar size={24}><Icon28CancelCircleOutline fill="var(--color-error)" /></Avatar>}
+                  before={<Avatar size={24}><Icon28CancelCircleOutline fill="var(--vkui--color_icon_negative)" /></Avatar>}
                 >
-                  Не удалось сохранить разрешение. Проверьте консоль для деталей.
+                  Не удалось сохранить разрешение. Проверьте подключение к интернету.
                 </Snackbar>
               );
             },
@@ -133,11 +140,11 @@ export default function AllowMessagesButton({ groupId, userId, launchParams }: A
           errorMessage = 'Вы отклонили запрос на разрешение уведомлений';
         }
       }
-
+      
       setSnackbar(
         <Snackbar
           onClose={() => setSnackbar(null)}
-          before={<Avatar size={24}><Icon28CancelCircleOutline fill="var(--color-error)" /></Avatar>}
+          before={<Avatar size={24}><Icon28CancelCircleOutline fill="var(--vkui--color_icon_negative)" /></Avatar>}
         >
           {errorMessage}
         </Snackbar>
@@ -158,7 +165,7 @@ export default function AllowMessagesButton({ groupId, userId, launchParams }: A
             setSnackbar(
               <Snackbar
                 onClose={() => setSnackbar(null)}
-                before={<Avatar size={24}><Icon28CheckCircleOutline fill="var(--color-success)" /></Avatar>}
+                before={<Avatar size={24}><Icon28CheckCircleOutline fill="var(--vkui--color_icon_positive)" /></Avatar>}
               >
                 Вы уже подписаны на уведомления
               </Snackbar>

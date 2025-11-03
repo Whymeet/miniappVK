@@ -99,7 +99,6 @@ export async function allowMessages(
     hasVkGroupId: 'vk_group_id' in (launchParams || {}),
     groupId
   });
-
   try {
     const response = await fetch(`${API_BASE}/subscribe/allow-messages/`, {
       method: 'POST',
@@ -111,9 +110,7 @@ export async function allowMessages(
         group_id: groupId,
       }),
     });
-
     console.log('API allowMessages: response status', response.status);
-
     if (!response.ok) {
       const errorText = await response.text();
       console.error(`API allowMessages: HTTP error ${response.status}`, errorText);
@@ -122,7 +119,6 @@ export async function allowMessages(
         error: `HTTP ${response.status}: ${errorText}`
       };
     }
-
     const data = await response.json();
     console.log('API allowMessages: success', data);
     return data;
