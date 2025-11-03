@@ -68,7 +68,7 @@ export default function SubscribeModal({ groupId, userId, launchParams, onClose 
               const trackResult = await bridge.send('VKWebAppTrackEvent', {
                 event_name: 'subscribe',
                 user_id: userId,
-              });
+              } as any);
               console.log('✅ VK Ads tracking event sent:', trackResult);
             } catch (trackError) {
               console.warn('⚠️ Failed to send VK Ads tracking event:', trackError);

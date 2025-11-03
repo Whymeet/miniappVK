@@ -32,12 +32,12 @@ export default function OfferCard({ offer, onApply, ctaText = 'Оформить'
       await bridge.send('VKWebAppTrackEvent', {
         event_name: 'product_card',
         user_id: userId || undefined,
-      });
+      } as any);
       console.log('✅ VK Ads product_card event sent for offer:', offer.id);
     } catch (error) {
       console.warn('⚠️ Failed to send VK Ads product_card event:', error);
     }
-
+    
     // Вызываем оригинальный обработчик
     onApply(offer.id);
   };
