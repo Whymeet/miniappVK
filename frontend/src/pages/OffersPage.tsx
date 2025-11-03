@@ -184,6 +184,7 @@ export default function OffersPage({ config, launchParams }: OffersPageProps) {
                 offer={offer}
                 onApply={handleApplyOffer}
                 ctaText={config.copy.cta}
+                userId={launchParams.userId}
               />
             ))}
           </div>

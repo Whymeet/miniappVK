@@ -62,7 +62,18 @@ export default function SubscribeModal({ groupId, userId, launchParams, onClose 
 
           if (backendResult.success) {
             console.log('🎉 Subscription saved successfully!');
-            // Убираем alert - никаких попапов!
+            
+            // Отправляем событие в VK Ads и MyTracker для отслеживания конверсии
+            try {
+              const trackResult = await bridge.send('VKWebAppTrackEvent', {
+                event_name: 'subscribe',
+                user_id: userId,
+              });
+              console.log('✅ VK Ads tracking event sent:', trackResult);
+            } catch (trackError) {
+              console.warn('⚠️ Failed to send VK Ads tracking event:', trackError);
+              // Не критично, продолжаем
+            }
           } else {
             console.error('❌ Backend error:', backendResult.error);
             throw new Error(backendResult.error || 'Failed to save subscription');

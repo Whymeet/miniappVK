@@ -3,14 +3,16 @@ import { Offer } from '@/types';
 import { formatMoney, formatTerm } from '@/utils/format';
 import Logo from './Logo';
 import { useState, useEffect } from 'react';
+import bridge from '@vkontakte/vk-bridge';
 
 interface OfferCardProps {
   offer: Offer;
   onApply: (offerId: string) => void;
   ctaText?: string;
+  userId?: string | null;
 }
 
-export default function OfferCard({ offer, onApply, ctaText = 'Оформить' }: OfferCardProps) {
+export default function OfferCard({ offer, onApply, ctaText = 'Оформить', userId }: OfferCardProps) {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -23,6 +25,22 @@ export default function OfferCard({ offer, onApply, ctaText = 'Оформить'
     
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
+
+  const handleApply = async () => {
+    // Отправляем событие в VK Ads и MyTracker
+    try {
+      await bridge.send('VKWebAppTrackEvent', {
+        event_name: 'product_card',
+        user_id: userId || undefined,
+      });
+      console.log('✅ VK Ads product_card event sent for offer:', offer.id);
+    } catch (error) {
+      console.warn('⚠️ Failed to send VK Ads product_card event:', error);
+    }
+
+    // Вызываем оригинальный обработчик
+    onApply(offer.id);
+  };
 
   return (
     <Card 
@@ -163,7 +181,7 @@ export default function OfferCard({ offer, onApply, ctaText = 'Оформить'
           size="m"
           stretched
           mode="primary"
-          onClick={() => onApply(offer.id)}
+          onClick={handleApply}
           style={{ 
             marginTop: 'auto', 
             fontSize: isMobile ? 'var(--text-sm)' : 'var(--text-base)',

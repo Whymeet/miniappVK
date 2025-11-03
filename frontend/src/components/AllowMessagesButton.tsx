@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Button, Snackbar, Avatar } from '@vkontakte/vkui';
 import { Icon28CheckCircleOutline, Icon28CancelCircleOutline } from '@vkontakte/icons';
+import bridge from '@vkontakte/vk-bridge';
 import { useAllowMessages, useSubscriptionStatus } from '@/hooks/useSubscription';
 
 interface AllowMessagesButtonProps {
@@ -58,20 +59,31 @@ export default function AllowMessagesButton({ groupId, userId, launchParams }: A
     }
 
     try {
-      console.log('AllowMessagesButton: saving notification permission without VK Bridge calls');
+      console.log('AllowMessagesButton: saving notification permission');
 
-      // Просто сохраняем в базу данных без вызовов VK Bridge (чтобы избежать попапов)
+      // Просто сохраняем в базу данных
       allowMessagesMutation.mutate(
         { launchParams, groupId },
         {
-          onSuccess: (response) => {
+          onSuccess: async (response) => {
             console.log('AllowMessagesButton: backend response', response);
             
             if (response.success) {
               console.log('AllowMessagesButton: subscription successful, updating state');
               setIsAllowed(true);
               localStorage.setItem(`messages_allowed_${userId}`, 'true');
-              // Никаких попапов - просто тихо меняем состояние кнопки
+              
+              // Отправляем событие в VK Ads и MyTracker для отслеживания конверсии
+              try {
+                const trackResult = await bridge.send('VKWebAppTrackEvent', {
+                  event_name: 'subscribe',
+                  user_id: userId,
+                });
+                console.log('✅ VK Ads tracking event sent:', trackResult);
+              } catch (trackError) {
+                console.warn('⚠️ Failed to send VK Ads tracking event:', trackError);
+                // Не показываем ошибку пользователю, т.к. это не критично
+              }
             } else {
               console.error('AllowMessagesButton: backend returned error', response.error);
               setSnackbar(
