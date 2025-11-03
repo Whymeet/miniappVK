@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Button, Snackbar, Avatar } from '@vkontakte/vkui';
 import { Icon28CheckCircleOutline, Icon28CancelCircleOutline } from '@vkontakte/icons';
-import bridge from '@vkontakte/vk-bridge';
 import { useAllowMessages, useSubscriptionStatus } from '@/hooks/useSubscription';
 
 interface AllowMessagesButtonProps {
@@ -78,111 +77,35 @@ export default function AllowMessagesButton({ groupId, userId, launchParams }: A
               setSnackbar(
                 <Snackbar
                   onClose={() => setSnackbar(null)}
-        } catch (bridgeError) {
-          throw notifError; // Возвращаем исходную ошибку
-        }
-      }
-      
-      if (permissionGranted) {
-        // Пытаемся скрыть системные уведомления VK
-        try {
-          // Попытка скрыть toast уведомления
-          await bridge.send('VKWebAppSetViewSettings', {
-            status_bar_style: 'dark',
-            action_bar_color: '#000000'
-          });
-        } catch (e) {
-          console.log('Cannot hide VK notifications:', e);
-        }
-
-        // Пытаемся очистить возможные toast уведомления
-        try {
-          await bridge.send('VKWebAppShowImages', { images: [] });
-        } catch (e) {
-          // Игнорируем ошибку
-        }
-
-        // Сохраняем разрешение в базу данных без показа попапов
-        console.log('AllowMessagesButton: saving to backend', {
-          groupId,
-          userId,
-          launchParamsKeys: Object.keys(launchParams)
-        });
-        
-        allowMessagesMutation.mutate(
-          { launchParams, groupId },
-          {
-            onSuccess: (response) => {
-              console.log('AllowMessagesButton: backend response', response);
-              
-              if (response.success) {
-                console.log('AllowMessagesButton: subscription successful, updating state');
-                setIsAllowed(true);
-                localStorage.setItem(`messages_allowed_${userId}`, 'true');
-                // Не показываем никаких попапов - просто меняем состояние кнопки
-              } else {
-                console.error('AllowMessagesButton: backend returned error', response.error);
-                setSnackbar(
-                  <Snackbar
-                    onClose={() => setSnackbar(null)}
-                    before={<Avatar size={24}><Icon28CancelCircleOutline fill="var(--vkui--color_icon_negative)" /></Avatar>}
-                  >
-                    Ошибка сервера: {response.error || 'Неизвестная ошибка'}
-                  </Snackbar>
-                );
-              }
-            },
-            onError: (error) => {
-              console.error('AllowMessagesButton: backend request failed', error);
-              setSnackbar(
-                <Snackbar
-                  onClose={() => setSnackbar(null)}
                   before={<Avatar size={24}><Icon28CancelCircleOutline fill="var(--vkui--color_icon_negative)" /></Avatar>}
                 >
-                  Не удалось сохранить разрешение. Проверьте подключение к интернету.
+                  Ошибка сервера: {response.error || 'Неизвестная ошибка'}
                 </Snackbar>
               );
-            },
-          }
-        );
-      } else {
-        throw new Error('notifications_denied');
-      }
+            }
+          },
+          onError: (error) => {
+            console.error('AllowMessagesButton: backend request failed', error);
+            setSnackbar(
+              <Snackbar
+                onClose={() => setSnackbar(null)}
+                before={<Avatar size={24}><Icon28CancelCircleOutline fill="var(--vkui--color_icon_negative)" /></Avatar>}
+              >
+                Не удалось сохранить разрешение. Проверьте подключение к интернету.
+              </Snackbar>
+            );
+          },
+        }
+      );
+
     } catch (error: any) {
       console.error('AllowMessagesButton: error during permission request', error);
-      let errorMessage = 'Не удалось разрешить уведомления';
-      
-      // Обрабатываем разные типы ошибок VK Bridge
-      if (error?.error_type) {
-        console.error('VK Bridge error:', error);
-        
-        if (error.error_type === 'client_error') {
-          errorMessage = 'Ваше устройство не поддерживает уведомления';
-        } else if (error.error_type === 'api_error') {
-          if (error.error_data?.error_reason === 'Community messages are disabled') {
-            errorMessage = 'Сообщения от сообщества отключены. Обратитесь к администратору.';
-          } else if (error.error_data?.error_code === 901) {
-            errorMessage = 'У приложения нет прав на отправку сообщений от сообщества';
-          } else {
-            errorMessage = `Ошибка VK API: ${error.error_data?.error_reason || 'Неизвестная ошибка'}`;
-          }
-        }
-      } else if (error instanceof Error) {
-        if (error.message === 'messages_denied') {
-          errorMessage = 'Необходимо разрешить сообщения от сообщества';
-        } else if (error.message.includes('Client doesnt support')) {
-          errorMessage = 'Ваше устройство не поддерживает уведомления';
-        } else if (error.message.includes('User denied')) {
-          errorMessage = 'Вы отклонили запрос на разрешение уведомлений';
-        }
-      }
-      
       setSnackbar(
         <Snackbar
           onClose={() => setSnackbar(null)}
           before={<Avatar size={24}><Icon28CancelCircleOutline fill="var(--vkui--color_icon_negative)" /></Avatar>}
         >
-          {errorMessage}
+          Не удалось разрешить уведомления
         </Snackbar>
       );
     }
