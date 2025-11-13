@@ -10,12 +10,19 @@ export async function trackProductView(
   vkUserId?: string | null
 ): Promise<void> {
   try {
-    const params: { event_name: string; user_id?: string } = {
+    const params: { 
+      event_name: string; 
+      custom_user_id?: string;
+      event_params?: Record<string, string | number>;
+    } = {
       event_name: 'product_card',
+      event_params: {
+        offer_id: offerId,
+      }
     };
 
     if (vkUserId) {
-      params.user_id = vkUserId;
+      params.custom_user_id = vkUserId;
     }
 
     await bridge.send('VKWebAppTrackEvent', params);
@@ -36,12 +43,19 @@ export async function trackOfferClick(
   vkUserId?: string | null
 ): Promise<void> {
   try {
-    const params: { event_name: string; user_id?: string } = {
+    const params: { 
+      event_name: string; 
+      custom_user_id?: string;
+      event_params?: Record<string, string | number>;
+    } = {
       event_name: 'add_to_cart',
+      event_params: {
+        offer_id: offerId,
+      }
     };
 
     if (vkUserId) {
-      params.user_id = vkUserId;
+      params.custom_user_id = vkUserId;
     }
 
     await bridge.send('VKWebAppTrackEvent', params);
@@ -62,12 +76,19 @@ export async function trackLead(
   vkUserId?: string | null
 ): Promise<void> {
   try {
-    const params: { event_name: string; user_id?: string } = {
+    const params: { 
+      event_name: string; 
+      custom_user_id?: string;
+      event_params?: Record<string, string | number>;
+    } = {
       event_name: 'lead',
+      event_params: {
+        offer_id: offerId,
+      }
     };
 
     if (vkUserId) {
-      params.user_id = vkUserId;
+      params.custom_user_id = vkUserId;
     }
 
     await bridge.send('VKWebAppTrackEvent', params);
@@ -84,12 +105,15 @@ export async function trackLead(
  */
 export async function trackSubscribe(vkUserId?: string | null): Promise<void> {
   try {
-    const params: { event_name: string; user_id?: string } = {
+    const params: { 
+      event_name: string; 
+      custom_user_id?: string;
+    } = {
       event_name: 'subscribe',
     };
 
     if (vkUserId) {
-      params.user_id = vkUserId;
+      params.custom_user_id = vkUserId;
     }
 
     await bridge.send('VKWebAppTrackEvent', params);
@@ -110,12 +134,19 @@ export async function trackVisitWebsite(
   vkUserId?: string | null
 ): Promise<void> {
   try {
-    const params: { event_name: string; user_id?: string } = {
+    const params: { 
+      event_name: string; 
+      custom_user_id?: string;
+      event_params?: Record<string, string | number>;
+    } = {
       event_name: 'visit_website',
+      event_params: {
+        offer_id: offerId,
+      }
     };
 
     if (vkUserId) {
-      params.user_id = vkUserId;
+      params.custom_user_id = vkUserId;
     }
 
     await bridge.send('VKWebAppTrackEvent', params);
