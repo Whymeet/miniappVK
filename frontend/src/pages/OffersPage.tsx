@@ -41,7 +41,7 @@ export default function OffersPage({ config, launchParams }: OffersPageProps) {
 
   const { data, isLoading, error } = useOffers(launchParams.groupId, filters);
 
-  const handleApplyOffer = async (offerId: string) => {
+  const handleApplyOffer = async (offerId: string, _position?: number, _offerTitle?: string) => {
     const url = buildOfferRedirectUrl(
       offerId,
       launchParams.userId,
@@ -178,10 +178,12 @@ export default function OffersPage({ config, launchParams }: OffersPageProps) {
       {data && (
         <div className="section">
           <div className="grid-offers">
-            {data.data.results.map((offer) => (
+            {data.data.results.map((offer, index) => (
               <OfferCard
                 key={offer.id}
                 offer={offer}
+                position={index}
+                vkUserId={launchParams.userId}
                 onApply={handleApplyOffer}
                 ctaText={config.copy.cta}
               />

@@ -1,16 +1,19 @@
 import { Card, Div, Title, Text, Button, Chip } from '@vkontakte/vkui';
 import { Offer } from '@/types';
 import { formatMoney, formatTerm } from '@/utils/format';
+import { trackOfferClick } from '@/utils/analytics';
 import Logo from './Logo';
 import { useState, useEffect } from 'react';
 
 interface OfferCardProps {
   offer: Offer;
-  onApply: (offerId: string) => void;
+  position: number;
+  vkUserId?: string | null;
+  onApply: (offerId: string, position?: number, offerTitle?: string) => void;
   ctaText?: string;
 }
 
-export default function OfferCard({ offer, onApply, ctaText = 'Оформить' }: OfferCardProps) {
+export default function OfferCard({ offer, position, vkUserId, onApply, ctaText = 'Оформить' }: OfferCardProps) {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -163,7 +166,12 @@ export default function OfferCard({ offer, onApply, ctaText = 'Оформить'
           size="m"
           stretched
           mode="primary"
-          onClick={() => onApply(offer.id)}
+          onClick={async () => {
+            // Отслеживаем клик по офферу
+            await trackOfferClick(offer.id, offer.partner_name, position, vkUserId);
+            // Вызываем обработчик
+            onApply(offer.id, position, offer.partner_name);
+          }}
           style={{ 
             marginTop: 'auto', 
             fontSize: isMobile ? 'var(--text-sm)' : 'var(--text-base)',
