@@ -4,6 +4,7 @@ import './SubscribeModal.css';
 import { Icon56NotificationOutline } from '@vkontakte/icons';
 import bridge from '@vkontakte/vk-bridge';
 import { useAllowMessages, useSubscriptionStatus } from '@/hooks/useSubscription';
+import { trackSubscribe } from '@/utils/analytics';
 
 interface SubscribeModalProps {
   groupId: string | null;
@@ -50,6 +51,9 @@ export default function SubscribeModal({ groupId, userId, launchParams, onClose 
 
         if (result.result) {
           console.log('Saving to backend...');
+          
+          // Отслеживаем подписку в VK Ads
+          await trackSubscribe(userId);
           
           const backendResult = await allowMessagesMutation.mutateAsync(
             { launchParams, groupId },

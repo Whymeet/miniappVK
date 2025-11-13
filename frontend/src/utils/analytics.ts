@@ -1,41 +1,127 @@
 import bridge from '@vkontakte/vk-bridge';
 
 /**
- * Отслеживание клика по офферу через VK Analytics
+ * Отслеживание просмотра карточки товара (оффера)
  * @param offerId - ID оффера
- * @param offerTitle - Название оффера
- * @param position - Позиция карточки в списке (0-indexed)
+ * @param vkUserId - VK User ID (опционально)
+ */
+export async function trackProductView(
+  offerId: string,
+  vkUserId?: string | null
+): Promise<void> {
+  try {
+    const params: { event_name: string; user_id?: string } = {
+      event_name: 'product_card',
+    };
+
+    if (vkUserId) {
+      params.user_id = vkUserId;
+    }
+
+    await bridge.send('VKWebAppTrackEvent', params);
+
+    console.log('✅ VK Ads: product_card', { offerId, vkUserId });
+  } catch (error) {
+    console.error('❌ VK Ads track error:', error);
+  }
+}
+
+/**
+ * Отслеживание клика по офферу (добавление в корзину)
+ * @param offerId - ID оффера
  * @param vkUserId - VK User ID (опционально)
  */
 export async function trackOfferClick(
   offerId: string,
-  offerTitle: string,
-  position: number,
   vkUserId?: string | null
 ): Promise<void> {
   try {
-    const eventParams: Record<string, string | number> = {
-      offer_id: offerId,
-      offer_title: offerTitle,
-      position: position,
+    const params: { event_name: string; user_id?: string } = {
+      event_name: 'add_to_cart',
     };
 
-    // Добавляем vk_user_id если доступен
     if (vkUserId) {
-      eventParams.custom_user_id = vkUserId;
+      params.user_id = vkUserId;
     }
 
-    // Отправляем событие через VK Bridge
-    await bridge.send('VKWebAppTrackEvent', {
-      event_name: 'offer_click',
-      event_params: eventParams,
-    });
+    await bridge.send('VKWebAppTrackEvent', params);
 
-    console.log('Tracked offer click:', {
-      event_name: 'offer_click',
-      event_params: eventParams,
-    });
+    console.log('✅ VK Ads: add_to_cart', { offerId, vkUserId });
   } catch (error) {
-    console.error('Failed to track offer click:', error);
+    console.error('❌ VK Ads track error:', error);
+  }
+}
+
+/**
+ * Отслеживание оформления заявки (лид)
+ * @param offerId - ID оффера
+ * @param vkUserId - VK User ID (опционально)
+ */
+export async function trackLead(
+  offerId: string,
+  vkUserId?: string | null
+): Promise<void> {
+  try {
+    const params: { event_name: string; user_id?: string } = {
+      event_name: 'lead',
+    };
+
+    if (vkUserId) {
+      params.user_id = vkUserId;
+    }
+
+    await bridge.send('VKWebAppTrackEvent', params);
+
+    console.log('✅ VK Ads: lead', { offerId, vkUserId });
+  } catch (error) {
+    console.error('❌ VK Ads track error:', error);
+  }
+}
+
+/**
+ * Отслеживание подписки на рассылку
+ * @param vkUserId - VK User ID (опционально)
+ */
+export async function trackSubscribe(vkUserId?: string | null): Promise<void> {
+  try {
+    const params: { event_name: string; user_id?: string } = {
+      event_name: 'subscribe',
+    };
+
+    if (vkUserId) {
+      params.user_id = vkUserId;
+    }
+
+    await bridge.send('VKWebAppTrackEvent', params);
+
+    console.log('✅ VK Ads: subscribe', { vkUserId });
+  } catch (error) {
+    console.error('❌ VK Ads track error:', error);
+  }
+}
+
+/**
+ * Отслеживание посещения сайта (переход по ссылке оффера)
+ * @param offerId - ID оффера
+ * @param vkUserId - VK User ID (опционально)
+ */
+export async function trackVisitWebsite(
+  offerId: string,
+  vkUserId?: string | null
+): Promise<void> {
+  try {
+    const params: { event_name: string; user_id?: string } = {
+      event_name: 'visit_website',
+    };
+
+    if (vkUserId) {
+      params.user_id = vkUserId;
+    }
+
+    await bridge.send('VKWebAppTrackEvent', params);
+
+    console.log('✅ VK Ads: visit_website', { offerId, vkUserId });
+  } catch (error) {
+    console.error('❌ VK Ads track error:', error);
   }
 }

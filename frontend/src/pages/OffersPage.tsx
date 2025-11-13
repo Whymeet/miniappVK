@@ -9,11 +9,12 @@ import {
 import { Icon28MoneyCircleOutline } from '@vkontakte/icons';
 
 import { BrandConfig, LaunchParams, OffersFilters } from '@/types';
-import { useOffers } from '@/hooks/useOffers';
+import { trackLead } from '@/utils/analytics';
 import { buildOfferRedirectUrl } from '@/api/offers';
 import OfferCard from '@/components/OfferCard';
 import OffersFiltersComponent from '@/components/OffersFilters';
 import AllowMessagesButton from '@/components/AllowMessagesButton';
+import { useOffers } from '@/hooks/useOffers';
 import Logo from '@/components/Logo';
 
 interface OffersPageProps {
@@ -42,6 +43,9 @@ export default function OffersPage({ config, launchParams }: OffersPageProps) {
   const { data, isLoading, error } = useOffers(launchParams.groupId, filters);
 
   const handleApplyOffer = async (offerId: string, _position?: number, _offerTitle?: string) => {
+    // Отслеживаем оформление лида в VK Ads
+    await trackLead(offerId, launchParams.userId);
+    
     const url = buildOfferRedirectUrl(
       offerId,
       launchParams.userId,
