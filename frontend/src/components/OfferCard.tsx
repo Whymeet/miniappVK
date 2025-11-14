@@ -27,15 +27,19 @@ export default function OfferCard({ offer, onApply, ctaText = 'Оформить'
   }, []);
 
   const handleApply = async () => {
-    // Отправляем событие в VK Ads и MyTracker
+    // Отправляем событие конверсии в VK Ads
     try {
       await bridge.send('VKWebAppTrackEvent', {
-        event_name: 'product_card',
+        event_name: 'lead',
         user_id: userId || undefined,
+        event_params: {
+          offer_id: offer.id,
+          partner_name: offer.partner_name,
+        }
       } as any);
-      console.log('✅ VK Ads product_card event sent for offer:', offer.id);
+      console.log('✅ VK Ads lead event sent for offer:', offer.id);
     } catch (error) {
-      console.warn('⚠️ Failed to send VK Ads product_card event:', error);
+      console.warn('⚠️ Failed to send VK Ads lead event:', error);
     }
     
     // Вызываем оригинальный обработчик
