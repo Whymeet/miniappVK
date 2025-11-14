@@ -34,7 +34,7 @@ export async function trackProductView(
 }
 
 /**
- * Отслеживание клика по офферу (добавление в корзину)
+ * Отслеживание клика по офферу (конверсия)
  * @param offerId - ID оффера
  * @param vkUserId - VK User ID (опционально)
  */
@@ -48,7 +48,7 @@ export async function trackOfferClick(
       custom_user_id?: string;
       event_params?: Record<string, string | number>;
     } = {
-      event_name: 'add_to_cart',
+      event_name: 'conversion',
       event_params: {
         offer_id: offerId,
       }
@@ -60,7 +60,7 @@ export async function trackOfferClick(
 
     await bridge.send('VKWebAppTrackEvent', params);
 
-    console.log('✅ VK Ads: add_to_cart', { offerId, vkUserId });
+    console.log('✅ VK Ads: conversion', { offerId, vkUserId });
   } catch (error) {
     console.error('❌ VK Ads track error:', error);
   }

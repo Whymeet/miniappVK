@@ -1,7 +1,7 @@
 import { Card, Div, Title, Text, Button, Chip } from '@vkontakte/vkui';
 import { Offer } from '@/types';
 import { formatMoney, formatTerm } from '@/utils/format';
-import { trackOfferClick, trackProductView, trackVisitWebsite } from '@/utils/analytics';
+import { trackOfferClick } from '@/utils/analytics';
 import Logo from './Logo';
 import { useState, useEffect } from 'react';
 
@@ -26,11 +26,6 @@ export default function OfferCard({ offer, position, vkUserId, onApply, ctaText 
     
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
-
-  // Трекаем просмотр карточки оффера при монтировании
-  useEffect(() => {
-    trackProductView(offer.id, vkUserId);
-  }, [offer.id, vkUserId]);
 
   return (
     <Card 
@@ -172,10 +167,8 @@ export default function OfferCard({ offer, position, vkUserId, onApply, ctaText 
           stretched
           mode="primary"
           onClick={async () => {
-            // Отслеживаем клик по офферу (добавление в корзину)
+            // Отслеживаем клик по офферу
             await trackOfferClick(offer.id, vkUserId);
-            // Отслеживаем переход на сайт
-            await trackVisitWebsite(offer.id, vkUserId);
             // Вызываем обработчик
             onApply(offer.id, position, offer.partner_name);
           }}
