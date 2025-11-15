@@ -15,6 +15,9 @@ urlpatterns = [
     path('unsubscribe/', views.unsubscribe_view, name='unsubscribe'),
     path('subscription/status/', views.subscription_status_view, name='subscription_status'),
     
+    # VK Ads Events Logging
+    path('vk-ads/log-event/', views.log_vk_ads_event_view, name='log_vk_ads_event'),
+    
     # Statistics HTML (для админов)
     path('statistics/', statistics_views.statistics_dashboard_html, name='statistics_html'),
     

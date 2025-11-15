@@ -388,3 +388,50 @@ class ClickLog(models.Model):
     def __str__(self):
         return f"Click {self.offer.partner_name} by {self.vk_user_id} at {self.created_at}"
 
+
+class VKAdsEvent(models.Model):
+    """Логирование событий VK Ads"""
+    EVENT_TYPES = [
+        ('lead', 'Лид (клик на оффер)'),
+        ('subscribe', 'Подписка на уведомления'),
+        ('product_card', 'Просмотр карточки'),
+        ('purchase', 'Покупка'),
+        ('add_to_cart', 'Добавление в корзину'),
+        ('visit_website', 'Посещение сайта'),
+    ]
+    
+    event_name = models.CharField(max_length=50, choices=EVENT_TYPES, verbose_name='Тип события', db_index=True)
+    vk_user_id = models.CharField(max_length=100, null=True, blank=True, verbose_name='VK User ID', db_index=True)
+    
+    # Параметры события (JSON)
+    event_params = models.JSONField(null=True, blank=True, verbose_name='Параметры события',
+                                     help_text='offer_id, partner_name и др.')
+    
+    # Результат отправки
+    success = models.BooleanField(default=True, verbose_name='Успешно отправлено')
+    error_message = models.TextField(null=True, blank=True, verbose_name='Сообщение об ошибке')
+    
+    # Метаданные
+    ip_address = models.GenericIPAddressField(null=True, blank=True, verbose_name='IP адрес')
+    user_agent = models.TextField(null=True, blank=True, verbose_name='User Agent')
+    platform = models.CharField(max_length=50, null=True, blank=True, verbose_name='Платформа',
+                                 help_text='iOS, Android, Web')
+    
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания', db_index=True)
+    
+    class Meta:
+        db_table = 'vk_ads_events'
+        ordering = ['-created_at']
+        verbose_name = 'VK Ads событие'
+        verbose_name_plural = 'VK Ads события'
+        indexes = [
+            models.Index(fields=['event_name', 'created_at']),
+            models.Index(fields=['vk_user_id', 'created_at']),
+        ]
+    
+    def __str__(self):
+        params_str = f" ({self.event_params})" if self.event_params else ""
+        status = "✅" if self.success else "❌"
+        return f"{status} {self.event_name} | User: {self.vk_user_id}{params_str} | {self.created_at.strftime('%d.%m %H:%M')}"
+
+
