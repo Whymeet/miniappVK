@@ -69,9 +69,21 @@ export default function SubscribeModal({ groupId, userId, launchParams, onClose 
                 event_name: 'subscribe',
                 user_id: userId,
               } as any);
-              console.log('✅ VK Ads tracking event sent:', trackResult);
+              
+              console.log('📊 VK Ads Subscribe Event:', {
+                event: 'subscribe',
+                user_id: userId,
+                result: trackResult,
+                timestamp: new Date().toISOString()
+              });
+              
+              if (trackResult.result) {
+                console.log('✅ VK Ads confirmed: Subscribe event delivered');
+              } else {
+                console.warn('⚠️ VK Ads: Subscribe event may not be delivered', trackResult);
+              }
             } catch (trackError) {
-              console.warn('⚠️ Failed to send VK Ads tracking event:', trackError);
+              console.error('❌ VK Ads Subscribe ERROR:', trackError);
               // Не критично, продолжаем
             }
           } else {
