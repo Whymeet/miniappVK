@@ -1,5 +1,4 @@
 import bridge from '@vkontakte/vk-bridge';
-import axios from 'axios';
 
 const API_BASE = import.meta.env.VITE_API_BASE || 'https://kybyshka-dev.ru';
 
@@ -26,14 +25,20 @@ export async function trackAndLogEvent(
       timestamp: new Date().toISOString()
     });
     
-    // Логируем на бэкенд
+    // Логируем на бэкенд через fetch
     try {
-      await axios.post(`${API_BASE}/api/vk-ads/log-event/`, {
-        event_name: eventName,
-        vk_user_id: vkUserId,
-        event_params: eventParams,
-        success: result.result === true,
-        platform: detectPlatform(),
+      await fetch(`${API_BASE}/api/vk-ads/log-event/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          event_name: eventName,
+          vk_user_id: vkUserId,
+          event_params: eventParams,
+          success: result.result === true,
+          platform: detectPlatform(),
+        }),
       });
       
       console.log(`✅ Backend logged: ${eventName}`);
@@ -50,15 +55,21 @@ export async function trackAndLogEvent(
   } catch (error) {
     console.error(`❌ VK Ads ERROR: ${eventName}`, error);
     
-    // Логируем ошибку на бэкенд
+    // Логируем ошибку на бэкенд через fetch
     try {
-      await axios.post(`${API_BASE}/api/vk-ads/log-event/`, {
-        event_name: eventName,
-        vk_user_id: vkUserId,
-        event_params: eventParams,
-        success: false,
-        error_message: error instanceof Error ? error.message : String(error),
-        platform: detectPlatform(),
+      await fetch(`${API_BASE}/api/vk-ads/log-event/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          event_name: eventName,
+          vk_user_id: vkUserId,
+          event_params: eventParams,
+          success: false,
+          error_message: error instanceof Error ? error.message : String(error),
+          platform: detectPlatform(),
+        }),
       });
     } catch (backendError) {
       console.warn('⚠️ Failed to log error to backend:', backendError);
