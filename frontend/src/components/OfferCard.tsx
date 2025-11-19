@@ -97,7 +97,7 @@ export default function OfferCard({ offer, onApply, ctaText = 'Оформить'
           <div style={{ textAlign: 'center' }}>
             <Text style={{ 
               color: 'var(--text-muted)', 
-              fontSize: isMobile ? '13px' : 'var(--text-sm)',
+              fontSize: isMobile ? '16px' : 'var(--text-sm)',
               display: 'block'
             }}>
               Сумма
@@ -105,7 +105,7 @@ export default function OfferCard({ offer, onApply, ctaText = 'Оформить'
             <Text 
               weight="2" 
               style={{ 
-                fontSize: isMobile ? '15px' : 'var(--text-md)',
+                fontSize: isMobile ? '18px' : 'var(--text-md)',
                 color: 'var(--accent)',
                 fontWeight: 'bold'
               }}
@@ -117,7 +117,7 @@ export default function OfferCard({ offer, onApply, ctaText = 'Оформить'
           {/* Первый займ бесплатно */}
           <div style={{ textAlign: 'center' }}>
             <Text style={{ 
-              fontSize: isMobile ? '13px' : 'var(--text-sm)',
+              fontSize: isMobile ? '16px' : 'var(--text-sm)',
               color: 'var(--text-primary)'
             }}>
               Первый займ <Text weight="2" style={{ color: 'var(--accent)', fontSize: 'inherit' }}>бесплатно</Text>
@@ -128,7 +128,7 @@ export default function OfferCard({ offer, onApply, ctaText = 'Оформить'
           <div style={{ textAlign: 'center' }}>
             <Text style={{ 
               color: 'var(--text-muted)', 
-              fontSize: isMobile ? '13px' : 'var(--text-sm)',
+              fontSize: isMobile ? '16px' : 'var(--text-sm)',
               display: 'block'
             }}>
               Срок
@@ -136,7 +136,7 @@ export default function OfferCard({ offer, onApply, ctaText = 'Оформить'
             <Text 
               weight="2" 
               style={{ 
-                fontSize: isMobile ? '15px' : 'var(--text-md)',
+                fontSize: isMobile ? '18px' : 'var(--text-md)',
                 fontWeight: 'bold'
               }}
             >
