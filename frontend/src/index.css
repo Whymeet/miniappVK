@@ -345,47 +345,7 @@ body.card-gradient-enabled .offer-card-gradient.vkuiCard {
   
   /* Компактные карточки для 2-колоночной сетки */
   .offer-card-gradient {
-    padding: 8px !important;
-  }
-  
-  .offer-card-gradient img {
-    width: 40px !important;
-    height: 40px !important;
-  }
-  
-  .offer-card-gradient .vkuiTitle--level-3 {
-    font-size: 12px !important;
-    line-height: 1.2 !important;
-  }
-  
-  .offer-card-gradient .vkuiText {
-    font-size: 10px !important;
-  }
-  
-  /* Кнопка и её содержимое - 12px */
-  .offer-card-gradient .vkuiButton {
-    font-size: 12px !important;
-    min-height: 32px !important;
-    padding: 6px 8px !important;
-  }
-  
-  .offer-card-gradient .vkuiButton__content {
-    font-size: 12px !important;
-  }
-  
-  /* Чипы и их содержимое - 12px */
-  .offer-card-gradient .vkuiChip {
-    font-size: 12px !important;
-    padding: 4px 8px !important;
-  }
-  
-  .offer-card-gradient .vkuiChip__content {
-    font-size: 12px !important;
-    line-height: 1.2 !important;
-  }
-  
-  .offer-card-gradient .vkuiFootnote {
-    font-size: 12px !important;
+    padding: 6px !important;
   }
 }
 
@@ -523,40 +483,6 @@ textarea {
     max-height: 220px !important;
     width: 100% !important;
     height: auto !important;
-  }
-  
-  /* Уменьшаем шрифты в карточках */
-  .offer-card-gradient .vkuiTitle--level-3 {
-    font-size: 11px !important;
-    line-height: 1.1 !important;
-  }
-  
-  .offer-card-gradient .vkuiText {
-    font-size: 9px !important;
-  }
-  
-  .offer-card-gradient .vkuiButton {
-    font-size: 12px !important;
-    min-height: 30px !important;
-    padding: 5px 6px !important;
-  }
-  
-  .offer-card-gradient .vkuiButton__content {
-    font-size: 12px !important;
-  }
-  
-  .offer-card-gradient .vkuiChip {
-    font-size: 12px !important;
-    padding: 3px 6px !important;
-  }
-  
-  .offer-card-gradient .vkuiChip__content {
-    font-size: 12px !important;
-    line-height: 1.1 !important;
-  }
-  
-  .offer-card-gradient .vkuiFootnote {
-    font-size: 12px !important;
   }
 }
 
