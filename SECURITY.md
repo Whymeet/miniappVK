@@ -230,3 +230,25 @@ docker-compose -f docker-compose.prod.yml logs backend | \
 
 Свяжитесь с разработчиками напрямую.
 
+cd /srv/kybyshka-dev/miniappVK
+
+# Остановить все
+docker compose -f docker-compose.prod.yml down
+
+# Удалить volume с фронтендом (БД НЕ ТРОГАЕМ!)
+docker volume rm miniappvk_frontend_static
+
+# Удалить образ фронтенда
+docker rmi miniappvk-frontend -f
+
+# Очистить кэш
+docker builder prune -f
+
+# Пересобрать с нуля
+docker compose -f docker-compose.prod.yml build --no-cache frontend
+
+# Запустить (фронтенд соберется в новый чистый volume)
+docker compose -f docker-compose.prod.yml up -d
+
+# Проверить что файлы появились
+docker exec miniappvk-nginx-1 ls -la /var/www/frontend/assets/
