@@ -12,7 +12,6 @@ import { BrandConfig, LaunchParams, OffersFilters } from '@/types';
 import { useOffers } from '@/hooks/useOffers';
 import { buildOfferRedirectUrl } from '@/api/offers';
 import OfferCard from '@/components/OfferCard';
-import OffersFiltersComponent from '@/components/OffersFilters';
 import AllowMessagesButton from '@/components/AllowMessagesButton';
 import Logo from '@/components/Logo';
 
@@ -121,17 +120,6 @@ export default function OffersPage({ config, launchParams }: OffersPageProps) {
           </a>
         )}
       </div>
-
-      {/* Фильтры */}
-      {config.features.show_filters && (
-        <div className="section">
-          <OffersFiltersComponent
-            filters={filters}
-            onChange={setFilters}
-            defaultSort={config.features.default_sort}
-          />
-        </div>
-      )}
 
       {/* Дисклеймер */}
       {config.features.show_disclaimer && (
