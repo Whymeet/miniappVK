@@ -1,4 +1,4 @@
-import { Card, Div, Title, Text, Button, Chip } from '@vkontakte/vkui';
+import { Card, Div, Title, Text, Button } from '@vkontakte/vkui';
 import { Offer } from '@/types';
 import { formatMoney, formatTerm } from '@/utils/format';
 import Logo from './Logo';
@@ -60,17 +60,36 @@ export default function OfferCard({ offer, onApply, ctaText = 'Оформить'
       <Div style={{ 
         padding: 0, 
         display: 'grid', 
-        gap: isMobile ? 'var(--space-sm)' : 'var(--space-sm)', 
-        height: '100%' 
+        gap: isMobile ? 'var(--space-xs)' : 'var(--space-sm)', 
+        height: '100%',
+        position: 'relative'
       }}>
+        {/* Статус-тег вверху */}
+        {offer.features.length > 0 && (
+          <div style={{
+            position: 'absolute',
+            top: '-6px',
+            left: '8px',
+            backgroundColor: 'var(--accent)',
+            color: 'white',
+            padding: '4px 8px',
+            borderRadius: '4px',
+            fontSize: '10px',
+            fontWeight: 600,
+            zIndex: 1
+          }}>
+            🌟 {offer.features[0]}
+          </div>
+        )}
+
         {/* Логотип на всю ширину */}
         <Logo 
           src={offer.logo_url} 
           alt={offer.partner_name}
           style={{ 
             width: '100%',
-            minHeight: isMobile ? 80 : 80,
-            maxHeight: isMobile ? 140 : 120,
+            minHeight: isMobile ? 100 : 80,
+            maxHeight: isMobile ? 180 : 120,
             objectFit: 'contain',
             borderRadius: '8px'
           }}
@@ -90,93 +109,80 @@ export default function OfferCard({ offer, onApply, ctaText = 'Оформить'
           {offer.partner_name}
         </Title>
 
-        {/* Ставка — всегда черная */}
-        <Text 
-          weight="3" 
-          style={{ 
-            fontSize: isMobile ? 'var(--text-lg)' : 'var(--text-xl)', 
-            color: 'var(--text)',
-            lineHeight: 1.2
-          }}
-        >
-          {offer.rate_text}
-        </Text>
+        {/* Рейтинг со звёздами */}
+        <div style={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'center',
+          gap: '4px'
+        }}>
+          <Text style={{ 
+            fontSize: isMobile ? 'var(--text-sm)' : 'var(--text-md)', 
+            fontWeight: 600,
+            color: 'var(--text-primary)'
+          }}>
+            4.8
+          </Text>
+          <div style={{ display: 'flex', color: '#FFD700' }}>
+            {'★★★★★'.split('').map((star, i) => (
+              <span key={i} style={{ fontSize: isMobile ? '12px' : '14px' }}>{star}</span>
+            ))}
+          </div>
+        </div>
 
-        {/* Параметры */}
-        <div style={{ display: 'grid', gap: isMobile ? 8 : 6 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        {/* Параметры в вертикальном стиле */}
+        <div style={{ display: 'grid', gap: isMobile ? 4 : 6 }}>
+          {/* Сумма */}
+          <div style={{ textAlign: 'center' }}>
             <Text style={{ 
               color: 'var(--text-muted)', 
-              fontSize: isMobile ? 'var(--text-xs)' : 'var(--text-sm)' 
+              fontSize: isMobile ? 'var(--text-xs)' : 'var(--text-sm)',
+              display: 'block'
             }}>
               Сумма
             </Text>
             <Text 
               weight="2" 
               style={{ 
-                fontSize: isMobile ? 'var(--text-xs)' : 'var(--text-sm)',
-                textAlign: 'right'
+                fontSize: isMobile ? 'var(--text-sm)' : 'var(--text-md)',
+                color: 'var(--accent)',
+                fontWeight: 'bold'
               }}
             >
-              до {formatMoney(offer.sum_max)}
+              {formatMoney(offer.sum_max)}
             </Text>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          
+          {/* Первый займ бесплатно */}
+          <div style={{ textAlign: 'center' }}>
+            <Text style={{ 
+              fontSize: isMobile ? 'var(--text-xs)' : 'var(--text-sm)',
+              color: 'var(--text-primary)'
+            }}>
+              Первый займ <Text weight="2" style={{ color: 'var(--accent)' }}>бесплатно</Text>
+            </Text>
+          </div>
+          
+          {/* Срок */}
+          <div style={{ textAlign: 'center' }}>
             <Text style={{ 
               color: 'var(--text-muted)', 
-              fontSize: isMobile ? 'var(--text-xs)' : 'var(--text-sm)' 
+              fontSize: isMobile ? 'var(--text-xs)' : 'var(--text-sm)',
+              display: 'block'
             }}>
               Срок
             </Text>
             <Text 
               weight="2" 
               style={{ 
-                fontSize: isMobile ? 'var(--text-xs)' : 'var(--text-sm)',
-                textAlign: 'right'
+                fontSize: isMobile ? 'var(--text-sm)' : 'var(--text-md)',
+                fontWeight: 'bold'
               }}
             >
-              до {formatTerm(offer.term_max)}
-            </Text>
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Text style={{ 
-              color: 'var(--text-muted)', 
-              fontSize: isMobile ? 'var(--text-xs)' : 'var(--text-sm)' 
-            }}>
-              Одобрение
-            </Text>
-            <Text 
-              weight="2" 
-              style={{ 
-                fontSize: isMobile ? 'var(--text-xs)' : 'var(--text-sm)',
-                textAlign: 'right'
-              }}
-            >
-              {offer.approval_time}
+              {formatTerm(offer.term_max)}
             </Text>
           </div>
         </div>
-
-        {/* Чипы */}
-        {!!offer.features.length && (
-          <div style={{ 
-            display: 'flex', 
-            flexWrap: 'wrap', 
-            gap: isMobile ? 'var(--space-xs)' : 'var(--space-xs)' 
-          }}>
-            {offer.features.slice(0, 2).map((feature, i) => (
-              <Chip 
-                key={i}
-                style={{ 
-                  fontSize: '12px',
-                  padding: isMobile ? '6px 10px' : '4px 8px'
-                }}
-              >
-                {feature}
-              </Chip>
-            ))}
-          </div>
-        )}
 
         {/* CTA */}
         <Button
