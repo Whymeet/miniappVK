@@ -121,6 +121,23 @@ export default function OffersPage({ config, launchParams }: OffersPageProps) {
         )}
       </div>
 
+      {/* Надпись под хедером */}
+      {config.copy.header_caption && (
+        <div style={{ 
+          textAlign: 'center', 
+          padding: isMobile ? 'var(--space-xs) var(--space-sm)' : 'var(--space-sm) var(--space-md)',
+          marginTop: '-8px'
+        }}>
+          <Text style={{ 
+            fontSize: isMobile ? 'var(--text-md)' : 'var(--text-lg)', 
+            fontWeight: 600,
+            color: 'var(--text-primary)'
+          }}>
+            {config.copy.header_caption}
+          </Text>
+        </div>
+      )}
+
       {/* Список офферов */}
       {isLoading && (
         <div className="section" style={{ display: 'flex', justifyContent: 'center', padding: '40px 0' }}>

@@ -14,6 +14,7 @@ export interface BrandPalette {
 export interface BrandCopy {
   title: string;
   subtitle: string;
+  header_caption: string;
   cta: string;
   disclaimer: string;
   policy_title: string;

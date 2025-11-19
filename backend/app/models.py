@@ -23,6 +23,7 @@ class AppConfig(models.Model):
     
     # Тексты
     subtitle = models.CharField(max_length=200, default='Быстрые займы онлайн', verbose_name='Подзаголовок')
+    header_caption = models.CharField(max_length=200, default='Лучшие предложения', verbose_name='Надпись под хедером')
     cta_text = models.CharField(max_length=100, default='Получить деньги', verbose_name='Текст кнопки')
     disclaimer = models.TextField(default='Сервис не является кредитором. Мы помогаем подобрать выгодное предложение.', 
                                    verbose_name='Дисклеймер')
@@ -83,6 +84,7 @@ class AppConfig(models.Model):
             'copy': {
                 'title': self.app_name,
                 'subtitle': self.subtitle,
+                'header_caption': self.header_caption,
                 'cta': self.cta_text,
                 'disclaimer': self.disclaimer,
                 'policy_title': 'Политика конфиденциальности',
