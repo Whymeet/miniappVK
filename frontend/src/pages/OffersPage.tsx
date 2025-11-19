@@ -138,6 +138,20 @@ export default function OffersPage({ config, launchParams }: OffersPageProps) {
         </div>
       )}
 
+      {/* Заголовок "Лучшие предложения" */}
+      <div style={{ 
+        textAlign: 'center', 
+        padding: isMobile ? 'var(--space-md) var(--space-sm) var(--space-sm)' : 'var(--space-lg) var(--space-md) var(--space-md)',
+      }}>
+        <Text style={{ 
+          fontSize: isMobile ? 'var(--text-lg)' : 'var(--text-xl)', 
+          fontWeight: 700,
+          color: 'var(--text-primary)'
+        }}>
+          Лучшие предложения
+        </Text>
+      </div>
+
       {/* Список офферов */}
       {isLoading && (
         <div className="section" style={{ display: 'flex', justifyContent: 'center', padding: '40px 0' }}>
