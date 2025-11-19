@@ -350,47 +350,7 @@ body.card-gradient-enabled .offer-card-gradient.vkuiCard {
   border: 1px solid #E5E7EB; border-radius: var(--radius-sm); padding: var(--space-md); }
 .alert__icon { line-height: 1; }
 
-/* Переключатель-сегменты (одна заливка только у активного) */
-.segmented { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px;
-  background: #F3F4F6; border-radius: var(--radius-pill); padding: 4px; }
-.segmented .vkuiButton { height: 40px !important; border: none !important;
-  background: transparent !important; color: #6B7280 !important;
-  font-weight: 500 !important; box-shadow: none !important; }
-.segmented .vkuiButton .vkuiButton__content { color: #6B7280 !important; }
-.segmented .vkuiButton.is-active { background: var(--accent) !important; color: #fff !important; }
-.segmented .vkuiButton.is-active .vkuiButton__content { color: #FFFFFF !important; }
 
-/* Кнопки сортировки в столбец на узких экранах */
-@media screen and (max-width: 480px) {
-  .segmented { 
-    grid-template-columns: 1fr !important; /* одна колонка */
-    grid-auto-flow: row !important;
-    gap: 8px !important;
-    padding: 8px !important;
-    border-radius: var(--radius-sm) !important;
-  }
-  
-  .segmented .vkuiButton,
-  .segmented button { 
-    height: 48px !important;
-    min-height: 48px !important;
-    max-height: 48px !important;
-    font-size: 16px !important;
-    width: 100% !important;
-    grid-column: 1 / -1 !important;
-  }
-}
-
-/* Индивидуальные цвета для кнопок сортировки */
-.segmented .vkuiButton.is-active.sort-rate { 
-  background: var(--sort-button-rate-color, var(--accent)) !important; 
-}
-.segmented .vkuiButton.is-active.sort-sum { 
-  background: var(--sort-button-sum-color, var(--accent)) !important; 
-}
-.segmented .vkuiButton.is-active.sort-term { 
-  background: var(--sort-button-term-color, var(--accent)) !important; 
-}
 
 /* Мелкие выравнивания VKUI для «монолита» */
 .vkuiGroup { background: transparent !important; margin-bottom: 0 !important; }
@@ -506,9 +466,6 @@ textarea {
     font-size: 17px !important;
   }
   
-  /* Кнопки сортировки обязательно в столбец */
-  .segmented { 
-    grid-template-columns: 1fr !important;
-  }
+
 }
 

@@ -1,4 +1,4 @@
-import { FormItem, Input, Button } from '@vkontakte/vkui';
+import { FormItem, Input } from '@vkontakte/vkui';
 import { OffersFilters } from '@/types';
 import { useState, useEffect } from 'react';
 
@@ -10,8 +10,7 @@ interface OffersFiltersProps {
 
 export default function OffersFiltersComponent({ 
   filters, 
-  onChange, 
-  defaultSort = 'rate'
+  onChange
 }: OffersFiltersProps) {
   const [isMobile, setIsMobile] = useState(false);
 
@@ -35,12 +34,6 @@ export default function OffersFiltersComponent({
     const value = e.target.value ? parseInt(e.target.value) : undefined;
     onChange({ ...filters, term_days: value, page: 1 });
   };
-
-  const handleSortChange = (sortType: 'rate' | 'sum' | 'term') => {
-    onChange({ ...filters, sort: sortType, page: 1 });
-  };
-
-  const currentSort = filters.sort || defaultSort;
 
   return (
     <div>
@@ -68,27 +61,6 @@ export default function OffersFiltersComponent({
           />
         </FormItem>
       </div>
-
-      <FormItem top="Сортировка" style={{ margin: 'var(--space-sm) 0 0 0' }}>
-        <div className="segmented">
-          <Button
-            size="m"
-            className={currentSort === 'rate' ? 'is-active sort-rate' : 'sort-rate'}
-            onClick={() => handleSortChange('rate')}
-          >По ставке</Button>
-          <Button
-            size="m"
-            className={currentSort === 'sum' ? 'is-active sort-sum' : 'sort-sum'}
-            onClick={() => handleSortChange('sum')}
-          >По сумме</Button>
-          <Button
-            size="m"
-            className={currentSort === 'term' ? 'is-active sort-term' : 'sort-term'}
-            onClick={() => handleSortChange('term')}
-          >По сроку</Button>
-        </div>
-      </FormItem>
     </div>
   );
 }
-
