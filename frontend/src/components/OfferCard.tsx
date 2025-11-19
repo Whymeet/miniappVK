@@ -69,8 +69,8 @@ export default function OfferCard({ offer, onApply, ctaText = 'Оформить'
           alt={offer.partner_name}
           style={{ 
             width: '100%',
-            minHeight: isMobile ? 60 : 80,
-            maxHeight: isMobile ? 100 : 120,
+            minHeight: isMobile ? 80 : 80,
+            maxHeight: isMobile ? 140 : 120,
             objectFit: 'contain',
             borderRadius: '8px'
           }}
