@@ -114,15 +114,18 @@ export default function OfferCard({ offer, onApply, ctaText = 'Оформить'
             </Text>
           </div>
           
-          {/* Первый займ бесплатно */}
-          <div style={{ textAlign: 'center' }}>
-            <Text style={{ 
-              fontSize: isMobile ? '16px' : 'var(--text-sm)',
-              color: 'var(--text-primary)'
-            }}>
-              Первый займ <Text weight="2" style={{ color: 'var(--accent)', fontSize: 'inherit' }}>бесплатно</Text>
-            </Text>
-          </div>
+          {/* Особенность (первая из списка) */}
+          {offer.features && offer.features.length > 0 && (
+            <div style={{ textAlign: 'center' }}>
+              <Text style={{ 
+                fontSize: isMobile ? '16px' : 'var(--text-sm)',
+                color: 'var(--accent)',
+                fontWeight: 600
+              }}>
+                {offer.features[0]}
+              </Text>
+            </div>
+          )}
           
           {/* Срок */}
           <div style={{ textAlign: 'center' }}>

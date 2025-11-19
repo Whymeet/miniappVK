@@ -245,11 +245,15 @@ export default function OffersPage({ config, launchParams }: OffersPageProps) {
       }}>
         {/* Дисклеймер */}
         {config.features.show_disclaimer && (
-          <div className="alert" style={{ marginBottom: 'var(--space-md)' }}>
-            <span className="alert__icon">ℹ️</span>
+          <div className="alert" style={{ 
+            marginBottom: 'var(--space-sm)',
+            padding: 'var(--space-xs)',
+            background: 'var(--bg)'
+          }}>
             <Text style={{ 
-              fontSize: isMobile ? 'var(--text-xs)' : 'var(--text-sm)', 
-              lineHeight: '1.5'
+              fontSize: isMobile ? '11px' : 'var(--text-xs)', 
+              lineHeight: '1.4',
+              color: 'var(--text-muted)'
             }}>
               {config.copy.disclaimer}
             </Text>
