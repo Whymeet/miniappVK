@@ -64,22 +64,16 @@ export default function OfferCard({ offer, onApply, ctaText = 'Оформить'
         height: '100%' 
       }}>
         {/* Логотип на всю ширину */}
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'center',
-          alignItems: 'center'
-        }}>
-          <Logo 
-            src={offer.logo_url} 
-            alt={offer.partner_name}
-            style={{ 
-              width: '100%',
-              height: isMobile ? 80 : 100,
-              objectFit: 'contain',
-              borderRadius: '8px'
-            }}
-          />
-        </div>
+        <Logo 
+          src={offer.logo_url} 
+          alt={offer.partner_name}
+          style={{ 
+            width: '100%',
+            height: isMobile ? 80 : 100,
+            objectFit: 'contain',
+            borderRadius: '8px'
+          }}
+        />
         
         {/* Название под логотипом */}
         <Title 
