@@ -339,38 +339,38 @@ body.card-gradient-enabled .offer-card-gradient.vkuiCard {
 
 @media (max-width: 480px) {
   .grid-offers {
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-xs);
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 8px;
   }
   
   /* Компактные карточки для 2-колоночной сетки */
   .offer-card-gradient {
-    padding: 10px !important;
+    padding: 8px !important;
   }
   
   .offer-card-gradient img {
-    width: 44px !important;
-    height: 44px !important;
+    width: 40px !important;
+    height: 40px !important;
   }
   
   .offer-card-gradient .vkuiTitle--level-3 {
-    font-size: 13px !important;
+    font-size: 12px !important;
     line-height: 1.2 !important;
   }
   
   .offer-card-gradient .vkuiText {
-    font-size: 11px !important;
+    font-size: 10px !important;
   }
   
   .offer-card-gradient .vkuiButton {
-    font-size: 13px !important;
+    font-size: 12px !important;
     min-height: 32px !important;
-    padding: 6px 12px !important;
+    padding: 6px 10px !important;
   }
   
   .offer-card-gradient .vkuiChip {
-    font-size: 10px !important;
-    padding: 3px 6px !important;
+    font-size: 9px !important;
+    padding: 2px 5px !important;
   }
 }
 
@@ -474,12 +474,12 @@ textarea {
 /* Очень маленькие экраны (360px и меньше) */
 @media screen and (max-width: 360px) {
   #root {
-    padding: var(--space-xs);
+    padding: 4px;
   }
   
   .grid-offers {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 6px;
   }
   
   .section {
@@ -499,22 +499,34 @@ textarea {
   
   /* Адаптация карточек для узких экранов */
   .offer-card-gradient {
-    padding: var(--space-sm) !important;
+    padding: 6px !important;
   }
   
   /* Уменьшаем размер логотипов в карточках */
   .offer-card-gradient img {
-    width: 48px !important;
-    height: 48px !important;
+    width: 36px !important;
+    height: 36px !important;
   }
   
   /* Уменьшаем шрифты в карточках */
   .offer-card-gradient .vkuiTitle--level-3 {
-    font-size: var(--text-sm) !important;
+    font-size: 11px !important;
+    line-height: 1.1 !important;
   }
   
   .offer-card-gradient .vkuiText {
-    font-size: var(--text-xs) !important;
+    font-size: 9px !important;
+  }
+  
+  .offer-card-gradient .vkuiButton {
+    font-size: 11px !important;
+    min-height: 30px !important;
+    padding: 5px 8px !important;
+  }
+  
+  .offer-card-gradient .vkuiChip {
+    font-size: 8px !important;
+    padding: 2px 4px !important;
   }
 }
 
