@@ -104,7 +104,7 @@ class AppConfigAdmin(admin.ModelAdmin):
             'description': 'Используйте формат HEX: #FF6B35. Основной цвет применяется к кнопкам.'
         }),
         ('📝 Тексты', {
-            'fields': ('subtitle', 'cta_text', 'disclaimer')
+            'fields': ('subtitle', 'header_caption', 'cta_text', 'disclaimer')
         }),
         ('⚙️ Настройки', {
             'fields': (
