@@ -183,6 +183,18 @@ export default function OffersPage({ config, launchParams }: OffersPageProps) {
 
       {data && (
         <div className="section">
+          <div style={{ 
+            padding: isMobile ? '0 var(--space-sm) var(--space-sm)' : '0 var(--space-md) var(--space-md)',
+            textAlign: 'left'
+          }}>
+            <Text style={{ 
+              fontSize: isMobile ? 'var(--text-lg)' : 'var(--text-xl)', 
+              fontWeight: 700,
+              color: 'var(--text-primary)'
+            }}>
+              Лучшие предложения
+            </Text>
+          </div>
           <div className="grid-offers">
             {data.data.results.map((offer) => (
               <OfferCard
