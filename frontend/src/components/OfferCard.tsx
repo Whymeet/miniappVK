@@ -61,26 +61,8 @@ export default function OfferCard({ offer, onApply, ctaText = 'Оформить'
         padding: 0, 
         display: 'grid', 
         gap: isMobile ? 'var(--space-xs)' : 'var(--space-sm)', 
-        height: '100%',
-        position: 'relative'
+        height: '100%'
       }}>
-        {/* Статус-тег вверху */}
-        {offer.features.length > 0 && (
-          <div style={{
-            position: 'absolute',
-            top: '-6px',
-            left: '8px',
-            backgroundColor: 'var(--accent)',
-            color: 'white',
-            padding: '4px 8px',
-            borderRadius: '4px',
-            fontSize: '10px',
-            fontWeight: 600,
-            zIndex: 1
-          }}>
-            🌟 {offer.features[0]}
-          </div>
-        )}
 
         {/* Логотип на всю ширину */}
         <Logo 
@@ -108,35 +90,14 @@ export default function OfferCard({ offer, onApply, ctaText = 'Оформить'
         >
           {offer.partner_name}
         </Title>
-
-        {/* Рейтинг со звёздами */}
-        <div style={{ 
-          display: 'flex', 
-          alignItems: 'center', 
-          justifyContent: 'center',
-          gap: '4px'
-        }}>
-          <Text style={{ 
-            fontSize: isMobile ? 'var(--text-sm)' : 'var(--text-md)', 
-            fontWeight: 600,
-            color: 'var(--text-primary)'
-          }}>
-            4.8
-          </Text>
-          <div style={{ display: 'flex', color: '#FFD700' }}>
-            {'★★★★★'.split('').map((star, i) => (
-              <span key={i} style={{ fontSize: isMobile ? '12px' : '14px' }}>{star}</span>
-            ))}
-          </div>
-        </div>
-
+        
         {/* Параметры в вертикальном стиле */}
         <div style={{ display: 'grid', gap: isMobile ? 3 : 6 }}>
           {/* Сумма */}
           <div style={{ textAlign: 'center' }}>
             <Text style={{ 
               color: 'var(--text-muted)', 
-              fontSize: isMobile ? '9px' : 'var(--text-sm)',
+              fontSize: isMobile ? '11px' : 'var(--text-sm)',
               display: 'block'
             }}>
               Сумма
@@ -144,7 +105,7 @@ export default function OfferCard({ offer, onApply, ctaText = 'Оформить'
             <Text 
               weight="2" 
               style={{ 
-                fontSize: isMobile ? '11px' : 'var(--text-md)',
+                fontSize: isMobile ? '13px' : 'var(--text-md)',
                 color: 'var(--accent)',
                 fontWeight: 'bold'
               }}
@@ -156,7 +117,7 @@ export default function OfferCard({ offer, onApply, ctaText = 'Оформить'
           {/* Первый займ бесплатно */}
           <div style={{ textAlign: 'center' }}>
             <Text style={{ 
-              fontSize: isMobile ? '9px' : 'var(--text-sm)',
+              fontSize: isMobile ? '11px' : 'var(--text-sm)',
               color: 'var(--text-primary)'
             }}>
               Первый займ <Text weight="2" style={{ color: 'var(--accent)', fontSize: 'inherit' }}>бесплатно</Text>
@@ -167,7 +128,7 @@ export default function OfferCard({ offer, onApply, ctaText = 'Оформить'
           <div style={{ textAlign: 'center' }}>
             <Text style={{ 
               color: 'var(--text-muted)', 
-              fontSize: isMobile ? '9px' : 'var(--text-sm)',
+              fontSize: isMobile ? '11px' : 'var(--text-sm)',
               display: 'block'
             }}>
               Срок
@@ -175,7 +136,7 @@ export default function OfferCard({ offer, onApply, ctaText = 'Оформить'
             <Text 
               weight="2" 
               style={{ 
-                fontSize: isMobile ? '11px' : 'var(--text-md)',
+                fontSize: isMobile ? '13px' : 'var(--text-md)',
                 fontWeight: 'bold'
               }}
             >
