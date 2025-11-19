@@ -121,19 +121,6 @@ export default function OffersPage({ config, launchParams }: OffersPageProps) {
         )}
       </div>
 
-      {/* Дисклеймер */}
-      {config.features.show_disclaimer && (
-        <div className="alert">
-          <span className="alert__icon">ℹ️</span>
-          <Text style={{ 
-            fontSize: isMobile ? 'var(--text-xs)' : 'var(--text-sm)', 
-            lineHeight: '1.5'
-          }}>
-            {config.copy.disclaimer}
-          </Text>
-        </div>
-      )}
-
       {/* Список офферов */}
       {isLoading && (
         <div className="section" style={{ display: 'flex', justifyContent: 'center', padding: '40px 0' }}>
@@ -227,6 +214,19 @@ export default function OffersPage({ config, launchParams }: OffersPageProps) {
         borderTop: '1px solid #E5E7EB',
         marginTop: 'var(--space-xl)'
       }}>
+        {/* Дисклеймер */}
+        {config.features.show_disclaimer && (
+          <div className="alert" style={{ marginBottom: 'var(--space-md)' }}>
+            <span className="alert__icon">ℹ️</span>
+            <Text style={{ 
+              fontSize: isMobile ? 'var(--text-xs)' : 'var(--text-sm)', 
+              lineHeight: '1.5'
+            }}>
+              {config.copy.disclaimer}
+            </Text>
+          </div>
+        )}
+        
         <Text style={{ 
           fontSize: isMobile ? '10px' : 'var(--text-xs)', 
           color: 'var(--text-muted)',
