@@ -514,13 +514,13 @@ textarea {
   
   /* Адаптация карточек для узких экранов */
   .offer-card-gradient {
-    padding: 6px !important;
+    padding: 4px !important;
   }
   
   /* Увеличиваем размер логотипов для очень узких экранов */
   .offer-card-gradient img {
-    min-height: 120px !important;
-    max-height: 200px !important;
+    min-height: 140px !important;
+    max-height: 220px !important;
     width: 100% !important;
     height: auto !important;
   }

@@ -54,7 +54,7 @@ export default function OfferCard({ offer, onApply, ctaText = 'Оформить'
         height: '100%', 
         display: 'flex', 
         flexDirection: 'column',
-        padding: isMobile ? 'var(--space-sm)' : 'var(--space-md)'
+        padding: isMobile ? '6px' : 'var(--space-md)'
       }}
     >
       <Div style={{ 
@@ -88,8 +88,8 @@ export default function OfferCard({ offer, onApply, ctaText = 'Оформить'
           alt={offer.partner_name}
           style={{ 
             width: '100%',
-            minHeight: isMobile ? 100 : 80,
-            maxHeight: isMobile ? 180 : 120,
+            minHeight: isMobile ? 120 : 100,
+            maxHeight: isMobile ? 200 : 140,
             objectFit: 'contain',
             borderRadius: '8px'
           }}
@@ -131,12 +131,12 @@ export default function OfferCard({ offer, onApply, ctaText = 'Оформить'
         </div>
 
         {/* Параметры в вертикальном стиле */}
-        <div style={{ display: 'grid', gap: isMobile ? 4 : 6 }}>
+        <div style={{ display: 'grid', gap: isMobile ? 3 : 6 }}>
           {/* Сумма */}
           <div style={{ textAlign: 'center' }}>
             <Text style={{ 
               color: 'var(--text-muted)', 
-              fontSize: isMobile ? 'var(--text-xs)' : 'var(--text-sm)',
+              fontSize: isMobile ? '9px' : 'var(--text-sm)',
               display: 'block'
             }}>
               Сумма
@@ -144,7 +144,7 @@ export default function OfferCard({ offer, onApply, ctaText = 'Оформить'
             <Text 
               weight="2" 
               style={{ 
-                fontSize: isMobile ? 'var(--text-sm)' : 'var(--text-md)',
+                fontSize: isMobile ? '11px' : 'var(--text-md)',
                 color: 'var(--accent)',
                 fontWeight: 'bold'
               }}
@@ -156,10 +156,10 @@ export default function OfferCard({ offer, onApply, ctaText = 'Оформить'
           {/* Первый займ бесплатно */}
           <div style={{ textAlign: 'center' }}>
             <Text style={{ 
-              fontSize: isMobile ? 'var(--text-xs)' : 'var(--text-sm)',
+              fontSize: isMobile ? '9px' : 'var(--text-sm)',
               color: 'var(--text-primary)'
             }}>
-              Первый займ <Text weight="2" style={{ color: 'var(--accent)' }}>бесплатно</Text>
+              Первый займ <Text weight="2" style={{ color: 'var(--accent)', fontSize: 'inherit' }}>бесплатно</Text>
             </Text>
           </div>
           
@@ -167,7 +167,7 @@ export default function OfferCard({ offer, onApply, ctaText = 'Оформить'
           <div style={{ textAlign: 'center' }}>
             <Text style={{ 
               color: 'var(--text-muted)', 
-              fontSize: isMobile ? 'var(--text-xs)' : 'var(--text-sm)',
+              fontSize: isMobile ? '9px' : 'var(--text-sm)',
               display: 'block'
             }}>
               Срок
@@ -175,7 +175,7 @@ export default function OfferCard({ offer, onApply, ctaText = 'Оформить'
             <Text 
               weight="2" 
               style={{ 
-                fontSize: isMobile ? 'var(--text-sm)' : 'var(--text-md)',
+                fontSize: isMobile ? '11px' : 'var(--text-md)',
                 fontWeight: 'bold'
               }}
             >
@@ -192,9 +192,10 @@ export default function OfferCard({ offer, onApply, ctaText = 'Оформить'
           onClick={handleApply}
           style={{ 
             marginTop: 'auto', 
-            fontSize: '12px',
-            minHeight: isMobile ? '48px' : '36px',
-            fontWeight: 600
+            fontSize: isMobile ? '11px' : '12px',
+            minHeight: isMobile ? '40px' : '36px',
+            fontWeight: 600,
+            padding: isMobile ? '8px 4px' : '8px 12px'
           }}
         >
           {ctaText}
