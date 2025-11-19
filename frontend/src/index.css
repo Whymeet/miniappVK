@@ -362,30 +362,30 @@ body.card-gradient-enabled .offer-card-gradient.vkuiCard {
     font-size: 10px !important;
   }
   
-  /* Уменьшаем кнопку и её содержимое */
+  /* Кнопка и её содержимое - 12px */
   .offer-card-gradient .vkuiButton {
-    font-size: 11px !important;
+    font-size: 12px !important;
     min-height: 32px !important;
     padding: 6px 8px !important;
   }
   
   .offer-card-gradient .vkuiButton__content {
-    font-size: 11px !important;
+    font-size: 12px !important;
   }
   
-  /* Уменьшаем чипы и их содержимое */
+  /* Чипы и их содержимое - 12px */
   .offer-card-gradient .vkuiChip {
-    font-size: 8px !important;
-    padding: 2px 4px !important;
+    font-size: 12px !important;
+    padding: 4px 8px !important;
   }
   
   .offer-card-gradient .vkuiChip__content {
-    font-size: 8px !important;
+    font-size: 12px !important;
     line-height: 1.2 !important;
   }
   
   .offer-card-gradient .vkuiFootnote {
-    font-size: 8px !important;
+    font-size: 12px !important;
   }
 }
 
@@ -534,27 +534,27 @@ textarea {
   }
   
   .offer-card-gradient .vkuiButton {
-    font-size: 10px !important;
+    font-size: 12px !important;
     min-height: 30px !important;
     padding: 5px 6px !important;
   }
   
   .offer-card-gradient .vkuiButton__content {
-    font-size: 10px !important;
+    font-size: 12px !important;
   }
   
   .offer-card-gradient .vkuiChip {
-    font-size: 7px !important;
-    padding: 2px 3px !important;
+    font-size: 12px !important;
+    padding: 3px 6px !important;
   }
   
   .offer-card-gradient .vkuiChip__content {
-    font-size: 7px !important;
+    font-size: 12px !important;
     line-height: 1.1 !important;
   }
   
   .offer-card-gradient .vkuiFootnote {
-    font-size: 7px !important;
+    font-size: 12px !important;
   }
 }
 

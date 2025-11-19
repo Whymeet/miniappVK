@@ -63,34 +63,37 @@ export default function OfferCard({ offer, onApply, ctaText = 'Оформить'
         gap: isMobile ? 'var(--space-sm)' : 'var(--space-sm)', 
         height: '100%' 
       }}>
-        {/* Шапка */}
+        {/* Логотип на всю ширину */}
         <div style={{ 
           display: 'flex', 
-          alignItems: 'center', 
-          gap: isMobile ? 'var(--space-sm)' : 'var(--space-sm)' 
+          justifyContent: 'center',
+          alignItems: 'center'
         }}>
           <Logo 
             src={offer.logo_url} 
             alt={offer.partner_name}
             style={{ 
-              width: isMobile ? 48 : 56, 
-              height: isMobile ? 48 : 56, 
+              width: '100%',
+              height: isMobile ? 80 : 100,
               objectFit: 'contain',
               borderRadius: '8px'
             }}
           />
-          <Title 
-            level="3" 
-            weight="2" 
-            style={{ 
-              fontSize: isMobile ? 'var(--text-sm)' : 'var(--text-md)', 
-              margin: 0,
-              lineHeight: 1.3
-            }}
-          >
-            {offer.partner_name}
-          </Title>
         </div>
+        
+        {/* Название под логотипом */}
+        <Title 
+          level="3" 
+          weight="2" 
+          style={{ 
+            fontSize: isMobile ? 'var(--text-sm)' : 'var(--text-md)', 
+            margin: 0,
+            lineHeight: 1.3,
+            textAlign: 'center'
+          }}
+        >
+          {offer.partner_name}
+        </Title>
 
         {/* Ставка — всегда черная */}
         <Text 
@@ -120,7 +123,7 @@ export default function OfferCard({ offer, onApply, ctaText = 'Оформить'
                 textAlign: 'right'
               }}
             >
-              {formatMoney(offer.sum_min)}–{formatMoney(offer.sum_max)}
+              до {formatMoney(offer.sum_max)}
             </Text>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -137,7 +140,7 @@ export default function OfferCard({ offer, onApply, ctaText = 'Оформить'
                 textAlign: 'right'
               }}
             >
-              {formatTerm(offer.term_min)}–{formatTerm(offer.term_max)}
+              до {formatTerm(offer.term_max)}
             </Text>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -170,7 +173,7 @@ export default function OfferCard({ offer, onApply, ctaText = 'Оформить'
               <Chip 
                 key={i}
                 style={{ 
-                  fontSize: isMobile ? 'var(--text-xs)' : 'var(--text-xs)',
+                  fontSize: '12px',
                   padding: isMobile ? '6px 10px' : '4px 8px'
                 }}
               >
@@ -188,7 +191,7 @@ export default function OfferCard({ offer, onApply, ctaText = 'Оформить'
           onClick={handleApply}
           style={{ 
             marginTop: 'auto', 
-            fontSize: isMobile ? 'var(--text-sm)' : 'var(--text-base)',
+            fontSize: '12px',
             minHeight: isMobile ? '48px' : '36px',
             fontWeight: 600
           }}
