@@ -156,7 +156,7 @@ export default function OfferCard({ offer, onApply, ctaText = 'Оформить'
           onClick={handleApply}
           style={{ 
             marginTop: 'auto', 
-            fontSize: isMobile ? '12px' : '14px',
+            fontSize: isMobile ? '11px' : '13px',
             minHeight: isMobile ? '44px' : '36px',
             fontWeight: 600,
             padding: isMobile ? '10px 12px' : '8px 12px',
