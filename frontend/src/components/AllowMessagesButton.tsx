@@ -142,6 +142,12 @@ export default function AllowMessagesButton({ groupId, userId, launchParams }: A
               </Snackbar>
             );
           }}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            textAlign: 'center'
+          }}
         >
           ✓ Уведомления разрешены
         </Button>
@@ -158,6 +164,12 @@ export default function AllowMessagesButton({ groupId, userId, launchParams }: A
         mode="secondary"
         onClick={handleAllowMessages}
         loading={allowMessagesMutation.isPending}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          textAlign: 'center'
+        }}
       >
         Разрешить уведомления
       </Button>
