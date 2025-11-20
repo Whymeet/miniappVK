@@ -253,7 +253,10 @@ export default function OffersPage({ config, launchParams }: OffersPageProps) {
             <Text style={{ 
               fontSize: isMobile ? '11px' : 'var(--text-xs)', 
               lineHeight: '1.4',
-              color: 'var(--text-muted)'
+              color: 'var(--text-muted)',
+              whiteSpace: 'normal',
+              wordBreak: 'normal',
+              display: 'block'
             }}>
               {config.copy.disclaimer}
             </Text>
