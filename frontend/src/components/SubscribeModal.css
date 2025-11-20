@@ -77,6 +77,7 @@
     font-size: 18px;
     font-weight: 600;
     color: #111827 !important;
+    padding-right: 40px; /* Отступ справа, чтобы текст не заезжал под крестик */
 }
 
 /* Контент */

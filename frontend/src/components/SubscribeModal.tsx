@@ -166,7 +166,7 @@ export default function SubscribeModal({ groupId, userId, launchParams, onClose 
               loading={isLoading}
               className="custom-modal-primary-button"
             >
-              {groupId ? '🔔 Подписаться и получить займ' : '✅ Зарегистрироваться и получить займ'}
+              {groupId ? '🔔 Получить займ' : '✅ Получить займ'}
             </Button>
             
             <Spacing size={12} />
