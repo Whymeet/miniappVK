@@ -152,15 +152,13 @@ body {
 /* Фиксированная высота для кнопок размера M */
 .vkuiButton--size-m {
   min-height: 36px !important;
-  max-height: 36px !important;
-  height: 36px !important;
+  height: auto !important; /* Изменено с 36px на auto */
 }
 
 /* Фиксированная высота для кнопок размера L */
 .vkuiButton--size-l {
   min-height: 44px !important;
-  max-height: 44px !important;
-  height: 44px !important;
+  height: auto !important; /* Изменено с 44px на auto */
 }
 
 .vkuiButton {
@@ -350,12 +348,15 @@ body.card-gradient-enabled .offer-card-gradient.vkuiCard {
 }
 
 /* Спокойный инфо-баннер (вместо ярко-жёлтого) */
-.alert { display: grid; grid-template-columns: 20px 1fr; gap: var(--space-sm);
-  align-items: flex-start; background: #F3F4F6; color: var(--neutral-text);
-  border: 1px solid #E5E7EB; border-radius: var(--radius-sm); padding: var(--space-md); }
+.alert { 
+  display: block; /* Изменено с grid на block */
+  background: #F3F4F6; 
+  color: var(--neutral-text);
+  border: 1px solid #E5E7EB; 
+  border-radius: var(--radius-sm); 
+  padding: var(--space-md); 
+}
 .alert__icon { line-height: 1; }
-
-
 
 /* Мелкие выравнивания VKUI для «монолита» */
 .vkuiGroup { background: transparent !important; margin-bottom: 0 !important; }
