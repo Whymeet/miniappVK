@@ -144,14 +144,14 @@ export default function SubscribeModal({ groupId, userId, launchParams, onClose 
             <Spacing size={12} />
             
             <Text className="custom-modal-subtitle">
-              Получите займ под 0%
+              Ваш первый займ под 0%
             </Text>
             
             <Spacing size={8} />
             
             <Text className="custom-modal-description">
               {groupId 
-                ? 'Подпишитесь на уведомления, чтобы первыми узнавать о новых предложениях и эксклюзивных условиях'
+                ? 'Получите мнгновенные уведомления, чтобы первыми ловить самые выгодные предложения и эксклюзивные условия по займам'
                 : 'Зарегистрируйтесь в нашем сервисе, чтобы получить доступ к лучшим предложениям по займам'
               }
             </Text>
