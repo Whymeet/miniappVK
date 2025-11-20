@@ -248,7 +248,9 @@ export default function OffersPage({ config, launchParams }: OffersPageProps) {
           <div className="alert" style={{ 
             marginBottom: 'var(--space-sm)',
             padding: 'var(--space-xs)',
-            background: 'var(--bg)'
+            background: 'var(--bg)',
+            width: '100%',
+            boxSizing: 'border-box'
           }}>
             <Text style={{ 
               fontSize: isMobile ? '11px' : 'var(--text-xs)', 
@@ -256,7 +258,8 @@ export default function OffersPage({ config, launchParams }: OffersPageProps) {
               color: 'var(--text-muted)',
               whiteSpace: 'normal',
               wordBreak: 'normal',
-              display: 'block'
+              display: 'block',
+              width: '100%'
             }}>
               {config.copy.disclaimer}
             </Text>
