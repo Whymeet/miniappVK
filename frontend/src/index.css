@@ -350,12 +350,17 @@ body.card-gradient-enabled .offer-card-gradient.vkuiCard {
 }
 
 /* Спокойный инфо-баннер (вместо ярко-жёлтого) */
-.alert { display: grid; grid-template-columns: 20px 1fr; gap: var(--space-sm);
-  align-items: flex-start; background: #F3F4F6; color: var(--neutral-text);
-  border: 1px solid #E5E7EB; border-radius: var(--radius-sm); padding: var(--space-md); }
+.alert { 
+  display: block;
+  background: #F3F4F6; 
+  color: var(--neutral-text);
+  border: 1px solid #E5E7EB; 
+  border-radius: var(--radius-sm); 
+  padding: var(--space-md);
+  width: 100%;
+  box-sizing: border-box;
+}
 .alert__icon { line-height: 1; }
-
-
 
 /* Мелкие выравнивания VKUI для «монолита» */
 .vkuiGroup { background: transparent !important; margin-bottom: 0 !important; }
