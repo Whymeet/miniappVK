@@ -71,6 +71,7 @@ export default function OfferCard({ offer, onApply, ctaText = 'Оформить'
           style={{ 
             width: '100%',
             minHeight: isMobile ? 120 : 100,
+            maxHeight: isMobile ? 200 : 140,
             objectFit: 'contain',
             borderRadius: '8px'
           }}
@@ -155,16 +156,17 @@ export default function OfferCard({ offer, onApply, ctaText = 'Оформить'
           onClick={handleApply}
           style={{ 
             marginTop: 'auto', 
-            fontSize: isMobile ? '14px' : '14px',
+            fontSize: isMobile ? '12px' : '14px',
             minHeight: isMobile ? '44px' : '36px',
             fontWeight: 600,
-            padding: isMobile ? '10px 8px' : '8px 12px',
+            padding: isMobile ? '10px 12px' : '8px 12px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             whiteSpace: 'normal',
             lineHeight: '1.3',
-            textAlign: 'center'
+            textAlign: 'center',
+            wordBreak: 'break-word'
           }}
         >
           {ctaText}
