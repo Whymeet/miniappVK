@@ -1,4 +1,4 @@
-import { Card, Div, Text, Button } from '@vkontakte/vkui';
+import { Card, Div, Button } from '@vkontakte/vkui';
 import { Offer } from '@/types';
 import { formatMoney, formatTerm } from '@/utils/format';
 import Logo from './Logo';
@@ -12,9 +12,14 @@ interface OfferCardProps {
   userId?: string | null;
 }
 
-export default function OfferCard({ offer, onApply, ctaText = 'Получить деньги', userId }: OfferCardProps) {
+export default function OfferCard({
+  offer,
+  onApply,
+  ctaText = 'Получить деньги',
+  userId,
+}: OfferCardProps) {
   const [deviceWidth, setDeviceWidth] = useState<number>(
-    typeof window !== 'undefined' ? window.innerWidth : 1024
+    typeof window !== 'undefined' ? window.innerWidth : 1024,
   );
 
   useEffect(() => {
@@ -47,10 +52,11 @@ export default function OfferCard({ offer, onApply, ctaText = 'Получить 
 
   const padding = isSmallMobile ? 8 : isMobile ? 10 : 12;
 
-  const logoBoxSize = isSmallMobile ? 42 : isMobile ? 46 : 52;
-  const logoRadius = 8;
+  // 🔼 УВЕЛИЧИЛ размеры логотипа
+  const logoBoxSize = isSmallMobile ? 60 : isMobile ? 66 : 74;
+  const logoRadius = 10;
 
-  const labelIconSize = isSmallMobile ? 26 : 28;
+  const labelIconSize = isSmallMobile ? 30 : 32;
 
   const ratingFont = isSmallMobile ? 13 : isMobile ? 14 : 14;
   const ratingValueFont = isSmallMobile ? 14 : 15;
@@ -58,16 +64,10 @@ export default function OfferCard({ offer, onApply, ctaText = 'Получить 
   const paramLabelFont = isSmallMobile ? 12 : 13;
   const paramValueFont = isSmallMobile ? 13 : 14;
 
-  const licenseFont = isSmallMobile ? 10 : 11;
-
   const btnFont = isSmallMobile ? 12 : isMobile ? 13 : 13;
   const btnHeight = isSmallMobile ? 40 : 44;
 
-  // текст верхней строки (как твой span c Срочная выдача)
-  const statusText =
-    offer.approval_time?.trim() ||
-    (offer.features && offer.features.length > 0 ? offer.features[0] : 'Срочная выдача');
-
+  // Промо-строка в середине карточки (оставляем)
   const promoText =
     offer.features && offer.features.length > 1
       ? offer.features[1]
@@ -98,18 +98,8 @@ export default function OfferCard({ offer, onApply, ctaText = 'Получить 
           gap: isSmallMobile ? 8 : 10,
         }}
       >
-        {/* ОДНА строка сверху как в span: font-size: 13px; color: var(--accent); font-weight: 600; */}
-        <Text
-          style={{
-            fontSize: 13,
-            color: 'var(--accent)',
-            fontWeight: 600,
-          }}
-        >
-          {statusText}
-        </Text>
+        {/* ВЕРХНЮЮ СТРОКУ «5 минут» УБРАЛИ — сразу логотипный блок */}
 
-        {/* Основное содержимое — аналог .tpl-offer__content */}
         <div
           style={{
             display: 'flex',
@@ -127,7 +117,7 @@ export default function OfferCard({ offer, onApply, ctaText = 'Получить 
               gap: 10,
             }}
           >
-            {/* Логотип слева как маленький квадрат */}
+            {/* ЛОГОТИП — заметно крупнее */}
             <div
               style={{
                 width: logoBoxSize,
@@ -181,7 +171,7 @@ export default function OfferCard({ offer, onApply, ctaText = 'Получить 
             </div>
           </div>
 
-          {/* Внутреннее содержимое: рейтинг + параметры + лицензия + кнопка */}
+          {/* Внутреннее содержимое: рейтинг + параметры + кнопка (без «0% в день») */}
           <div
             style={{
               display: 'flex',
@@ -260,7 +250,7 @@ export default function OfferCard({ offer, onApply, ctaText = 'Получить 
                 </span>
               </div>
 
-              {/* Промо-строка */}
+              {/* Промо-строка — оставляем, если нужна */}
               {promoText && (
                 <div
                   style={{
@@ -305,20 +295,7 @@ export default function OfferCard({ offer, onApply, ctaText = 'Получить 
               </div>
             </div>
 
-            {/* Лицензия / примечание */}
-            {offer.rate_text && (
-              <Text
-                style={{
-                  fontSize: licenseFont,
-                  color: 'var(--vkui--color_text_secondary)',
-                  lineHeight: 1.3,
-                  marginTop: 2,
-                  minHeight: 18,
-                }}
-              >
-                {offer.rate_text}
-              </Text>
-            )}
+            {/* БЛОК С «0% в день» / rate_text ПОЛНОСТЬЮ УБРАН */}
 
             {/* Кнопка */}
             <Button
