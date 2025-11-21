@@ -1,4 +1,4 @@
-import { Card, Div, Title, Text, Button } from '@vkontakte/vkui';
+import { Card, Div, Text, Button } from '@vkontakte/vkui';
 import { Offer } from '@/types';
 import { formatMoney, formatTerm } from '@/utils/format';
 import Logo from './Logo';
@@ -12,8 +12,10 @@ interface OfferCardProps {
   userId?: string | null;
 }
 
-export default function OfferCard({ offer, onApply, ctaText = 'Оформить', userId }: OfferCardProps) {
-  const [deviceWidth, setDeviceWidth] = useState<number>(typeof window !== 'undefined' ? window.innerWidth : 1024);
+export default function OfferCard({ offer, onApply, ctaText = 'Получить деньги', userId }: OfferCardProps) {
+  const [deviceWidth, setDeviceWidth] = useState<number>(
+    typeof window !== 'undefined' ? window.innerWidth : 1024
+  );
 
   useEffect(() => {
     const onResize = () => setDeviceWidth(window.innerWidth);
@@ -22,12 +24,10 @@ export default function OfferCard({ offer, onApply, ctaText = 'Оформить'
     return () => window.removeEventListener('resize', onResize);
   }, []);
 
-  // breakpoints
   const isMobile = deviceWidth <= 420;
-  const isSmallMobile = deviceWidth <= 360; // target 360x685 devices
+  const isSmallMobile = deviceWidth <= 360;
 
   const handleApply = async () => {
-    // Отправляем событие конверсии в VK Ads
     try {
       await bridge.send('VKWebAppTrackEvent', {
         event_name: 'lead',
@@ -35,166 +35,314 @@ export default function OfferCard({ offer, onApply, ctaText = 'Оформить'
         event_params: {
           offer_id: offer.id,
           partner_name: offer.partner_name,
-        }
+        },
       } as any);
       console.log('✅ VK Ads lead event sent for offer:', offer.id);
     } catch (error) {
       console.warn('⚠️ Failed to send VK Ads lead event:', error);
     }
-    
-    // Вызываем оригинальный обработчик
+
     onApply(offer.id);
   };
 
-  // sizes tuned for small mobiles
-  const padding = isSmallMobile ? '6px' : isMobile ? '10px' : 'var(--space-md)';
+  const padding = isSmallMobile ? 8 : isMobile ? 10 : 12;
 
-  // 🔽 новые размеры логотипа — существенно меньше, чем раньше
-  const logoContainerHeight = isSmallMobile ? 68 : isMobile ? 80 : 92;
+  const logoBoxSize = isSmallMobile ? 42 : isMobile ? 46 : 52;
+  const logoRadius = 8;
 
-  const titleSize = isSmallMobile ? '14px' : isMobile ? '16px' : 'var(--text-md)';
-  const paramLabelSize = isSmallMobile ? '13px' : isMobile ? '15px' : 'var(--text-sm)';
-  const paramValueSize = isSmallMobile ? '16px' : isMobile ? '18px' : 'var(--text-md)';
-  const btnFont = isSmallMobile ? '12px' : isMobile ? '11px' : '13px';
-  const btnHeight = isSmallMobile ? '46px' : isMobile ? '44px' : '36px';
+  const labelIconSize = isSmallMobile ? 26 : 28;
+
+  const ratingFont = isSmallMobile ? 13 : isMobile ? 14 : 14;
+  const ratingValueFont = isSmallMobile ? 14 : 15;
+
+  const paramLabelFont = isSmallMobile ? 12 : 13;
+  const paramValueFont = isSmallMobile ? 13 : 14;
+
+  const licenseFont = isSmallMobile ? 10 : 11;
+
+  const btnFont = isSmallMobile ? 12 : isMobile ? 13 : 13;
+  const btnHeight = isSmallMobile ? 40 : 44;
+
+  // текст верхней строки (как твой span c Срочная выдача)
+  const statusText =
+    offer.approval_time?.trim() ||
+    (offer.features && offer.features.length > 0 ? offer.features[0] : 'Срочная выдача');
+
+  const promoText =
+    offer.features && offer.features.length > 1
+      ? offer.features[1]
+      : offer.features && offer.features.length > 0
+      ? offer.features[0]
+      : undefined;
 
   return (
-    <Card 
-      mode="shadow" 
-      className="offer-card-gradient" 
-      style={{ 
-        height: '100%', 
-        display: 'flex', 
+    <Card
+      mode="shadow"
+      className="offer-card-gradient"
+      style={{
+        height: '100%',
+        display: 'flex',
         flexDirection: 'column',
-        padding: padding
+        padding,
+        borderRadius: 16,
+        boxShadow: '0 6px 18px rgba(15, 23, 42, 0.08)',
+        backgroundColor: 'var(--vkui--color_background_content)',
       }}
     >
-      <Div style={{ 
-        padding: 0, 
-        display: 'grid', 
-        gap: isSmallMobile ? '6px' : isMobile ? 'var(--space-xs)' : 'var(--space-sm)', 
-        height: '100%'
-      }}>
+      <Div
+        style={{
+          padding: 0,
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100%',
+          gap: isSmallMobile ? 8 : 10,
+        }}
+      >
+        {/* ОДНА строка сверху как в span: font-size: 13px; color: var(--accent); font-weight: 600; */}
+        <Text
+          style={{
+            fontSize: 13,
+            color: 'var(--accent)',
+            fontWeight: 600,
+          }}
+        >
+          {statusText}
+        </Text>
 
-        {/* Логотип — теперь меньше и по центру, в отдельном контейнере фиксированной высоты */}
+        {/* Основное содержимое — аналог .tpl-offer__content */}
         <div
           style={{
             display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            maxHeight: logoContainerHeight,
-            // лёгкий верхний отступ, чтобы не прилипал к краю карточки
-            padding: isSmallMobile ? '4px 4px 0' : isMobile ? '6px 8px 0' : '8px 10px 0',
+            flexDirection: 'column',
+            gap: isSmallMobile ? 10 : 12,
+            flex: 1,
           }}
         >
-          <Logo 
-            src={offer.logo_url} 
-            alt={offer.partner_name}
-            style={{ 
-              maxHeight: '100%',     // не выше контейнера
-              maxWidth: '70%',       // логотип не шире 70% карточки
-              width: 'auto',         // сохраняем пропорции
-              objectFit: 'contain',
-              borderRadius: '6px',
-              display: 'block'
+          {/* Верхняя информационная строка: логотип + иконка справа */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: 10,
             }}
-          />
-        </div>
-        
-        {/* Название под логотипом */}
-        <Title 
-          level="3" 
-          weight="2" 
-          style={{ 
-            fontSize: titleSize, 
-            margin: 0,
-            lineHeight: 1.3,
-            textAlign: 'center'
-          }}
-        >
-          {offer.partner_name}
-        </Title>
-        
-        {/* Параметры в вертикальном стиле */}
-        <div style={{ display: 'grid', gap: isSmallMobile ? 4 : isMobile ? 6 : 8 }}>
-          {/* Сумма */}
-          <div style={{ textAlign: 'center' }}>
-            <Text style={{ 
-              color: 'var(--text-muted)', 
-              fontSize: paramLabelSize,
-              display: 'block'
-            }}>
-              Сумма
-            </Text>
-            <Text 
-              weight="2" 
-              style={{ 
-                fontSize: paramValueSize,
-                color: 'var(--accent)',
-                fontWeight: 'bold'
+          >
+            {/* Логотип слева как маленький квадрат */}
+            <div
+              style={{
+                width: logoBoxSize,
+                height: logoBoxSize,
+                borderRadius: logoRadius,
+                backgroundColor: 'rgba(148, 163, 184, 0.08)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                overflow: 'hidden',
+                flexShrink: 0,
               }}
             >
-              {formatMoney(offer.sum_max)}
-            </Text>
-          </div>
-          
-          {/* Особенность (первая из списка) */}
-          {offer.features && offer.features.length > 0 && (
-            <div style={{ textAlign: 'center' }}>
-              <Text style={{ 
-                fontSize: paramLabelSize,
-                color: 'var(--accent)',
-                fontWeight: 600
-              }}>
-                {offer.features[0]}
-              </Text>
+              <Logo
+                src={offer.logo_url}
+                alt={offer.partner_name}
+                style={{
+                  maxWidth: '100%',
+                  maxHeight: '100%',
+                  objectFit: 'contain',
+                  borderRadius: logoRadius,
+                  display: 'block',
+                }}
+              />
             </div>
-          )}
-          
-          {/* Срок */}
-          <div style={{ textAlign: 'center' }}>
-            <Text style={{ 
-              color: 'var(--text-muted)', 
-              fontSize: paramLabelSize,
-              display: 'block'
-            }}>
-              Срок
-            </Text>
-            <Text 
-              weight="2" 
-              style={{ 
-                fontSize: paramValueSize,
-                fontWeight: 'bold'
+
+            {/* Круглая иконка-лейбл справа */}
+            <div
+              style={{
+                marginLeft: 'auto',
+                width: labelIconSize,
+                height: labelIconSize,
+                borderRadius: 999,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background:
+                  'linear-gradient(135deg, rgba(34,197,94,1) 0%, rgba(52,211,153,1) 100%)',
+                flexShrink: 0,
               }}
             >
-              {formatTerm(offer.term_max)}
-            </Text>
+              <svg
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+                width={labelIconSize - 8}
+                height={labelIconSize - 8}
+                style={{ fill: '#ffffff' }}
+              >
+                <path d="M12 6L16 12L21 8L19 18H5L3 8L8 12L12 6Z" />
+              </svg>
+            </div>
+          </div>
+
+          {/* Внутреннее содержимое: рейтинг + параметры + лицензия + кнопка */}
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: isSmallMobile ? 8 : 10,
+              flex: 1,
+            }}
+          >
+            {/* Рейтинг */}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
+              }}
+            >
+              <span
+                style={{
+                  fontSize: ratingValueFont,
+                  fontWeight: 700,
+                  color: 'var(--vkui--color_text_primary)',
+                }}
+              >
+                5.0
+              </span>
+
+              <div
+                style={{
+                  display: 'flex',
+                  gap: 2,
+                }}
+              >
+                {Array.from({ length: 5 }).map((_, idx) => (
+                  <svg
+                    key={idx}
+                    viewBox="0 0 24 24"
+                    width={ratingFont + 2}
+                    height={ratingFont + 2}
+                    xmlns="http://www.w3.org/2000/svg"
+                    style={{ fill: '#FACC15' }}
+                  >
+                    <path d="M12 3.172L14.472 8.182L20 8.964L16 12.788L16.944 18.308L12 15.6L7.056 18.308L8 12.788L4 8.964L9.528 8.182L12 3.172Z" />
+                  </svg>
+                ))}
+              </div>
+            </div>
+
+            {/* Параметры, как .tpl-offer__params */}
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: isSmallMobile ? 4 : 6,
+                fontSize: paramLabelFont,
+                color: 'var(--vkui--color_text_secondary)',
+              }}
+            >
+              {/* Сумма */}
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: 6,
+                }}
+              >
+                <span>Сумма</span>
+                <span
+                  style={{
+                    fontWeight: 700,
+                    fontSize: paramValueFont,
+                    color: 'var(--accent)',
+                  }}
+                >
+                  {formatMoney(offer.sum_max)}
+                </span>
+              </div>
+
+              {/* Промо-строка */}
+              {promoText && (
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: 6,
+                  }}
+                >
+                  <span>Первый заём</span>
+                  <span
+                    style={{
+                      fontWeight: 700,
+                      fontSize: paramValueFont,
+                      color: 'var(--vkui--color_text_primary)',
+                    }}
+                  >
+                    {promoText}
+                  </span>
+                </div>
+              )}
+
+              {/* Срок */}
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: 6,
+                }}
+              >
+                <span>Срок</span>
+                <span
+                  style={{
+                    fontWeight: 700,
+                    fontSize: paramValueFont,
+                    color: 'var(--vkui--color_text_primary)',
+                  }}
+                >
+                  {formatTerm(offer.term_max)}
+                </span>
+              </div>
+            </div>
+
+            {/* Лицензия / примечание */}
+            {offer.rate_text && (
+              <Text
+                style={{
+                  fontSize: licenseFont,
+                  color: 'var(--vkui--color_text_secondary)',
+                  lineHeight: 1.3,
+                  marginTop: 2,
+                  minHeight: 18,
+                }}
+              >
+                {offer.rate_text}
+              </Text>
+            )}
+
+            {/* Кнопка */}
+            <Button
+              size="m"
+              stretched
+              mode="primary"
+              onClick={handleApply}
+              style={{
+                marginTop: 'auto',
+                fontSize: btnFont,
+                minHeight: btnHeight,
+                fontWeight: 600,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                whiteSpace: 'normal',
+                lineHeight: 1.25,
+                textAlign: 'center',
+              }}
+            >
+              {ctaText}
+            </Button>
           </div>
         </div>
-
-        {/* CTA */}
-        <Button
-          size="m"
-          stretched
-          mode="primary"
-          onClick={handleApply}
-          style={{ 
-            marginTop: 'auto', 
-            fontSize: btnFont,
-            minHeight: btnHeight,
-            fontWeight: 600,
-            padding: isSmallMobile ? '10px 12px' : isMobile ? '10px 12px' : '8px 12px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            whiteSpace: 'normal',
-            lineHeight: '1.3',
-            textAlign: 'center',
-            wordBreak: 'break-word'
-          }}
-        >
-          {ctaText}
-        </Button>
       </Div>
     </Card>
   );
