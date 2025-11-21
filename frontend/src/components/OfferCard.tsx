@@ -52,9 +52,9 @@ export default function OfferCard({
 
   const padding = isSmallMobile ? 8 : isMobile ? 10 : 12;
 
-  // 🔼 УВЕЛИЧИЛ размеры логотипа
-  const logoBoxSize = isSmallMobile ? 60 : isMobile ? 66 : 74;
-  const logoRadius = 10;
+  // 👉 логотипы увеличены
+  const logoBoxSize = isSmallMobile ? 72 : isMobile ? 84 : 96;
+  const logoRadius = 12;
 
   const labelIconSize = isSmallMobile ? 30 : 32;
 
@@ -67,7 +67,7 @@ export default function OfferCard({
   const btnFont = isSmallMobile ? 12 : isMobile ? 13 : 13;
   const btnHeight = isSmallMobile ? 40 : 44;
 
-  // Промо-строка в середине карточки (оставляем)
+  // Промо-строка в середине карточки
   const promoText =
     offer.features && offer.features.length > 1
       ? offer.features[1]
@@ -98,8 +98,7 @@ export default function OfferCard({
           gap: isSmallMobile ? 8 : 10,
         }}
       >
-        {/* ВЕРХНЮЮ СТРОКУ «5 минут» УБРАЛИ — сразу логотипный блок */}
-
+        {/* Сразу логотипный блок, без "5 минут" и т.п. */}
         <div
           style={{
             display: 'flex',
@@ -108,7 +107,7 @@ export default function OfferCard({
             flex: 1,
           }}
         >
-          {/* Верхняя информационная строка: логотип + иконка справа */}
+          {/* Логотип + иконка справа */}
           <div
             style={{
               display: 'flex',
@@ -117,7 +116,6 @@ export default function OfferCard({
               gap: 10,
             }}
           >
-            {/* ЛОГОТИП — заметно крупнее */}
             <div
               style={{
                 width: logoBoxSize,
@@ -144,7 +142,6 @@ export default function OfferCard({
               />
             </div>
 
-            {/* Круглая иконка-лейбл справа */}
             <div
               style={{
                 marginLeft: 'auto',
@@ -171,7 +168,7 @@ export default function OfferCard({
             </div>
           </div>
 
-          {/* Внутреннее содержимое: рейтинг + параметры + кнопка (без «0% в день») */}
+          {/* Рейтинг + параметры + кнопка */}
           <div
             style={{
               display: 'flex',
@@ -219,7 +216,7 @@ export default function OfferCard({
               </div>
             </div>
 
-            {/* Параметры, как .tpl-offer__params */}
+            {/* Параметры */}
             <div
               style={{
                 display: 'flex',
@@ -229,7 +226,6 @@ export default function OfferCard({
                 color: 'var(--vkui--color_text_secondary)',
               }}
             >
-              {/* Сумма */}
               <div
                 style={{
                   display: 'flex',
@@ -250,7 +246,6 @@ export default function OfferCard({
                 </span>
               </div>
 
-              {/* Промо-строка — оставляем, если нужна */}
               {promoText && (
                 <div
                   style={{
@@ -273,7 +268,6 @@ export default function OfferCard({
                 </div>
               )}
 
-              {/* Срок */}
               <div
                 style={{
                   display: 'flex',
@@ -295,9 +289,8 @@ export default function OfferCard({
               </div>
             </div>
 
-            {/* БЛОК С «0% в день» / rate_text ПОЛНОСТЬЮ УБРАН */}
+            {/* Без блока "0% в день" */}
 
-            {/* Кнопка */}
             <Button
               size="m"
               stretched
