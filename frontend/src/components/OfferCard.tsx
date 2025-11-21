@@ -48,8 +48,10 @@ export default function OfferCard({ offer, onApply, ctaText = 'Оформить'
 
   // sizes tuned for small mobiles
   const padding = isSmallMobile ? '6px' : isMobile ? '10px' : 'var(--space-md)';
-  const logoMinHeight = isSmallMobile ? 88 : isMobile ? 110 : 100;
-  const logoMaxHeight = isSmallMobile ? 140 : isMobile ? 180 : 140;
+
+  // 🔽 новые размеры логотипа — существенно меньше, чем раньше
+  const logoContainerHeight = isSmallMobile ? 68 : isMobile ? 80 : 92;
+
   const titleSize = isSmallMobile ? '14px' : isMobile ? '16px' : 'var(--text-md)';
   const paramLabelSize = isSmallMobile ? '13px' : isMobile ? '15px' : 'var(--text-sm)';
   const paramValueSize = isSmallMobile ? '16px' : isMobile ? '18px' : 'var(--text-md)';
@@ -74,18 +76,30 @@ export default function OfferCard({ offer, onApply, ctaText = 'Оформить'
         height: '100%'
       }}>
 
-        {/* Логотип на всю ширину */}
-        <Logo 
-          src={offer.logo_url} 
-          alt={offer.partner_name}
-          style={{ 
-            width: '100%',
-            minHeight: logoMinHeight,
-            maxHeight: logoMaxHeight,
-            objectFit: 'contain',
-            borderRadius: '8px'
+        {/* Логотип — теперь меньше и по центру, в отдельном контейнере фиксированной высоты */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            maxHeight: logoContainerHeight,
+            // лёгкий верхний отступ, чтобы не прилипал к краю карточки
+            padding: isSmallMobile ? '4px 4px 0' : isMobile ? '6px 8px 0' : '8px 10px 0',
           }}
-        />
+        >
+          <Logo 
+            src={offer.logo_url} 
+            alt={offer.partner_name}
+            style={{ 
+              maxHeight: '100%',     // не выше контейнера
+              maxWidth: '70%',       // логотип не шире 70% карточки
+              width: 'auto',         // сохраняем пропорции
+              objectFit: 'contain',
+              borderRadius: '6px',
+              display: 'block'
+            }}
+          />
+        </div>
         
         {/* Название под логотипом */}
         <Title 
