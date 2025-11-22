@@ -106,11 +106,12 @@ export default function OfferCard({
             flex: 1,
           }}
         >
-          {/* Верхняя часть с логотипом (только логотип, без иконки) */}
+          {/* Верхняя часть с логотипом (по центру) */}
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
+              justifyContent: 'center', // <<< логотип по центру
               gap: 12,
             }}
           >
