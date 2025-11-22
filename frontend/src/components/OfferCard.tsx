@@ -15,7 +15,7 @@ interface OfferCardProps {
 export default function OfferCard({
   offer,
   onApply,
-  ctaText = 'Получить деньги',
+  ctaText = 'ТЕСТОВАЯ КНОПКА',
   userId,
 }: OfferCardProps) {
   const [deviceWidth, setDeviceWidth] = useState<number>(
@@ -77,18 +77,19 @@ export default function OfferCard({
 
   return (
     <Card
-      mode="shadow"
-      className="offer-card-gradient"
-      style={{
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        padding,
-        borderRadius: 16,
-        boxShadow: '0 6px 18px rgba(15, 23, 42, 0.08)',
-        backgroundColor: 'var(--vkui--color_background_content)',
-      }}
-    >
+  mode="shadow"
+  className="offer-card-gradient"
+  style={{
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    padding,
+    borderRadius: 16,
+    boxShadow: '0 6px 18px rgba(15, 23, 42, 0.08)',
+    backgroundColor: '#ffdddd', // <<< временный розовый фон
+  }}
+>
+
       <Div
         style={{
           padding: 0,
