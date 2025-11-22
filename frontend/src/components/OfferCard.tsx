@@ -15,7 +15,7 @@ interface OfferCardProps {
 export default function OfferCard({
   offer,
   onApply,
-  ctaText = 'ТЕСТОВАЯ КНОПКА',
+  ctaText = 'Получить деньги',
   userId,
 }: OfferCardProps) {
   const [deviceWidth, setDeviceWidth] = useState<number>(
@@ -52,11 +52,9 @@ export default function OfferCard({
 
   const padding = isSmallMobile ? 8 : isMobile ? 10 : 12;
 
-  // 👉 логотипы увеличены
+  // большие логотипы
   const logoBoxSize = isSmallMobile ? 72 : isMobile ? 84 : 96;
   const logoRadius = 12;
-
-  const labelIconSize = isSmallMobile ? 30 : 32;
 
   const ratingFont = isSmallMobile ? 13 : isMobile ? 14 : 14;
   const ratingValueFont = isSmallMobile ? 14 : 15;
@@ -67,7 +65,7 @@ export default function OfferCard({
   const btnFont = isSmallMobile ? 12 : isMobile ? 13 : 13;
   const btnHeight = isSmallMobile ? 40 : 44;
 
-  // Промо-строка в середине карточки
+  // Промо-строка
   const promoText =
     offer.features && offer.features.length > 1
       ? offer.features[1]
@@ -77,19 +75,18 @@ export default function OfferCard({
 
   return (
     <Card
-  mode="shadow"
-  className="offer-card-gradient"
-  style={{
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    padding,
-    borderRadius: 16,
-    boxShadow: '0 6px 18px rgba(15, 23, 42, 0.08)',
-    backgroundColor: '#ffdddd', // <<< временный розовый фон
-  }}
->
-
+      mode="shadow"
+      className="offer-card-gradient"
+      style={{
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        padding,
+        borderRadius: 16,
+        boxShadow: '0 6px 18px rgba(15, 23, 42, 0.08)',
+        backgroundColor: 'var(--vkui--color_background_content)',
+      }}
+    >
       <Div
         style={{
           padding: 0,
@@ -99,7 +96,6 @@ export default function OfferCard({
           gap: isSmallMobile ? 8 : 10,
         }}
       >
-        {/* Сразу логотипный блок, без "5 минут" и т.п. */}
         <div
           style={{
             display: 'flex',
@@ -108,12 +104,12 @@ export default function OfferCard({
             flex: 1,
           }}
         >
-          {/* Логотип + иконка справа */}
+          {/* Верхняя часть с логотипом */}
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'space-between',
+              // убрали justifyContent: 'space-between', чтобы логотип был ближе к левому краю
               gap: 10,
             }}
           >
@@ -142,34 +138,9 @@ export default function OfferCard({
                 }}
               />
             </div>
-
-            <div
-              style={{
-                marginLeft: 'auto',
-                width: labelIconSize,
-                height: labelIconSize,
-                borderRadius: 999,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                background:
-                  'linear-gradient(135deg, rgba(34,197,94,1) 0%, rgba(52,211,153,1) 100%)',
-                flexShrink: 0,
-              }}
-            >
-              <svg
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-                width={labelIconSize - 8}
-                height={labelIconSize - 8}
-                style={{ fill: '#ffffff' }}
-              >
-                <path d="M12 6L16 12L21 8L19 18H5L3 8L8 12L12 6Z" />
-              </svg>
-            </div>
           </div>
 
-          {/* Рейтинг + параметры + кнопка */}
+          {/* Контент: рейтинг + параметры + кнопка */}
           <div
             style={{
               display: 'flex',
@@ -290,8 +261,7 @@ export default function OfferCard({
               </div>
             </div>
 
-            {/* Без блока "0% в день" */}
-
+            {/* Кнопка */}
             <Button
               size="m"
               stretched
