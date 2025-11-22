@@ -50,20 +50,21 @@ export default function OfferCard({
     onApply(offer.id);
   };
 
-  const padding = isSmallMobile ? 8 : isMobile ? 10 : 12;
+  // карточка и контент крупнее
+  const padding = isSmallMobile ? 10 : isMobile ? 12 : 16;
 
-  // большие логотипы
-  const logoBoxSize = isSmallMobile ? 72 : isMobile ? 84 : 96;
-  const logoRadius = 12;
+  // ЛОГО ОЩУТИМО БОЛЬШЕ
+  const logoBoxSize = isSmallMobile ? 88 : isMobile ? 100 : 120;
+  const logoRadius = 14;
 
-  const ratingFont = isSmallMobile ? 13 : isMobile ? 14 : 14;
-  const ratingValueFont = isSmallMobile ? 14 : 15;
+  const ratingFont = isSmallMobile ? 14 : isMobile ? 15 : 16;
+  const ratingValueFont = isSmallMobile ? 15 : 16 : 17;
 
-  const paramLabelFont = isSmallMobile ? 12 : 13;
-  const paramValueFont = isSmallMobile ? 13 : 14;
+  const paramLabelFont = isSmallMobile ? 13 : 14;
+  const paramValueFont = isSmallMobile ? 14 : 15;
 
-  const btnFont = isSmallMobile ? 12 : isMobile ? 13 : 13;
-  const btnHeight = isSmallMobile ? 40 : 44;
+  const btnFont = isSmallMobile ? 13 : isMobile ? 14 : 15;
+  const btnHeight = isSmallMobile ? 44 : 48;
 
   // Промо-строка
   const promoText =
@@ -79,6 +80,7 @@ export default function OfferCard({
       className="offer-card-gradient"
       style={{
         height: '100%',
+        minHeight: isSmallMobile ? 180 : isMobile ? 190 : 210,
         display: 'flex',
         flexDirection: 'column',
         padding,
@@ -93,24 +95,23 @@ export default function OfferCard({
           display: 'flex',
           flexDirection: 'column',
           height: '100%',
-          gap: isSmallMobile ? 8 : 10,
+          gap: isSmallMobile ? 10 : 12,
         }}
       >
         <div
           style={{
             display: 'flex',
             flexDirection: 'column',
-            gap: isSmallMobile ? 10 : 12,
+            gap: isSmallMobile ? 12 : 14,
             flex: 1,
           }}
         >
-          {/* Верхняя часть с логотипом */}
+          {/* Верхняя часть с логотипом (только логотип, без иконки) */}
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
-              // убрали justifyContent: 'space-between', чтобы логотип был ближе к левому краю
-              gap: 10,
+              gap: 12,
             }}
           >
             <div
@@ -145,7 +146,7 @@ export default function OfferCard({
             style={{
               display: 'flex',
               flexDirection: 'column',
-              gap: isSmallMobile ? 8 : 10,
+              gap: isSmallMobile ? 10 : 12,
               flex: 1,
             }}
           >
@@ -170,7 +171,7 @@ export default function OfferCard({
               <div
                 style={{
                   display: 'flex',
-                  gap: 2,
+                  gap: 3,
                 }}
               >
                 {Array.from({ length: 5 }).map((_, idx) => (
@@ -193,7 +194,7 @@ export default function OfferCard({
               style={{
                 display: 'flex',
                 flexDirection: 'column',
-                gap: isSmallMobile ? 4 : 6,
+                gap: isSmallMobile ? 6 : 8,
                 fontSize: paramLabelFont,
                 color: 'var(--vkui--color_text_secondary)',
               }}
