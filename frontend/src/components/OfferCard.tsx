@@ -53,12 +53,12 @@ export default function OfferCard({
   // карточка и контент крупнее
   const padding = isSmallMobile ? 10 : isMobile ? 12 : 16;
 
-  // ЛОГО ОЩУТИМО БОЛЬШЕ
+  // крупный логотип
   const logoBoxSize = isSmallMobile ? 88 : isMobile ? 100 : 120;
   const logoRadius = 14;
 
   const ratingFont = isSmallMobile ? 14 : isMobile ? 15 : 16;
-  const ratingValueFont = isSmallMobile ? 15 : 16 : 17;
+  const ratingValueFont = isSmallMobile ? 15 : isMobile ? 16 : 17;
 
   const paramLabelFont = isSmallMobile ? 13 : 14;
   const paramValueFont = isSmallMobile ? 14 : 15;
