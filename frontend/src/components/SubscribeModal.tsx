@@ -185,16 +185,27 @@ export default function SubscribeModal({
       }
 
       onClose();
-    } catch (error) {
-      console.error('SubscribeModal: failed to allow messages:', error);
-      const errorMessage =
-        error instanceof Error ? error.message : 'Произошла ошибка при подписке';
-      alert(`Ошибка: ${errorMessage}`);
-      onClose();
-    } finally {
-      setIsLoading(false);
+      } catch (error: any) {
+    console.error('SubscribeModal: failed to allow messages RAW:', error);
+
+    if (error?.error_data) {
+      console.error(
+        'VK error_data:',
+        JSON.stringify(error.error_data, null, 2),
+      );
     }
-  };
+
+    const errorMessage =
+      error?.error_data?.error_reason ||
+      (error instanceof Error ? error.message : 'Произошла ошибка при подписке');
+
+    alert(`Ошибка при разрешении уведомлений: ${errorMessage}`);
+    onClose();
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
   const handleOverlayClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
