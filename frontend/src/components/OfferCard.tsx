@@ -90,6 +90,24 @@ export default function OfferCard({ offer, onApply, ctaText = 'Оформить'
         >
           {offer.partner_name}
         </Title>
+
+        {/* Статус "Одобрим мгновенно" */}
+        <div
+          style={{
+            textAlign: 'right',
+            marginTop: isMobile ? 2 : 4,
+          }}
+        >
+          <span
+            style={{
+              fontWeight: 600, // чуть менее жирный, чем 700
+              fontSize: '14px',
+              color: 'var(--vkui--color_text_primary)',
+            }}
+          >
+            Одобрим мгновенно
+          </span>
+        </div>
         
         {/* Параметры в вертикальном стиле */}
         <div style={{ display: 'grid', gap: isMobile ? 3 : 6 }}>
