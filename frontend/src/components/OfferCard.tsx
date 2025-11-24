@@ -94,7 +94,7 @@ export default function OfferCard({ offer, onApply, ctaText = 'Оформить'
         {/* Параметры в вертикальном стиле */}
         <div style={{ display: 'grid', gap: isMobile ? 3 : 6 }}>
           {/* Сумма */}
-          <div style={{ textAlign: 'center' }}>
+          <div style={{ textAlign: isMobile ? 'center' : 'right' }}>
             <Text style={{ 
               color: 'var(--text-muted)', 
               fontSize: isMobile ? '16px' : 'var(--text-sm)',
@@ -116,7 +116,7 @@ export default function OfferCard({ offer, onApply, ctaText = 'Оформить'
           
           {/* Особенность (первая из списка) */}
           {offer.features && offer.features.length > 0 && (
-            <div style={{ textAlign: 'center' }}>
+            <div style={{ textAlign: isMobile ? 'center' : 'right' }}>
               <Text style={{ 
                 fontSize: isMobile ? '16px' : 'var(--text-sm)',
                 color: 'var(--accent)',
@@ -128,7 +128,7 @@ export default function OfferCard({ offer, onApply, ctaText = 'Оформить'
           )}
           
           {/* Срок */}
-          <div style={{ textAlign: 'center' }}>
+          <div style={{ textAlign: isMobile ? 'center' : 'right' }}>
             <Text style={{ 
               color: 'var(--text-muted)', 
               fontSize: isMobile ? '16px' : 'var(--text-sm)',
