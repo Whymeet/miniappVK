@@ -126,14 +126,15 @@ function App() {
           </Router>
 
           {/* Модалка подписки */}
-          {showSubscribeModal && (
-            <SubscribeModal
-              groupId={launchParams.groupId}
-              userId={launchParams.userId}
-              launchParams={(launchParams as any).rawParams}
-              onClose={handleCloseSubscribeModal}
-            />
-          )}
+            {showSubscribeModal && (
+              <SubscribeModal
+                groupId={launchParams.groupId}
+                userId={launchParams.userId}
+                launchParams={(launchParams as any).rawParams}
+                brand={config.data.brand}
+                onClose={handleCloseSubscribeModal}
+              />
+            )}
         </AppRoot>
       </AdaptivityProvider>
     </ConfigProvider>
