@@ -3,12 +3,13 @@ import { Button, Title, Text, Spacing } from '@vkontakte/vkui';
 import './SubscribeModal.css';
 import { Icon56NotificationOutline } from '@vkontakte/icons';
 import bridge from '@vkontakte/vk-bridge';
-import { useAllowMessages, useSubscriptionStatus } from '@/hooks/useSubscription';
+import { useAllowMessages, useSubscriptionStatus, useSubscribe } from '@/hooks/useSubscription';
 
 interface SubscribeModalProps {
   groupId: string | null;
   userId: string | null;
   launchParams?: Record<string, any>;
+  brand?: string | null;
   onClose: () => void;
 }
 
@@ -18,10 +19,12 @@ export default function SubscribeModal({
   groupId,
   userId,
   launchParams,
+  brand,
   onClose,
 }: SubscribeModalProps) {
   const [isLoading, setIsLoading] = useState(false);
   const allowMessagesMutation = useAllowMessages();
+  const subscribeMutation = useSubscribe();
   const { data: subscriptionStatus } = useSubscriptionStatus(userId, launchParams);
 
   // Проверяем, уже ли разрешены уведомления
@@ -47,6 +50,21 @@ export default function SubscribeModal({
     setIsLoading(true);
 
     try {
+      // Создаем запись подписчика перед запросом разрешения сообщений
+      if (launchParams && !subscriptionStatus?.data?.subscribed) {
+        console.log('SubscribeModal: creating subscriber before allowing messages');
+
+        const subscribeResult = await subscribeMutation.mutateAsync({
+          launchParams,
+          brand: brand || 'default',
+        });
+
+        if (!subscribeResult.success) {
+          console.error('SubscribeModal: subscribe mutation failed', subscribeResult.error);
+          throw new Error(subscribeResult.error || 'Не удалось создать подписку');
+        }
+      }
+
       if (groupId) {
         console.log(
           'SubscribeModal: requesting VKWebAppAllowMessagesFromGroup for group:',
