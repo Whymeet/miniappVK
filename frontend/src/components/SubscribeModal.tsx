@@ -25,7 +25,7 @@ export default function SubscribeModal({ groupId, userId, launchParams, onClose 
   }, [subscriptionStatus]);
 
   const handleSubscribe = async () => {
-    console.log('handleSubscribe called', { groupId, userId, launchParams });
+    console.log('SubscribeModal: handleSubscribe called', { groupId, userId, launchParams });
     
     if (!userId || !launchParams) {
       console.error('Missing required params:', { 
@@ -40,69 +40,99 @@ export default function SubscribeModal({ groupId, userId, launchParams, onClose 
 
     try {
       if (groupId) {
-        console.log('🔔 Requesting VK notifications permission for group:', groupId);
+        console.log('SubscribeModal: requesting VKWebAppAllowMessagesFromGroup for group:', groupId);
         
-        const result = await bridge.send('VKWebAppAllowMessagesFromGroup', {
-          group_id: parseInt(groupId),
-        });
-        console.log('✅ VK notification permission result:', result);
-        
-        // Проверяем статус подписки сразу после разрешения
-        const subscriptionCheck = await bridge.send('VKWebAppAllowMessagesFromGroup', {
-          group_id: parseInt(groupId),
-        });
-        console.log('📱 Current notification status:', subscriptionCheck);
+        try {
+          const result = await bridge.send('VKWebAppAllowMessagesFromGroup', {
+            group_id: parseInt(groupId),
+          });
+          console.log('SubscribeModal: VK Bridge result:', result);
 
-        if (result.result) {
-          console.log('💫 Saving subscription to backend...');
-          
-          const backendResult = await allowMessagesMutation.mutateAsync(
-            { launchParams, groupId },
-          );
-
-          if (backendResult.success) {
-            console.log('🎉 Subscription saved successfully!');
+          if (result.result) {
+            // Успешно получили разрешение от VK
+            console.log('SubscribeModal: user allowed messages, saving to backend...');
             
-            // Отправляем событие в VK Ads и MyTracker для отслеживания конверсии
-            try {
-              const trackResult = await bridge.send('VKWebAppTrackEvent', {
-                event_name: 'subscribe',
-                user_id: userId,
-              } as any);
-              console.log('✅ VK Ads tracking event sent:', trackResult);
-            } catch (trackError) {
-              console.warn('⚠️ Failed to send VK Ads tracking event:', trackError);
-              // Не критично, продолжаем
+            const backendResult = await allowMessagesMutation.mutateAsync(
+              { launchParams, groupId },
+            );
+
+            if (backendResult.success) {
+              console.log('SubscribeModal: subscription saved successfully!');
+              
+              // Отправляем событие в VK Ads
+              try {
+                await bridge.send('VKWebAppTrackEvent', {
+                  event_name: 'subscribe',
+                  user_id: userId,
+                } as any);
+                console.log('SubscribeModal: VK Ads tracking event sent');
+              } catch (trackError) {
+                console.warn('SubscribeModal: failed to send VK Ads tracking:', trackError);
+              }
+              
+              onClose();
+            } else {
+              console.error('SubscribeModal: backend error:', backendResult.error);
+              throw new Error(backendResult.error || 'Failed to save subscription');
             }
           } else {
-            console.error('❌ Backend error:', backendResult.error);
-            throw new Error(backendResult.error || 'Failed to save subscription');
+            console.log('SubscribeModal: user declined notifications');
+            alert('Вы отказались от уведомлений. Вы можете включить их позже в настройках.');
+            onClose();
           }
-        } else {
-          console.log('⚠️ User declined notifications');
-          alert('Вы отключили уведомления. Вы можете включить их позже в настройках.');
+        } catch (vkError: any) {
+          console.error('SubscribeModal: failed to allow messages RAW:', vkError);
+          
+          // Проверяем тип ошибки
+          const isUntrustedApp = vkError?.error_data?.error_code === 15;
+          const isApiError = vkError?.error_type === 'api_error';
+          
+          if (isUntrustedApp || isApiError) {
+            // Приложение не доверенное или другая API ошибка - сохраняем подписку без VK API
+            console.log('SubscribeModal: VK API unavailable (error ' + vkError?.error_data?.error_code + '), saving subscription anyway...');
+            console.log('VK error_data:', JSON.stringify(vkError?.error_data, null, 2));
+            
+            try {
+              const backendResult = await allowMessagesMutation.mutateAsync(
+                { launchParams, groupId },
+              );
+
+              if (backendResult.success) {
+                console.log('SubscribeModal: subscription saved without VK API confirmation');
+                alert('Регистрация прошла успешно! Уведомления будут доступны после верификации приложения.');
+                onClose();
+              } else {
+                throw new Error(backendResult.error || 'Failed to save subscription');
+              }
+            } catch (backendError) {
+              console.error('SubscribeModal: backend error after VK API failure:', backendError);
+              throw backendError;
+            }
+          } else {
+            // Другая ошибка - пробрасываем дальше
+            throw vkError;
+          }
         }
       } else {
-        console.log('No groupId, saving subscription without notifications...');
+        console.log('SubscribeModal: no groupId, saving subscription without notifications...');
         
         const backendResult = await allowMessagesMutation.mutateAsync(
           { launchParams, groupId: '218513564' },
         );
 
         if (backendResult.success) {
-          console.log('Subscription saved!');
+          console.log('SubscribeModal: subscription saved!');
+          onClose();
         } else {
-          console.error('Backend error:', backendResult.error);
+          console.error('SubscribeModal: backend error:', backendResult.error);
           throw new Error(backendResult.error || 'Failed to save subscription');
         }
       }
-      
-      onClose();
     } catch (error) {
-      console.error('Failed to allow messages:', error);
+      console.error('SubscribeModal: final error handler:', error);
       
       const errorMessage = error instanceof Error ? error.message : 'Произошла ошибка при подписке';
-      alert(`Ошибка: ${errorMessage}`);
+      alert(`Ошибка при разрешении уведомлений: ${errorMessage}`);
       
       onClose();
     } finally {
