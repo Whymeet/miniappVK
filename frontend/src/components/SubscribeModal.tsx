@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Button, Title, Text, Spacing } from '@vkontakte/vkui';
+import { Button, Title, Text, Spacing, Snackbar, Avatar } from '@vkontakte/vkui';
 import './SubscribeModal.css';
 import { Icon56NotificationOutline } from '@vkontakte/icons';
+import { Icon28CancelCircleOutline } from '@vkontakte/icons';
 import bridge from '@vkontakte/vk-bridge';
 import { useAllowMessages, useSubscriptionStatus, useSubscribe } from '@/hooks/useSubscription';
 
@@ -23,6 +24,7 @@ export default function SubscribeModal({
   onClose,
 }: SubscribeModalProps) {
   const [isLoading, setIsLoading] = useState(false);
+  const [snackbar, setSnackbar] = useState<React.ReactNode>(null);
   const allowMessagesMutation = useAllowMessages();
   const subscribeMutation = useSubscribe();
   const { data: subscriptionStatus } = useSubscriptionStatus(userId, launchParams);
@@ -43,7 +45,18 @@ export default function SubscribeModal({
         hasUserId: !!userId,
         hasLaunchParams: !!launchParams,
       });
-      alert('Ошибка: данные пользователя не найдены');
+      setSnackbar(
+        <Snackbar
+          onClose={() => setSnackbar(null)}
+          before={
+            <Avatar size={24}>
+              <Icon28CancelCircleOutline />
+            </Avatar>
+          }
+        >
+          Ошибка: данные пользователя не найдены
+        </Snackbar>
+      );
       return;
     }
 
@@ -79,7 +92,18 @@ export default function SubscribeModal({
 
         if (!vkResult?.result) {
           console.log('SubscribeModal: user declined notifications');
-          alert('Вы отключили уведомления. Вы можете включить их позже в настройках.');
+          setSnackbar(
+            <Snackbar
+              onClose={() => setSnackbar(null)}
+              before={
+                <Avatar size={24}>
+                  <Icon28CancelCircleOutline />
+                </Avatar>
+              }
+            >
+              Вы отключили уведомления. Вы можете включить их позже в настройках.
+            </Snackbar>
+          );
           setIsLoading(false);
           return;
         }
@@ -217,7 +241,18 @@ export default function SubscribeModal({
       error?.error_data?.error_reason ||
       (error instanceof Error ? error.message : 'Произошла ошибка при подписке');
 
-    alert(`Ошибка при разрешении уведомлений: ${errorMessage}`);
+    setSnackbar(
+      <Snackbar
+        onClose={() => setSnackbar(null)}
+        before={
+          <Avatar size={24}>
+            <Icon28CancelCircleOutline />
+          </Avatar>
+        }
+      >
+        {`Ошибка при разрешении уведомлений: ${errorMessage}`}
+      </Snackbar>
+    );
     onClose();
   } finally {
     setIsLoading(false);
@@ -297,6 +332,7 @@ export default function SubscribeModal({
           </div>
         </div>
       </div>
+      {snackbar}
     </div>
   );
 }
