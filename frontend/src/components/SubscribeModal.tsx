@@ -315,7 +315,7 @@ export default function SubscribeModal({
               loading={isLoading}
               className="custom-modal-primary-button"
             >
-              {groupId ? '🔔 Получить займ' : '✅ Получить займ'}
+              {groupId ? '🔔 Разрешить уведомления' : '✅ Разрешить уведомления'}
             </Button>
 
             <Spacing size={12} />
