@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import {
   Spinner,
   Placeholder,
@@ -219,23 +218,6 @@ export default function OffersPage({ config, launchParams }: OffersPageProps) {
         </div>
       )}
 
-      {/* Политика конфиденциальности */}
-      <div style={{ 
-        textAlign: 'center', 
-        padding: isMobile ? 'var(--space-sm)' : 'var(--space-md)' 
-      }}>
-        <Link 
-          to="/policy" 
-          style={{ 
-            color: 'var(--text-muted)', 
-            textDecoration: 'none',
-            fontSize: isMobile ? 'var(--text-xs)' : 'var(--text-sm)',
-          }}
-        >
-          Политика конфиденциальности
-        </Link>
-      </div>
-
       {/* Юридическая информация */}
       <div style={{ 
         textAlign: 'center', 
@@ -245,7 +227,7 @@ export default function OffersPage({ config, launchParams }: OffersPageProps) {
       }}>
         {/* Дисклеймер */}
         {config.features.show_disclaimer && (
-          <div className="alert" style={{ 
+          <div className="disclaimer" style={{
             marginBottom: 'var(--space-sm)',
             padding: 'var(--space-xs)',
             background: 'var(--bg)',

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Snackbar, Avatar, Alert } from '@vkontakte/vkui';
+import { Button, Snackbar, Avatar, ModalRoot, ModalCard } from '@vkontakte/vkui';
 import { Icon28CheckCircleOutline, Icon28CancelCircleOutline } from '@vkontakte/icons';
 import { useUnsubscribe, useSubscriptionStatus } from '@/hooks/useSubscription';
 
@@ -10,7 +10,7 @@ interface UnsubscribeButtonProps {
 
 export default function UnsubscribeButton({ userId, launchParams }: UnsubscribeButtonProps) {
   const [snackbar, setSnackbar] = useState<React.ReactNode>(null);
-  const [showAlert, setShowAlert] = useState(false);
+  const [activeModal, setActiveModal] = useState<string | null>(null);
   const unsubscribeMutation = useUnsubscribe();
   const { data: subscriptionStatus } = useSubscriptionStatus(userId, launchParams);
 
@@ -18,11 +18,11 @@ export default function UnsubscribeButton({ userId, launchParams }: UnsubscribeB
   const isSubscribed = subscriptionStatus?.success && subscriptionStatus.data?.subscribed;
 
   const handleUnsubscribeClick = () => {
-    setShowAlert(true);
+    setActiveModal('unsubscribe-confirm');
   };
 
   const handleConfirmUnsubscribe = async () => {
-    setShowAlert(false);
+    setActiveModal(null);
 
     if (!userId || !launchParams) {
       setSnackbar(
@@ -76,6 +76,30 @@ export default function UnsubscribeButton({ userId, launchParams }: UnsubscribeB
     return null;
   }
 
+  const modal = (
+    <ModalRoot activeModal={activeModal} onClose={() => setActiveModal(null)}>
+      <ModalCard
+        id="unsubscribe-confirm"
+        onClose={() => setActiveModal(null)}
+        header="Отписка от рассылки"
+        actions={[
+          {
+            title: 'Отменить',
+            mode: 'secondary',
+            action: () => setActiveModal(null),
+          },
+          {
+            title: 'Отписаться',
+            mode: 'destructive',
+            action: handleConfirmUnsubscribe,
+          },
+        ]}
+      >
+        Вы уверены, что хотите отписаться? Вы не будете получать уведомления о новых предложениях.
+      </ModalCard>
+    </ModalRoot>
+  );
+
   return (
     <>
       <Button
@@ -89,25 +113,7 @@ export default function UnsubscribeButton({ userId, launchParams }: UnsubscribeB
         Отписаться от рассылки
       </Button>
 
-      {showAlert && (
-        <Alert
-          actions={[
-            {
-              title: 'Отменить',
-              mode: 'cancel',
-            },
-            {
-              title: 'Отписаться',
-              mode: 'destructive',
-              action: handleConfirmUnsubscribe,
-            },
-          ]}
-          onClose={() => setShowAlert(false)}
-          header="Отписка от рассылки"
-          text="Вы уверены, что хотите отписаться? Вы не будете получать уведомления о новых предложениях."
-        />
-      )}
-
+      {modal}
       {snackbar}
     </>
   );
