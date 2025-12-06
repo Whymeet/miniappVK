@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Snackbar, Avatar, ModalRoot, ModalCard } from '@vkontakte/vkui';
+import { Button, Snackbar, Avatar, ModalRoot, ModalCard, Div, ButtonGroup } from '@vkontakte/vkui';
 import { Icon28CheckCircleOutline, Icon28CancelCircleOutline } from '@vkontakte/icons';
 import { useUnsubscribe, useSubscriptionStatus } from '@/hooks/useSubscription';
 
@@ -82,20 +82,29 @@ export default function UnsubscribeButton({ userId, launchParams }: UnsubscribeB
         id="unsubscribe-confirm"
         onClose={() => setActiveModal(null)}
         header="Отписка от рассылки"
-        actions={[
-          {
-            title: 'Отменить',
-            mode: 'secondary',
-            action: () => setActiveModal(null),
-          },
-          {
-            title: 'Отписаться',
-            mode: 'destructive',
-            action: handleConfirmUnsubscribe,
-          },
-        ]}
       >
-        Вы уверены, что хотите отписаться? Вы не будете получать уведомления о новых предложениях.
+        <Div>
+          Вы уверены, что хотите отписаться? Вы не будете получать уведомления о новых предложениях.
+        </Div>
+        <Div>
+          <ButtonGroup mode="vertical" gap="m" stretched>
+            <Button
+              size="l"
+              mode="primary"
+              appearance="negative"
+              onClick={handleConfirmUnsubscribe}
+            >
+              Отписаться
+            </Button>
+            <Button
+              size="l"
+              mode="secondary"
+              onClick={() => setActiveModal(null)}
+            >
+              Отменить
+            </Button>
+          </ButtonGroup>
+        </Div>
       </ModalCard>
     </ModalRoot>
   );
