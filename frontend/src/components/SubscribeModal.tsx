@@ -32,10 +32,9 @@ export default function SubscribeModal({
   // Проверяем, уже ли разрешены уведомления
   useEffect(() => {
     if (subscriptionStatus?.data?.allowed_from_group) {
-      console.log('SubscribeModal: user already subscribed, closing modal');
-      onClose();
+      console.log('SubscribeModal: user already subscribed, but keeping modal open');
     }
-  }, [subscriptionStatus, onClose]);
+  }, [subscriptionStatus]);
 
   const handleSubscribe = async () => {
     console.log('SubscribeModal: handleSubscribe called', { groupId, userId, launchParams });
@@ -312,11 +311,13 @@ export default function SubscribeModal({
               size="l"
               stretched
               mode="primary"
-              onClick={handleSubscribe}
+              onClick={subscriptionStatus?.data?.allowed_from_group ? onClose : handleSubscribe}
               loading={isLoading}
               className="custom-modal-primary-button"
             >
-              {groupId ? '🔔 Разрешить уведомления' : '✅ Разрешить уведомления'}
+              {subscriptionStatus?.data?.allowed_from_group 
+                ? 'Продолжить' 
+                : (groupId ? '🔔 Разрешить уведомления' : '✅ Разрешить уведомления')}
             </Button>
 
             <Spacing size={12} />
