@@ -32,9 +32,10 @@ export default function SubscribeModal({
   // Проверяем, уже ли разрешены уведомления
   useEffect(() => {
     if (subscriptionStatus?.data?.allowed_from_group) {
-      console.log('SubscribeModal: user already subscribed, but keeping modal open');
+      console.log('SubscribeModal: user already subscribed, closing modal');
+      onClose();
     }
-  }, [subscriptionStatus]);
+  }, [subscriptionStatus, onClose]);
 
   const handleSubscribe = async () => {
     console.log('SubscribeModal: handleSubscribe called', { groupId, userId, launchParams });
