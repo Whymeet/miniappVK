@@ -33,6 +33,7 @@ export default function OfferCard({
   const isSmallMobile = deviceWidth <= 360;
 
   const handleApply = async () => {
+    // 1. Отправляем событие в VK Ads
     try {
       await bridge.send('VKWebAppTrackEvent', {
         event_name: 'lead',
@@ -45,6 +46,27 @@ export default function OfferCard({
       console.log('✅ VK Ads lead event sent for offer:', offer.id);
     } catch (error) {
       console.warn('⚠️ Failed to send VK Ads lead event:', error);
+    }
+
+    // 2. Логируем событие на бэкенд
+    try {
+      await fetch('/api/vk-ads/log-event/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          event_name: 'lead',
+          vk_user_id: userId,
+          event_params: {
+            offer_id: offer.id,
+            partner_name: offer.partner_name,
+          },
+          success: true,
+          platform: 'Web',
+        }),
+      });
+      console.log('✅ Lead event logged to backend for offer:', offer.id);
+    } catch (logError) {
+      console.warn('⚠️ Failed to log lead event on backend:', logError);
     }
 
     onApply(offer.id);
